@@ -1,38 +1,56 @@
-.App {
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hide_scrollbar {
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.scrollbar::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.scrollbar::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 6px #003F7A; */
+  background: transparent;
 }
 
-.App-link {
-  color: #61dafb;
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #003f7a;
+  width: 2px;
+  border-radius: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #003f7a;
+  width: 2px;
+  border-radius: 10px;
+}
+
+.error {
+  @apply text-red-600 font-medium text-sm capitalize;
+}
+
+.gray_button {
+  @apply bg-darkGray text-white md:min-w-[7rem] rounded-lg text-center capitalize font-medium p-2 hover:bg-darkGray/70 active:scale-95 transition duration-100 cursor-pointer;
 }

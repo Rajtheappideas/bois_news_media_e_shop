@@ -3,7 +3,8 @@ import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 const useAbortApiCall = () => {
-  const { loading } = useSelector((state) => state.root.auth);
+  // const { loading } = useSelector((state) => state.root.auth);
+  const loading = false;
 
   const AbortControllerRef = useRef(null);
   const abortApiCall = () => {

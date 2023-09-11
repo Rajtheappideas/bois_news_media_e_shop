@@ -2,16 +2,20 @@ import React from "react";
 import HeroSection from "../components/Home/HeroSection";
 import SubScribe from "./SubScribe";
 import PurchaseByNumber from "../components/Home/PurchaseByNumber";
-import NewsLetter from "../components/Home/NewsLetter";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   return (
-    <div>
-      <HeroSection />
-      <SubScribe />
-      <PurchaseByNumber />
-      <NewsLetter />
-    </div>
+    <>
+      <Helmet>
+        <title style={{ color: "black" }}>Home | E-shop</title>
+      </Helmet>
+      <div>
+        <HeroSection />
+        <SubScribe />
+        <PurchaseByNumber />
+      </div>
+    </>
   );
 };
 

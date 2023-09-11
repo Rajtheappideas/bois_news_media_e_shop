@@ -1,14 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore, FLUSH, REHYDRATE } from "redux-persist";
+import globalStates from "./globalStates";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: [],
+  blacklist: ["globalStates"],
 };
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  globalStates: globalStates,
+});
 
 const persisteRoot = persistReducer(rootPersistConfig, rootReducer);
 

@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.hide_scrollbar {
-  overflow: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.hide_scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -47,10 +45,29 @@ body::-webkit-scrollbar-thumb {
   border-radius: 10px;
 }
 
+html {
+  font-family: "Poppins", sans-serif;
+}
 .error {
   @apply text-red-600 font-medium text-sm capitalize;
 }
 
 .gray_button {
   @apply bg-darkGray text-white md:min-w-[7rem] rounded-lg text-center capitalize font-medium p-2 hover:bg-darkGray/70 active:scale-95 transition duration-100 cursor-pointer;
+}
+
+Label {
+  @apply text-black font-medium block text-left md:text-lg text-sm;
+}
+
+.gray_input_field {
+  @apply outline-none w-full rounded-md bg-lightGray border border-gray-300 p-2.5 focus:border-gray-400 focus:border-2;
+}
+
+.input_field {
+  @apply outline-none w-full rounded-md border bg-lightGray bg-opacity-30 border-gray-300 p-2.5 focus:border-gray-400 focus:border-2;
+}
+
+.Container {
+  @apply container xl:px-3 lg:px-10 md:px-5 px-3 mx-auto;
 }

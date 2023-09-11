@@ -6,11 +6,14 @@ import ErrorFallback from "./components/ErrorFallback";
 import { Suspense, lazy } from "react";
 import Lottie from "lottie-react";
 import loading from "./assests/animations/loading.json";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { useSelector } from "react-redux";
+import Signin from "./components/Auth/Signin";
+import Signup from "./components/Auth/Signup";
+import ForgotPassword from "./components/Auth/ForgotPassword";
 
 const Home = lazy(() => import("./pages/Home"));
-const SignIn = lazy(() => import("./pages/Signin"));
-const SignUp = lazy(() => import("./pages/Signup"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Shop = lazy(() => import("./pages/Shop"));
 const SubScribe = lazy(() => import("./pages/SubScribe"));
@@ -23,6 +26,9 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Search = lazy(() => import("./pages/Search"));
 
 function App() {
+  const { showSignin, showSignup, showForgotPassword } = useSelector(
+    (state) => state.root.globalStates
+  );
   return (
     <BrowserRouter>
       <Toaster toastOptions={{ duration: 3000 }} position="top-center" />
@@ -48,10 +54,12 @@ function App() {
             </div>
           }
         >
+          <Header />
+          {showSignin && <Signin />}
+          {showSignup && <Signup />}
+          {showForgotPassword && <ForgotPassword />}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/sign-in" element={<SignIn />} caseSensitive />
-            <Route path="/sign-up" element={<SignUp />} caseSensitive />
             <Route path="/shop" element={<Shop />} caseSensitive />
             <Route path="/subscribe" element={<SubScribe />} caseSensitive />
             <Route path="/cart" element={<Cart />} caseSensitive />
@@ -66,13 +74,10 @@ function App() {
               caseSensitive
             />
             <Route path="/" element={<BuyByNumber />} caseSensitive />
-            <Route
-              path="/forgot-password"
-              element={<ForgotPassword />}
-              caseSensitive
-            />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
+          <Footer />
         </Suspense>
       </ErrorBoundary>
     </BrowserRouter>

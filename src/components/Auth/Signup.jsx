@@ -16,8 +16,6 @@ const Signup = () => {
   useEffect(() => {
     if (showSignup) {
       window.document.body.style.overflow = "hidden";
-    } else {
-      window.document.body.style.overflow = "unset";
     }
     const handleClickOutside = (event) => {
       if (
@@ -26,6 +24,7 @@ const Signup = () => {
         showSignup
       ) {
         dispatch(handleChangeShowSignup(false));
+        window.document.body.style.overflow = "unset";
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -36,6 +35,7 @@ const Signup = () => {
 
   function handleClickOutside() {
     dispatch(handleChangeShowSignup(false));
+    window.document.body.style.overflow = "unset";
   }
 
   return (
@@ -45,7 +45,9 @@ const Signup = () => {
         className="absolute scrollbar z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-10 space-y-3"
       >
         <div className="w-full flex items-center justify-between">
-          <p className="font-semibold text-left md:text-lg">Create your account</p>
+          <p className="font-semibold text-left md:text-lg">
+            Create your account
+          </p>
           <AiOutlineClose
             size={20}
             role="button"

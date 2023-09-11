@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleChangeShowForgotPassword,
-  handleChangeShowSignin,
-  handleChangeShowSignup,
-} from "../../redux/globalStates";
+import { handleChangeShowForgotPassword } from "../../redux/globalStates";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -19,8 +15,6 @@ const ForgotPassword = () => {
   useEffect(() => {
     if (showForgotPassword) {
       window.document.body.style.overflow = "hidden";
-    } else {
-      window.document.body.style.overflow = "unset";
     }
     const handleClickOutside = (event) => {
       if (
@@ -29,6 +23,7 @@ const ForgotPassword = () => {
         showForgotPassword
       ) {
         dispatch(handleChangeShowForgotPassword(false));
+        window.document.body.style.overflow = "unset";
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -39,6 +34,7 @@ const ForgotPassword = () => {
 
   function handleClickOutside() {
     dispatch(handleChangeShowForgotPassword(false));
+    window.document.body.style.overflow = "unset";
   }
 
   return (

@@ -10,6 +10,8 @@ module.exports = {
         darkBlue: "#003F7A",
         borderColor: "#DBDBDB",
         lightGray: "#EFEFEF",
+        darkRed: "#F1152B",
+        lighBlue: "#009BDB",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],

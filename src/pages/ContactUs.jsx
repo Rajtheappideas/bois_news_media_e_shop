@@ -110,7 +110,7 @@ const ContactUs = () => {
 
   return (
     <>
-      <Helmet title="Contact us | Dollar Empire" />
+      <Helmet title="Contact us | E-shop" />
       <div className="relative md:h-80 h-60">
         <img
           src={require("../assests/images/contact-us.png")}
@@ -159,7 +159,10 @@ const ContactUs = () => {
             {/* mail */}
             <div className="flex items-center flex-wrap gap-x-2 md:pb-10 pb-5">
               <GrMail size={20} className="text-darkGray min-w-[1rem]" />
-              <a href="mailto:contact@boisnewsmedia.com" className="font-semibold">
+              <a
+                href="mailto:contact@boisnewsmedia.com"
+                className="font-semibold"
+              >
                 contact@boisnewsmedia.com
               </a>
             </div>
@@ -208,14 +211,14 @@ const ContactUs = () => {
                   // value={formik.values.phone}
                   inputStyle={{
                     width: "100%",
-                    background: "#F5F5F5",
+                    background: "#EFEFEF",
                     borderRadius: "6px",
                     border: "0",
                     padding: "1.6rem 0 1.6rem 3rem",
                   }}
                   // disabled={loading}
                   jumpCursorToEnd={true}
-                  dropdownStyle={{ background: "lightgray" }}
+                  dropdownStyle={{ background: "#EFEFEF" }}
                   buttonStyle={{ border: "0px" }}
                 />
               </>
@@ -228,15 +231,12 @@ const ContactUs = () => {
             placeholder="message..."
             name="comments"
           />
-
           <p>{t("Please check the box below to proceed")}.</p>
-          <div>
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
-              // onChange={handlChange}
-              ref={captchaRef}
-            />{" "}
-          </div>
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+            // onChange={handlChange}
+            ref={captchaRef}
+          />{" "}
           <button
             type="submit"
             className="gray_button w-40 h-12"

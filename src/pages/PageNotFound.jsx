@@ -7,13 +7,12 @@ import { useTranslation } from "react-i18next";
 const PageNotFound = () => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen">
+    <div className="flex flex-col items-center justify-center w-full h-full py-5">
       <Lottie
         style={{
           pointerEvents: "none",
-          height: "80%",
-          width: "80%",
         }}
+        className="lg:w-1/2 w-3/4 h-fit"
         animationData={pagenotfound}
         loop
       />

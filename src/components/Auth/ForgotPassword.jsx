@@ -38,7 +38,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="absolute inset-0 bg-black bg-opacity-50">
+    <div className="absolute z-10 inset-0 bg-black bg-opacity-50">
       <div
         ref={forgotRef}
         className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"

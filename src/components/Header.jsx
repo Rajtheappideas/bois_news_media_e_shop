@@ -43,7 +43,7 @@ const Header = () => {
   }
 
   useEffect(() => {
-    if (openSidebar && window.screen.width >= 1024) {
+    if (openSidebar && window.innerWidth >= 1024) {
       setOpenSidebar(false);
     }
     if (openSidebar) {
@@ -59,18 +59,7 @@ const Header = () => {
     return () => {
       window.removeEventListener("resize", () => {});
     };
-  }, [openSidebar, window.screen.width]);
-
-  const links = [
-    { title: "home", link: "/" },
-    { title: "shop", link: "/shop" },
-    { title: "subscribe", link: "/subscribe" },
-    { title: "buy by number", link: "/buy-by-number" },
-    { title: "our magazines", link: "/magazines" },
-    { title: "contact", link: "/contact-us" },
-    { title: "cart", link: "/cart" },
-    { title: "search", link: "/search" },
-  ];
+  }, [openSidebar, window.innerWidth]);
 
   return (
     <header>
@@ -128,48 +117,116 @@ const Header = () => {
         </div>
       </div>
       {/* second div */}
-      <div className="Container w-full flex justify-between items-center md:py-3 py-1">
-        <Link to="/">
-          <img
-            src={require("../assests/images/logo.png")}
-            alt="logo"
-            className="md:w-fit md:h-fit h-16 w-16 object-contain object-center"
-          />
-        </Link>
-        {/* links for desktop */}
-        <div className="lg:flex items-center lg:gap-x-5 gap-x-2 select-none hidden">
-          {links.slice(0, -2).map((link) => (
+      <div className="shadow-lg">
+        <div className="Container w-full flex justify-between items-center md:py-3 py-1">
+          <Link to="/">
+            <img
+              src={require("../assests/images/logo.png")}
+              alt="logo"
+              className="md:w-fit md:h-fit h-16 w-16 object-contain object-center"
+            />
+          </Link>
+          {/* links for desktop */}
+          <div className="lg:flex items-center lg:gap-x-5 gap-x-2 select-none hidden">
             <Link
-              key={link.title}
-              to={link.link}
-              className={`uppercase transition-all 2xl:text-xl hover:scale-105 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === link.title
+              to="/"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+                activeLink === "home"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
               } `}
-              onClick={() => setActiveLink(link.title)}
+              onClick={() => setActiveLink("home")}
             >
-              {link.title}
+              Home
             </Link>
-          ))}
-          |
-          <p className="relative">
-            <Link to="cart">
-              <AiOutlineShoppingCart size={25} />
-              <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
-                0
-              </span>
+            <Link
+              to="/shop"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+                activeLink === "shop"
+                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                  : "border-0 text-black font-medium"
+              } `}
+              onClick={() => setActiveLink("shop")}
+            >
+              Shop
             </Link>
-          </p>
-          <Link to="search">
-            <AiOutlineSearch size={25} />
-          </Link>
+            <Link
+              to="/subscribe"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold text-sm cursor-pointer ${
+                activeLink === "subscribe"
+                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                  : "border-0 text-black font-medium"
+              } relative group`}
+              onClick={() => setActiveLink("subscribe")}
+            >
+              subscribe
+              <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
+                <p className="p-3 hover:bg-darkGray hover:text-white transition-all duration-100">
+                  BOISMAG SUBSCRIPTION
+                </p>
+                <p className="p-2 hover:bg-darkGray hover:text-white transition-all duration-100">
+                  SUBSCRIPTION L’AGENCEUR MAGAZINE
+                </p>
+                <p className="p-2 hover:bg-darkGray hover:text-white transition-all duration-100">
+                  ARTISANS & WOOD SUBSCRIPTION
+                </p>
+                <p className="p-3 hover:bg-darkGray hover:text-white transition-all duration-100">
+                  SUBSCRIPTION ROOFING MAGAZINE
+                </p>
+              </div>
+            </Link>
+            <Link
+              to="/buy-by-number"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+                activeLink === "buy_by_number"
+                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                  : "border-0 text-black font-medium"
+              } `}
+              onClick={() => setActiveLink("buy_by_number")}
+            >
+              buy by number
+            </Link>
+            <Link
+              to="#"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+                activeLink === "our_magazines"
+                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                  : "border-0 text-black font-medium"
+              } `}
+              onClick={() => setActiveLink("our_magazines")}
+            >
+              our magazines
+            </Link>
+            <Link
+              to="/contact-us"
+              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+                activeLink === "contact"
+                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                  : "border-0 text-black font-medium"
+              } relative`}
+              onClick={() => setActiveLink("contact")}
+            >
+              contact
+            </Link>
+            |
+            <p className="relative">
+              <Link to="cart">
+                <AiOutlineShoppingCart size={25} />
+                <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
+                  0
+                </span>
+              </Link>
+            </p>
+            <Link to="search">
+              <AiOutlineSearch size={25} />
+            </Link>
+          </div>
+          <HiOutlineBars3BottomRight
+            size={30}
+            className="cursor-pointer lg:hidden"
+            onClick={() => setOpenSidebar(true)}
+          />
         </div>
-        <HiOutlineBars3BottomRight
-          size={30}
-          className="cursor-pointer lg:hidden"
-          onClick={() => setOpenSidebar(!openSidebar)}
-        />
       </div>
       {/* mobile sidebar */}
       <div
@@ -183,26 +240,142 @@ const Header = () => {
           onClick={() => setOpenSidebar(false)}
         />
         <ul className="md:w-1/2 w-full mx-auto space-y-5 px-10">
-          {links.map((link) => (
-            <li
-              key={link.title}
-              className={`${
-                activeLink === link.title
-                  ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                  : "bg-none font-medium"
-              } uppercase transition-all duration-300`}
+          <li
+            className={`${
+              activeLink === "home"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/"
+              onClick={() => {
+                setActiveLink("home");
+                setOpenSidebar(false);
+              }}
             >
-              <Link
-                to={link.link}
-                onClick={() => {
-                  setActiveLink(link.title);
-                  setOpenSidebar(false);
-                }}
-              >
-                {link.title}
-              </Link>
-            </li>
-          ))}
+              home
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "shop"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/shop"
+              onClick={() => {
+                setActiveLink("shop");
+                setOpenSidebar(false);
+              }}
+            >
+              shop
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "subscribe"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/subscribe"
+              onClick={() => {
+                setActiveLink("subscribe");
+                setOpenSidebar(false);
+              }}
+            >
+              subscribe
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "buy_by_number"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/buy-by-number"
+              onClick={() => {
+                setActiveLink("buy_by_number");
+                setOpenSidebar(false);
+              }}
+            >
+              buy by number
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "our_magazine"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="#"
+              onClick={() => {
+                setActiveLink("our_magazine");
+                setOpenSidebar(false);
+              }}
+            >
+              our magazines
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "contact"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/contact-us"
+              onClick={() => {
+                setActiveLink("contact");
+                setOpenSidebar(false);
+              }}
+            >
+              contact
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "cart"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/cart"
+              onClick={() => {
+                setActiveLink("cart");
+                setOpenSidebar(false);
+              }}
+            >
+              cart
+            </Link>
+          </li>
+          <li
+            className={`${
+              activeLink === "search"
+                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+                : "bg-none font-medium"
+            } uppercase transition-all duration-300 `}
+          >
+            <Link
+              to="/search"
+              onClick={() => {
+                setActiveLink("search");
+                setOpenSidebar(false);
+              }}
+            >
+              search
+            </Link>
+          </li>
         </ul>
       </div>
     </header>

@@ -1,6 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeSubscriptionShow } from "../redux/ShopSlice";
+import {
+  handleChangeMagazineShow,
+  handleChangeSubscriptionShow,
+} from "../redux/ShopSlice";
 
 const MagazineCard = ({ image, title, price, description }) => {
   const { selectedView, activeCategory } = useSelector(
@@ -8,6 +11,14 @@ const MagazineCard = ({ image, title, price, description }) => {
   );
 
   const dispatch = useDispatch();
+
+  const handleDispatchAction = () => {
+    if (activeCategory === "subscriptions" || activeCategory === "magazines") {
+      dispatch(handleChangeSubscriptionShow(true));
+    } else {
+      dispatch(handleChangeMagazineShow(true));
+    }
+  };
 
   return (
     <div className="w-full">
@@ -18,7 +29,7 @@ const MagazineCard = ({ image, title, price, description }) => {
             src={image}
             alt="magazine"
             className="xl:w-1/5 md:w-1/4 w-1/2 cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-contain object-center h-fit mx-auto"
-            onClick={() => dispatch(handleChangeSubscriptionShow(true))}
+            onClick={() => handleDispatchAction()}
           />
           <div className="space-y-2">
             <p className="font-semibold md:text-left text-center md:text-lg">
@@ -45,7 +56,7 @@ const MagazineCard = ({ image, title, price, description }) => {
                 ? "md:min-h-[30rem] md:max-h-[30rem] min-h-[15rem] max-h-[15rem]"
                 : "min-h-[25rem] max-h-[25rem]"
             } md:object-fill object-contain object-center`}
-            onClick={() => dispatch(handleChangeSubscriptionShow(true))}
+            onClick={() => handleDispatchAction()}
           />
           <p className="font-semibold md:text-lg">{title}</p>
           {price && (

@@ -36,10 +36,10 @@ const Shop = () => {
           <div className="lg:w-9/12 w-full space-y-3">
             {/* for magazines only */}
             {(activeCategory === "WOODmag" ||
-              "The_magazine_designer" ||
-              "Magazine_roof" ||
-              "Craftsmen_Wood") && (
-              <div className="space-y-3">
+              activeCategory === "The_magazine_designer" ||
+              activeCategory === "Magazine_roof" ||
+              activeCategory === "Craftsmen_Wood") && (
+              <div className="md:space-y-3 space-y-1">
                 <p className="md:text-2xl text-lg font-semibold">
                   The magazine designer
                 </p>
@@ -215,9 +215,9 @@ const Shop = () => {
             )}
             {/* magazines issues */}
             {(activeCategory === "WOODmag" ||
-              "The_magazine_designer" ||
-              "Magazine_roof" ||
-              "Craftsmen_Wood") && (
+              activeCategory === "The_magazine_designer" ||
+              activeCategory === "Magazine_roof" ||
+              activeCategory === "Craftsmen_Wood") && (
               <div
                 className={`w-full py-4 ${
                   selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
@@ -231,7 +231,7 @@ const Shop = () => {
               companies, forest and wood professionals"
                   title="MAGAZINE ROOF(24)"
                   image={require("../assests/images/Product image-10.png")}
-                  price="13"
+                  price="13.00"
                 />
                 <MagazineCard
                   description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -240,7 +240,7 @@ const Shop = () => {
               officia sequi nihil, ullam vel."
                   title="CRAFTSMEN & WOOD(30)"
                   image={require("../assests/images/Product image-8.png")}
-                  price="12"
+                  price="12.00"
                 />
                 <MagazineCard
                   description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -249,7 +249,7 @@ const Shop = () => {
               officia sequi nihil, ullam vel."
                   title="THE MAGAZINE DESIGNER(40)"
                   image={require("../assests/images/Product image-7.png")}
-                  price="23"
+                  price="23.00"
                 />
                 <MagazineCard
                   description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -258,7 +258,7 @@ const Shop = () => {
               officia sequi nihil, ullam vel."
                   title="WOODMAG(72)"
                   image={require("../assests/images/Product image.png")}
-                  price="30"
+                  price="30.00"
                 />
               </div>
             )}

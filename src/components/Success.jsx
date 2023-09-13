@@ -1,51 +1,64 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import success from "../assests/animations/success.json";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
-const Success = () => {
+const Success = ({ title, description, btnText, link }) => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    setTimeout(() => {
-      navigate("/sign-in");
-      toast.success(t("You can signin now with your new password."), {
-        duration: 4000,
-      });
-    }, 5000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigate("/sign-in");
+  //     toast.success(t("You can signin now with your new password."), {
+  //       duration: 4000,
+  //     });
+  //   }, 5000);
+  // }, []);
+
   return (
-    <>
-      <section className="bg-white absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl md:px-5 md:py-5 px-4 py-2 flex items-center flex-col mx-auto xl:w-4/12 lg:w-5/12 md:w-1/2 w-11/12 h-auto gap-y-2">
+    <div>
+      {/* bg img + heading */}
+      <div className="relative md:h-80 h-60">
+        <img
+          src={require("../assests/images/terms.png")}
+          alt="terms"
+          className="w-screen h-full object-cover object-left"
+          loading="lazy"
+        />
+      </div>
+      <section className="md:Container mt-5 bg-white drop-shadow-2xl rounded-xl md:px-5 md:py-5 px-4 py-2 flex items-center flex-col mx-auto md:w-1/2 w-11/12  h-auto gap-y-2">
         <Lottie
           style={{
             pointerEvents: "none",
-            height: "200px",
-            width: "200px",
           }}
           animationData={success}
           loop
+          className="h-40 w-fit"
         />
         <p className="font-bold text-textBlack text-center md:text-lg">
-          {t("Verification success")}{" "}
+          {title}
         </p>
         <p className="font-normal text-textColor text-center md:text-lg w-9/12">
-          {t("Verification is success and now you can proceed")}{" "}
+          {description}
         </p>
-        <button
-          type="button"
-          onClick={() => navigate("/sign-in")}
-          className="bg-primaryBlue text-white font-medium text-center md:h-12 h-10 rounded-lg p-2 hover:bg-primaryBlue/80 active:scale-95 transition w-full"
-        >
-          {t("Sign in")}
-        </button>
+        {link !== undefined ? (
+          <Link to={link} className="w-1/2 mx-auto">
+            <button type="button" className="gray_button capitalize w-full">
+              {btnText}
+            </button>
+          </Link>
+        ) : (
+          <button type="button" className="gray_button capitalize w-1/2">
+            {btnText}
+          </button>
+        )}
       </section>
-    </>
+    </div>
   );
 };
 

@@ -18,20 +18,20 @@ const SubscriptionDetails = () => {
         onClick={() => dispatch(handleChangeSubscriptionShow(false))}
       />
       {/* img + add to cart details */}
-      <div className="w-full flex items-start justify-start gap-3">
+      <div className="w-full flex md:flex-row flex-col items-start justify-start gap-3">
         <img
           src={require("../assests/images/Product image-11.png")}
           alt=""
-          className="w-1/2 2xl:h-[30rem] h-[28rem] object-contain object-center"
+          className="md:w-1/2 w-full 2xl:h-[30rem] h-[28rem] object-contain object-center"
         />
-        <div className="w-2/3 space-y-4">
+        <div className="md:w-2/3 w-full md:space-y-4 space-y-2">
           <p className="font-semibold md:text-xl text-lg text-left">
             BOISmag subscription
           </p>
           <p className="font-semibold md:text-lg text-darkBlue">From € 95.00</p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="w-3/12">Type of support</p>
+            <p className="md:w-3/12 md:text-base text-sm">Type of support</p>
             <select name="type_of_support" className="border p-2 w-full">
               <option value="paper_&_digital">Paper and Digital</option>
               <option value="paper">Paper</option>
@@ -40,7 +40,7 @@ const SubscriptionDetails = () => {
           </div>
           {/* shipping area */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="w-3/12">Shipping area</p>
+            <p className="md:w-3/12 md:text-base text-sm">Shipping area</p>
             <select name="shipping_area" className="border p-2 w-full">
               <option value="EEC / Switzerland / Dom-tom&_digital">
                 EEC / Switzerland / Dom-tom
@@ -51,7 +51,7 @@ const SubscriptionDetails = () => {
           </div>
           {/* qty */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="w-3/12">Quantity</p>
+            <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
             <input
               type="number"
               placeholder="1"
@@ -68,7 +68,7 @@ const SubscriptionDetails = () => {
         </div>
       </div>
       {/* tab btns */}
-      <div className="w-full border-b-2 flex items-center gap-3">
+      <div className="w-full border-b-2 flex items-center gap-3 md:text-base text-sm">
         <p
           className={`${
             activeComponent === "description"
@@ -82,7 +82,7 @@ const SubscriptionDetails = () => {
         <p
           className={`${
             activeComponent === "further_info"
-              ? "text-darkBlue font-semibold border-b-4 border-darkBlue"
+              ? "text-darkBlue font-semibold border-b-2 border-darkBlue"
               : "font-medium"
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
@@ -92,7 +92,7 @@ const SubscriptionDetails = () => {
       </div>
       {/* description */}
       {activeComponent === "description" && (
-        <div className="space-y-4 ">
+        <div className="md:space-y-4  space-y-2">
           <p className="font-semibold md:text-lg">
             8 issues/year – €115 (metropolitan France)
           </p>

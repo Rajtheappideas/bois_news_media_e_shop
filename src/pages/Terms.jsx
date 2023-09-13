@@ -5,10 +5,11 @@ const Terms = () => {
   return (
     <>
       <Helmet title="Terms & Conditions | E-shop" />
+      {/* bg img + heading */}
       <div className="relative md:h-80 h-60">
         <img
           src={require("../assests/images/terms.png")}
-          alt="contactus"
+          alt="terms"
           className="w-screen h-full object-cover object-left"
           loading="lazy"
         />

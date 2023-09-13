@@ -7,6 +7,7 @@ const HeroSection = () => {
         src={require("../../assests/images/Banner2.png")}
         alt="banner"
         className="w-full xl:h-fit lg:h-96 h-80 object-cover object-center"
+        loading="lazy"
       />
       <div className="absolute top-1/2 -translate-y-1/2 w-full lg:space-y-5 space-y-3">
         {/* text */}

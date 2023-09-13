@@ -135,14 +135,14 @@ const SimilarProducts = () => {
       <button
         type="button"
         ref={prevRef}
-        className="rounded-full md:p-3 p-2 bg-darkBlue  absolute top-1/2 -translate-y-1/2 xl:-left-4 md:left-4 left-0 z-20"
+        className="rounded-full md:p-3 p-1 bg-darkBlue  absolute top-1/2 -translate-y-1/2 xl:-left-4 md:-left-3 -left-2 z-20"
       >
         <AiOutlineLeft className="w-6 h-6 text-white" />
       </button>
       <button
         type="button"
         ref={nextRef}
-        className="rounded-full md:p-3 p-2 absolute bg-darkBlue top-1/2 -translate-y-1/2 xl:-right-4 md:right-4 right-0 z-20"
+        className="rounded-full md:p-3 p-1 absolute bg-darkBlue top-1/2 -translate-y-1/2 xl:-right-4 lg:-right-3 md:-right-2 right-0 z-20"
       >
         <AiOutlineRight className="w-6 h-6 text-white" />
       </button>

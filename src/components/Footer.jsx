@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className="md:space-y-5 space-y-3">
       {/* news letter */}
@@ -33,7 +37,7 @@ const Footer = () => {
       {/* footer */}
       <div className="Container md:py-5 grid lg:grid-cols-3 md:grid-cols-2 place-items-start items-start md:gap-5 gap-3">
         <div>
-          <Link to="/">
+          <Link to="/" onClick={() => scrollToTop()}>
             <img
               src={require("../assests/images/logo.png")}
               alt="logo"
@@ -48,27 +52,27 @@ const Footer = () => {
             <span className="bg-darkBlue w-14 absolute -bottom-1 left-0 h-0.5 rounded-lg" />
           </p>
           <ul className="font-medium ">
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Home
               </li>
             </Link>
-            <Link to="/subscribe">
+            <Link to="/subscribe" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Subscribe
               </li>
             </Link>
-            <Link to="/shop">
+            <Link to="/shop" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Shop
               </li>
             </Link>
-            <Link to="/magazines">
+            <Link to="/magazines" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Our Magazines
               </li>
             </Link>
-            <Link to="/contact-us">
+            <Link to="/contact-us" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Contact
               </li>
@@ -82,32 +86,32 @@ const Footer = () => {
             <span className="bg-darkBlue w-14 absolute -bottom-1 left-0 h-0.5 rounded-lg" />
           </p>
           <ul className="font-medium ">
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Wood News Media
               </li>
             </Link>
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Wood Mag
               </li>
             </Link>
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Craftsmen & Wood
               </li>
             </Link>
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 The magazine designer
               </li>
             </Link>
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Magazine Roofing
               </li>
             </Link>
-            <Link to="/">
+            <Link to="/" onClick={() => scrollToTop()}>
               <li className="hover:border-l-4  my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 WoodPartners
               </li>

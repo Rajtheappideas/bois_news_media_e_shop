@@ -70,11 +70,23 @@ html {
 }
 
 .gray_button {
-  @apply bg-darkGray text-white md:min-w-[7rem] rounded-lg text-center font-semibold p-2 hover:bg-darkGray/70 active:scale-95 transition duration-100 cursor-pointer;
+  @apply bg-darkGray md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-darkGray/70 active:scale-95 transition duration-100 cursor-pointer;
+}
+
+.light_gray_button {
+  @apply bg-gray-300 md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-gray-400 active:scale-95 transition duration-100 cursor-pointer;
+}
+
+.blue_button {
+  @apply bg-darkBlue md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-darkBlue/70 active:scale-95 transition duration-100 cursor-pointer;
+}
+
+.black_button {
+  @apply bg-black md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-black/70 active:scale-95 transition duration-100 cursor-pointer;
 }
 
 Label {
-  @apply text-black font-medium block text-left md:text-lg text-sm;
+  @apply text-black capitalize font-medium block text-left md:text-lg text-sm;
 }
 
 .gray_input_field {

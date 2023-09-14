@@ -3,18 +3,22 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/ErrorFallback";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Lottie from "lottie-react";
 import loading from "./assests/animations/loading.json";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import OTPVerify from "./components/Auth/OtpVerifty";
 import PrivateRoute from "./pages/PrivateRoute";
 import ResetPassword from "./components/Auth/ResetPassword";
+import {
+  loginAllTabsEventListener,
+  logoutAllTabsEventListener,
+} from "./redux/globalStates";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -34,6 +38,14 @@ function App() {
     showOtpField,
     showResetPassword,
   } = useSelector((state) => state.root.globalStates);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loginAllTabsEventListener());
+    dispatch(logoutAllTabsEventListener());
+  }, []);
+
   return (
     <BrowserRouter>
       <Toaster toastOptions={{ duration: 3000 }} position="top-center" />

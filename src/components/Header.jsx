@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeShowSignin,
   handleChangeShowSignup,
+  handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
@@ -132,6 +133,7 @@ const Header = () => {
                   setTimeout(() => {
                     toast.remove();
                     dispatch(handleLogout());
+                    dispatch(handleLogoutFromAllTabs());
                   }, 2000);
                 }}
               >

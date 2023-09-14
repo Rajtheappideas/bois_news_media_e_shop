@@ -39,6 +39,7 @@ const globalStates = createSlice({
       loginChannel.onmessage = (event) => {
         loginChannel.close();
       };
+      toast.success("Sign in successfully.");
     },
     handleLogoutFromAllTabs: () => {
       logoutChannel.postMessage("");

@@ -1,9 +1,9 @@
 import React from "react";
 import HeroSection from "../components/Home/HeroSection";
-import SubScribe from "./SubScribe";
 import PurchaseByNumber from "../components/Home/PurchaseByNumber";
 import { Helmet } from "react-helmet";
 import SeeOtherIsse from "../components/Home/SeeOtherIsse";
+import SubScribe from "../components/Home/Subscribe";
 
 const Home = () => {
   return (

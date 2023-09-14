@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CheckoutForm from "../components/Checkout/CheckoutForm";
 import OrderSummary from "../components/Checkout/OrderSummary";
 import HeadNavigationLink from "../components/HeadNavigationLink";
 import PaymentMethod from "../components/Checkout/PaymentMethod";
 import Success from "../components/Success";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { handleChangeShowSignin } from "../redux/globalStates";
 
 const Checkout = () => {
   const [activeComponent, setActiveComponent] = useState("checkout_form");
+
+  const { user } = useSelector((state) => state.root.auth);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user === null) {
+      dispatch(handleChangeShowSignin(true));
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>

@@ -12,12 +12,13 @@ import { useSelector } from "react-redux";
 import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import OTPVerify from "./components/Auth/OtpVerifty";
+import PrivateRoute from "./pages/PrivateRoute";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Shop = lazy(() => import("./pages/Shop"));
-const SubScribe = lazy(() => import("./pages/SubScribe"));
-const BuyByNumber = lazy(() => import("./pages/BuyByNumber"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const MyAccount = lazy(() => import("./pages/MyAccount"));
@@ -26,9 +27,13 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Search = lazy(() => import("./pages/Search"));
 
 function App() {
-  const { showSignin, showSignup, showForgotPassword } = useSelector(
-    (state) => state.root.globalStates
-  );
+  const {
+    showSignin,
+    showSignup,
+    showForgotPassword,
+    showOtpField,
+    showResetPassword,
+  } = useSelector((state) => state.root.globalStates);
   return (
     <BrowserRouter>
       <Toaster toastOptions={{ duration: 3000 }} position="top-center" />
@@ -58,22 +63,41 @@ function App() {
           {showSignin && <Signin />}
           {showSignup && <Signup />}
           {showForgotPassword && <ForgotPassword />}
+          {showOtpField && <OTPVerify />}
+          {showResetPassword && <ResetPassword />}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} caseSensitive />
-            <Route path="/subscribe" element={<SubScribe />} caseSensitive />
-            <Route path="/cart" element={<Cart />} caseSensitive />
-            <Route path="/checkout" element={<Checkout />} caseSensitive />
-            <Route path="/my-account" element={<MyAccount />} caseSensitive />
+            <Route
+              path="/cart"
+              element={
+                <PrivateRoute>
+                  <Cart />
+                </PrivateRoute>
+              }
+              caseSensitive
+            />
+            <Route
+              path="/checkout"
+              element={
+                <PrivateRoute>
+                  <Checkout />
+                </PrivateRoute>
+              }
+              caseSensitive
+            />
+            <Route
+              path="/my-account"
+              element={
+                <PrivateRoute>
+                  <MyAccount />
+                </PrivateRoute>
+              }
+              caseSensitive
+            />
             <Route path="/contact-us" element={<ContactUs />} caseSensitive />
             <Route path="/terms" element={<Terms />} caseSensitive />
             <Route path="/search" element={<Search />} caseSensitive />
-            <Route
-              path="/buy-by-number"
-              element={<BuyByNumber />}
-              caseSensitive
-            />
-            <Route path="/" element={<BuyByNumber />} caseSensitive />
 
             <Route path="*" element={<PageNotFound />} />
           </Routes>

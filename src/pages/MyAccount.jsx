@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ActiveTabComponent from "../components/MyAccount/ActiveTabComponent";
 import Profile from "../components/MyAccount/Profile";
 import Orders from "../components/MyAccount/Orders";
 import Download from "../components/MyAccount/Download";
 import Address from "../components/MyAccount/Address";
 import ChangePassword from "../components/MyAccount/ChangePassword";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { handleChangeShowSignin } from "../redux/globalStates";
 
 const MyAccount = () => {
   const [activeComponent, setActiveComponent] = useState("profile");
+
+  const { user } = useSelector((state) => state.root.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user === null) {
+      dispatch(handleChangeShowSignin(true));
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="Container md:py-10 py-5">

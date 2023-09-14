@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeadNavigationLink from "../components/HeadNavigationLink";
 import { AiOutlineClose } from "react-icons/ai";
 import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
+import { handleChangeShowSignin } from "../redux/globalStates";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [showAddressFields, setshowAddressFields] = useState(false);
+
+  const { user } = useSelector((state) => state.root.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user === null) {
+      dispatch(handleChangeShowSignin(true));
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>

@@ -7,16 +7,20 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeShowSignin,
   handleChangeShowSignup,
 } from "../redux/globalStates";
+import { handleLogout } from "../redux/AuthSlice";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const [showDropdown, setshowDropdown] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const [openSidebar, setOpenSidebar] = useState(false);
+
+  const { user } = useSelector((state) => state.root.auth);
 
   const dropDownRef = useRef(null);
 
@@ -95,25 +99,46 @@ const Header = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-x-3">
-            <span
-              className="uppercase cursor-pointer"
-              onClick={() => {
-                dispatch(handleChangeShowSignup(true));
-              }}
-            >
-              Register
-            </span>{" "}
-            |{" "}
-            <span
-              className="uppercase cursor-pointer"
-              onClick={() => {
-                dispatch(handleChangeShowSignin(true));
-              }}
-            >
-              Login
-            </span>
-          </div>
+          {user === null ? (
+            <div className="flex items-center gap-x-3">
+              <span
+                className="uppercase cursor-pointer"
+                onClick={() => {
+                  dispatch(handleChangeShowSignup(true));
+                }}
+              >
+                Register
+              </span>{" "}
+              |{" "}
+              <span
+                className="uppercase cursor-pointer"
+                onClick={() => {
+                  dispatch(handleChangeShowSignin(true));
+                }}
+              >
+                Login
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-x-3">
+              <Link to="/my-account" className="uppercase cursor-pointer">
+                {user?.fname} {user?.lname}
+              </Link>
+              |
+              <span
+                className="uppercase cursor-pointer"
+                onClick={() => {
+                  toast.loading("Logout...");
+                  setTimeout(() => {
+                    toast.remove();
+                    dispatch(handleLogout());
+                  }, 2000);
+                }}
+              >
+                Log out
+              </span>
+            </div>
+          )}
         </div>
       </div>
       {/* second div */}
@@ -210,12 +235,21 @@ const Header = () => {
             </Link>
             |
             <p className="relative">
-              <Link to="cart">
-                <AiOutlineShoppingCart size={25} />
-                <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
-                  0
-                </span>
-              </Link>
+              {user !== null ? (
+                <Link to="cart">
+                  <AiOutlineShoppingCart size={25} />
+                  <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
+                    0
+                  </span>
+                </Link>
+              ) : (
+                <p onClick={() => dispatch(handleChangeShowSignin(true))}>
+                  <AiOutlineShoppingCart role="button" size={25} />
+                  <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
+                    0
+                  </span>
+                </p>
+              )}
             </p>
             <Link to="search">
               <AiOutlineSearch size={25} />
@@ -349,15 +383,27 @@ const Header = () => {
                 : "bg-none font-medium"
             } uppercase transition-all duration-300 `}
           >
-            <Link
-              to="/cart"
-              onClick={() => {
-                setActiveLink("cart");
-                setOpenSidebar(false);
-              }}
-            >
-              cart
-            </Link>
+            {user === null ? (
+              <span
+                role="button"
+                onClick={() => {
+                  dispatch(handleChangeShowSignin(true));
+                  setOpenSidebar(false);
+                }}
+              >
+                cart
+              </span>
+            ) : (
+              <Link
+                to="/cart"
+                onClick={() => {
+                  setActiveLink("cart");
+                  setOpenSidebar(false);
+                }}
+              >
+                cart
+              </Link>
+            )}
           </li>
           <li
             className={`${

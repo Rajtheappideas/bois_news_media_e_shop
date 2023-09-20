@@ -82,7 +82,7 @@ const OTPVerify = () => {
         if (res?.payload?.status === "success") {
           toast.success(t("OTP verified successfully."), { duration: 2000 });
           dispatch(handleChangeShowResetPassword(true));
-          dispatch(handleChangeShowOtpField(false))
+          dispatch(handleChangeShowOtpField(false));
           resetValues();
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);
@@ -128,6 +128,7 @@ const OTPVerify = () => {
     document.getElementById("stepOne").focus();
     return () => {
       abortApiCall();
+      window.document.body.style.overflow = "unset";
     };
   }, []);
 

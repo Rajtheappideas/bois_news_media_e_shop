@@ -213,6 +213,7 @@ const Signup = () => {
   useEffect(() => {
     return () => {
       abortApiCall();
+      window.document.body.style.overflow = "unset";
     };
   }, []);
 

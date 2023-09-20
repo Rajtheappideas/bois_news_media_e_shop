@@ -9,12 +9,15 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handleChangeShowSearch,
   handleChangeShowSignin,
   handleChangeShowSignup,
   handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
+import { GetUrl } from "../BaseUrl";
+import { handleChangeActiveCategory } from "../redux/ShopSlice";
 
 const Header = () => {
   const [showDropdown, setshowDropdown] = useState(false);
@@ -88,7 +91,7 @@ const Header = () => {
             </p>
             <div
               ref={dropDownRef}
-              className={`absolute z-10 -bottom-12 left-5 w-24 transition-all duration-100 ${
+              className={`absolute z-10 -bottom-14 left-5 w-32 transition-all duration-100 ${
                 showDropdown ? "scale-100" : "scale-0"
               } origin-top-left p-1 space-y-1 rounded-lg drop-shadow-xl shadow-xl bg-white text-black`}
             >
@@ -173,18 +176,24 @@ const Header = () => {
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
               } `}
-              onClick={() => setActiveLink("shop")}
+              onClick={() => {
+                setActiveLink("shop");
+                dispatch(handleChangeActiveCategory("view_all"));
+              }}
             >
               Shop
             </Link>
             <Link
-              to="/subscribe"
+              to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold text-sm cursor-pointer ${
                 activeLink === "subscribe"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
               } relative group`}
-              onClick={() => setActiveLink("subscribe")}
+              onClick={() => {
+                setActiveLink("subscribe");
+                dispatch(handleChangeActiveCategory("subscriptions"));
+              }}
             >
               subscribe
               <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
@@ -203,24 +212,30 @@ const Header = () => {
               </div>
             </Link>
             <Link
-              to="/buy-by-number"
+              to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "buy_by_number"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
               } `}
-              onClick={() => setActiveLink("buy_by_number")}
+              onClick={() => {
+                setActiveLink("buy_by_number");
+                dispatch(handleChangeActiveCategory("subscriptions"));
+              }}
             >
               buy by number
             </Link>
             <Link
-              to="#"
+              to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "our_magazines"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
               } `}
-              onClick={() => setActiveLink("our_magazines")}
+              onClick={() => {
+                setActiveLink("our_magazines");
+                dispatch(handleChangeActiveCategory("magazines"));
+              }}
             >
               our magazines
             </Link>
@@ -253,9 +268,13 @@ const Header = () => {
                 </p>
               )}
             </p>
-            <Link to="search">
-              <AiOutlineSearch size={25} />
-            </Link>
+            {/* <Link to="search"> */}
+            <AiOutlineSearch
+              size={25}
+              role="button"
+              onClick={() => dispatch(handleChangeShowSearch(true))}
+            />
+            {/* </Link> */}
           </div>
           <HiOutlineBars3BottomRight
             size={30}
@@ -305,6 +324,7 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("shop");
                 setOpenSidebar(false);
+                dispatch(handleChangeActiveCategory("view_all"));
               }}
             >
               shop
@@ -318,10 +338,11 @@ const Header = () => {
             } uppercase transition-all duration-300 `}
           >
             <Link
-              to="/subscribe"
+              to="/shop"
               onClick={() => {
                 setActiveLink("subscribe");
                 setOpenSidebar(false);
+                dispatch(handleChangeActiveCategory("subscriptions"));
               }}
             >
               subscribe
@@ -335,10 +356,11 @@ const Header = () => {
             } uppercase transition-all duration-300 `}
           >
             <Link
-              to="/buy-by-number"
+              to="/shop"
               onClick={() => {
                 setActiveLink("buy_by_number");
                 setOpenSidebar(false);
+                dispatch(handleChangeActiveCategory("magazines"));
               }}
             >
               buy by number
@@ -352,10 +374,11 @@ const Header = () => {
             } uppercase transition-all duration-300 `}
           >
             <Link
-              to="#"
+              to="/shop"
               onClick={() => {
                 setActiveLink("our_magazine");
                 setOpenSidebar(false);
+                dispatch(handleChangeActiveCategory("magazines"));
               }}
             >
               our magazines

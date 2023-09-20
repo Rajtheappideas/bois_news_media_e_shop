@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { MdCall, MdLocationOn } from "react-icons/md";
 import { GrMail } from "react-icons/gr";
@@ -14,13 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import useAbortApiCall from "../hooks/useAbortApiCall";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { PostUrl } from "../BaseUrl";
 
 const ContactUs = () => {
-  // function handlChange(value) {
-  //   setFieldValue("captcha", value);
-  // }
-  // const { loading } = useSelector((state) => state.basicFeatures);
-  // const Content = useSelector((state) => state.getContent);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -29,84 +28,82 @@ const ContactUs = () => {
 
   const { t } = useTranslation();
 
-  // const SignupSchema = yup.object().shape({
-  //   email: yup.string().required("email is required").email(),
-  //   fname: yup
-  //     .string()
-  //     .trim("The contact name cannot include leading and trailing spaces")
-  //     .required("firstname is required")
-  //     .min(3, "too short")
-  //     .max(30, "too long")
-  //     .matches(
-  //       /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
-  //       "only contain Latin letters."
-  //     ),
-  //   lname: yup
-  //     .string()
-  //     .trim("The contact name cannot include leading and trailing spaces")
-  //     .required("lastname is required")
-  //     .min(2, "too short")
-  //     .max(30, "too long")
-  //     .matches(
-  //       /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
-  //       "only contain Latin letters."
-  //     ),
-  //   comments: yup
-  //     .string()
-  //     .required("Comment is required")
-  //     .matches(/^[A-Za-z\s\-]+$/g, "That doesn't look Comment")
-  //     .trim("The contact name cannot include leading and trailing spaces"),
-  //   phone: yup.number().required("A phone number is required"),
-  //   captcha: yup.string().required("Check the captcha."),
-  // });
+  const contactSchema = yup.object().shape({
+    email: yup.string().required("email is required").email(),
+    name: yup
+      .string()
+      .trim("The contact name cannot include leading and trailing spaces")
+      .required("name is required")
+      .min(3, "too short")
+      .max(30, "too long")
+      .matches(
+        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
+        "only contain Latin letters."
+      ),
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     fname: "",
-  //     lname: "",
-  //     email: "",
-  //     phone: "",
-  //     comments: "",
-  //     captcha: "",
-  //   },
-  //   validationSchema: SignupSchema,
-  //   onSubmit: (values) => {
-  //     if (
-  //       isPossiblePhoneNumber(values.phone) &&
-  //       isValidPhoneNumber(values.phone)
-  //     ) {
-  //       const response = dispatch(
-  //         handlePostContactUs({
-  //           fname: values.fname,
-  //           lname: values.lname,
-  //           email: values.email,
-  //           phone: values.phone,
-  //           comments: values.comments,
-  //           signal: AbortControllerRef,
-  //         })
-  //       );
-  //       if (response) {
-  //         response.then((res) => {
-  //           if (res.payload.status === "success") {
-  //             toast.success("Message sent successfully.");
-  //             captchaRef.current.props.grecaptcha.reset();
-  //             resetForm();
-  //           } else {
-  //             toast.error(res.payload.message);
-  //           }
-  //         });
-  //       }
-  //     } else {
-  //       toast.error("Phone number is invalid!!!");
-  //     }
-  //   },
-  // });
+    comments: yup
+      .string()
+      .required("Comment is required")
+      .matches(/^[A-Za-z\s\-]+$/g, "That doesn't look Comment")
+      .trim("The contact name cannot include leading and trailing spaces"),
+    phone: yup.string().required(t("phone is required")),
+    captcha: yup.string().required("Check the captcha."),
+  });
 
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    control,
+    reset,
+    resetField,
+    formState: { errors },
+  } = useForm({
+    shouldFocusError: true,
+    resolver: yupResolver(contactSchema),
+  });
+
+  const onSubmit = async (data) => {
+    const { phone, email, comments, name } = data;
+
+    if (!isPossiblePhoneNumber(phone) || !isValidPhoneNumber(phone)) {
+      toast.remove();
+      toast.error(t("Phone is invalid"));
+      return true;
+    } else if (
+      (getValues("mobile") !== "" && !isPossiblePhoneNumber(phone)) ||
+      !isValidPhoneNumber(phone)
+    ) {
+      toast.remove();
+      toast.error(t("Phone is invalid"));
+      return true;
+    }
+    setLoading(true);
+    try {
+      const { data } = await PostUrl("contact", {
+        data: { email, name, phone, comments },
+      });
+      setLoading(false);
+      toast.success(data?.message);
+      reset();
+      resetField("phone");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      setLoading(false);
+    }
+  };
+
+  function handleChange(value) {
+    setValue("captcha", value);
+  }
   useEffect(() => {
     return () => {
       abortApiCall();
     };
   }, []);
+
+  console.log(getValues());
 
   return (
     <>
@@ -169,7 +166,10 @@ const ContactUs = () => {
           </div>
         </div>
         {/* right side div */}
-        <div className="md:w-2/3 w-full p-4 rounded-lg border border-borderColor md:space-y-4 space-y-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="md:w-2/3 w-full p-4 rounded-lg border border-borderColor md:space-y-4 space-y-2"
+        >
           <h1 className="font-semibold md:text-2xl text-xl text-left">
             {t("Get In Touch")}
           </h1>
@@ -182,7 +182,9 @@ const ContactUs = () => {
               className="gray_input_field"
               placeholder="Enter your name"
               name="name"
+              {...register("name")}
             />
+            <span className="error">{errors?.name?.message}</span>
           </div>
           {/* email , phone */}
           <div className="flex items-start w-full lg:flex-row flex-col gap-3">
@@ -193,35 +195,49 @@ const ContactUs = () => {
                 className="gray_input_field"
                 placeholder="abc@gmail.com"
                 name="email"
+                {...register("email")}
               />
+              <span className="error">{errors?.email?.message}</span>
             </div>
             <div className="lg:w-1/2 w-full">
-              <>
-                <label className="Label">{t("Phone")}*</label>
-                <PhoneInput
-                  country={"us"}
-                  countryCodeEditable={false}
-                  enableSearch={true}
-                  inputProps={{
-                    name: "phone",
-                  }}
-                  // onChange={(value) =>
-                  //   setFieldValue("phone", "+".concat(value).trim())
-                  // }
-                  // value={formik.values.phone}
-                  inputStyle={{
-                    width: "100%",
-                    background: "#EFEFEF",
-                    borderRadius: "6px",
-                    border: "0",
-                    padding: "1.6rem 0 1.6rem 3rem",
-                  }}
-                  // disabled={loading}
-                  jumpCursorToEnd={true}
-                  dropdownStyle={{ background: "#EFEFEF" }}
-                  buttonStyle={{ border: "0px" }}
-                />
-              </>
+              <label className="Label">{t("Phone")}*</label>
+
+              <Controller
+                name="phone"
+                control={control}
+                rules={{
+                  validate: (value) => isValidPhoneNumber(value),
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <PhoneInput
+                    country={"in"}
+                    onChange={(value) => {
+                      onChange((e) => {
+                        setValue("phone", "+".concat(value));
+                      });
+                    }}
+                    value={getValues().phone}
+                    autocompleteSearch={true}
+                    countryCodeEditable={false}
+                    enableSearch={true}
+                    inputStyle={{
+                      width: "100%",
+                      background: "#f9f9f9",
+                      padding: "22px 0 22px 50px",
+                      borderRadius: "5px",
+                      fontSize: "1rem",
+                      // opacity:'0.7'
+                    }}
+                    dropdownStyle={{
+                      background: "white",
+                      color: "#13216e",
+                      fontWeight: "600",
+                      padding: "0px 0px 0px 10px",
+                    }}
+                  />
+                )}
+              />
+              <span className="error">{errors?.phone?.message}</span>
             </div>
           </div>
           {/* message */}
@@ -230,22 +246,23 @@ const ContactUs = () => {
             className="gray_input_field min-h-[8rem] max-h-[10rem]"
             placeholder="message..."
             name="comments"
+            {...register("comments")}
           />
-          <p>{t("Please check the box below to proceed")}.</p>
+          <span className="error">{errors?.comments?.message}</span>
           <ReCAPTCHA
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
-            // onChange={handlChange}
+            onChange={handleChange}
             ref={captchaRef}
           />{" "}
+          <p className="error">{errors?.captcha?.message}.</p>
           <button
             type="submit"
             className="gray_button w-40 h-12"
-            // disabled={loading}
+            disabled={loading}
           >
-            {/* {loading ? t("Submitting").concat("...") : t("Send")} */}
-            Send
+            {loading ? t("Submitting").concat("...") : t("Send")}
           </button>
-        </div>
+        </form>
       </section>
     </>
   );

@@ -10,6 +10,7 @@ const initialState = {
   showOtpField: false,
   showResetPassword: false,
   language: JSON.parse(window.localStorage.getItem("lang")) ?? "en",
+  showSearchModal: false,
 };
 
 const logoutChannel = new BroadcastChannel("handleLogout");
@@ -25,6 +26,9 @@ const globalStates = createSlice({
     handleChangeShowSignup: (state, { payload }) => {
       state.showSignup = payload;
     },
+    handleChangeShowSearch: (state, { payload }) => {
+      state.showSearchModal = payload;
+    },
     handleChangeShowForgotPassword: (state, { payload }) => {
       state.showForgotPassword = payload;
     },
@@ -39,7 +43,6 @@ const globalStates = createSlice({
       loginChannel.onmessage = (event) => {
         loginChannel.close();
       };
-      toast.success("Sign in successfully.");
     },
     handleLogoutFromAllTabs: () => {
       logoutChannel.postMessage("");
@@ -78,6 +81,7 @@ export const {
   loginAllTabsEventListener,
   logoutAllTabsEventListener,
   handleChangeShowResetPassword,
+  handleChangeShowSearch,
 } = globalStates.actions;
 
 export default globalStates.reducer;

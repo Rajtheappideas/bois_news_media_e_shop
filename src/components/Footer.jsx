@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { PostUrl } from "../BaseUrl";
+import toast from "react-hot-toast";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const inputRef = useRef(null);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSubscribeNewsLetter = async () => {
+    if (!email) return inputRef.current.focus();
+    setLoading(true);
+    try {
+      await PostUrl("newsletter", {
+        data: { email },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      toast.success("Subscribed successfully.");
+      setEmail("");
+      setLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,19 +46,24 @@ const Footer = () => {
               Sign up to receive email updates about courses
             </p>
           </div>
-          <form className="flex items-center lg:w-fit gap-2 w-full justify-center">
+          <div className="flex items-center lg:w-fit gap-2 w-full justify-center">
             <input
               type="email"
               placeholder="Enter your email"
               className="bg-white xl:w-80 lg:w-60 sm:w-1/2 w-full p-2 text-black outline-none focus:border-2 focus:border-green-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value.trim())}
+              ref={inputRef}
             />
             <button
               type="button"
               className="uppercase text-white bg-black text-center w-auto p-2"
+              onClick={() => handleSubscribeNewsLetter()}
+              disabled={loading}
             >
-              subscribe
+              {loading ? "subscribing..." : "subscribe"}
             </button>
-          </form>
+          </div>
         </div>
       </div>
       {/* footer */}

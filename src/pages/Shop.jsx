@@ -15,13 +15,19 @@ const Shop = () => {
     activeCategory,
     showSubscriptionDetails,
     showMagazineDetails,
+    magazines,
+    subscriptions,
+    magazineLoading,
+    subscriptionLoading,
   } = useSelector((state) => state.root.shop);
 
   const dispatch = useDispatch();
 
+  // console.log(magazines, subscriptions);
+
   return (
     <div className="Container space-y-5 lg:py-10 py-5">
-      <HeadNavigationLink />
+      {/* <HeadNavigationLink /> */}
       {/* subscription Detais */}
       {showSubscriptionDetails && <SubscriptionDetails />}
 
@@ -95,34 +101,13 @@ const Shop = () => {
                   selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
                 } grid  place-items-start items-start md:gap-5 gap-3`}
               >
-                <MagazineCard
-                  description="EDITO Summer lull For the past few weeks, the return of fine weather and the
-              summer atmosphere that has reigned over France have marked the end of
-              a rather calm first half of 2023 for the sector. Far from the post-Covid
-              outpouring of 2021 and 2022, and the double-digit growth of many
-              companies, forest and wood professionals"
-                  title="BOISmag n°213"
-                  price="12.00"
-                  image={require("../assests/images/Product image-1.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="The fitter n°69"
-                  price="12.00"
-                  image={require("../assests/images/Product image-11.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="Craftsmen & Wood n°72"
-                  price="12.00"
-                  image={require("../assests/images/Product image-3.png")}
-                />
+                {subscriptions.length > 0 ? (
+                  subscriptions.map((subscription) => (
+                    <MagazineCard key={subscription?._id} data={subscription} />
+                  ))
+                ) : (
+                  <div className="loading">No Subscriptions here.</div>
+                )}
               </div>
             )}
             {/* subscriptions  */}
@@ -132,43 +117,13 @@ const Shop = () => {
                   selectedView === "grid" && "md:grid-cols-2"
                 } grid  place-items-start items-start md:gap-5 gap-3`}
               >
-                <MagazineCard
-                  description="EDITO Summer lull For the past few weeks, the return of fine weather and the
-              summer atmosphere that has reigned over France have marked the end of
-              a rather calm first half of 2023 for the sector. Far from the post-Covid
-              outpouring of 2021 and 2022, and the double-digit growth of many
-              companies, forest and wood professionals"
-                  title="BOISmag n°213"
-                  price="12.00"
-                  image={require("../assests/images/Product image-2.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="The fitter n°69"
-                  price="12.00"
-                  image={require("../assests/images/Product image-3.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="Craftsmen & Wood n°72"
-                  price="12.00"
-                  image={require("../assests/images/Product image-6.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="Craftsmen & Wood n°72"
-                  price="12.00"
-                  image={require("../assests/images/Product image-8.png")}
-                />
+                {subscriptions.length > 0 ? (
+                  subscriptions.map((subscription) => (
+                    <MagazineCard key={subscription?._id} data={subscription} />
+                  ))
+                ) : (
+                  <div className="loading">No Subscriptions here.</div>
+                )}
               </div>
             )}
             {/* magazines all */}
@@ -178,39 +133,13 @@ const Shop = () => {
                   selectedView === "grid" && "md:grid-cols-2"
                 } grid  place-items-start items-start md:gap-5 gap-3`}
               >
-                <MagazineCard
-                  description="EDITO Summer lull For the past few weeks, the return of fine weather and the
-              summer atmosphere that has reigned over France have marked the end of
-              a rather calm first half of 2023 for the sector. Far from the post-Covid
-              outpouring of 2021 and 2022, and the double-digit growth of many
-              companies, forest and wood professionals"
-                  title="MAGAZINE ROOF(24)"
-                  image={require("../assests/images/Product image-2.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="CRAFTSMEN & WOOD(30)"
-                  image={require("../assests/images/Product image-3.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="THE MAGAZINE DESIGNER(40)"
-                  image={require("../assests/images/Product image-6.png")}
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="WOODMAG(72)"
-                  image={require("../assests/images/Product image-8.png")}
-                />
+                {magazines.length > 0 ? (
+                  magazines.map((magazine) => (
+                    <MagazineCard key={magazine?._id} data={magazine} />
+                  ))
+                ) : (
+                  <div className="loading">No Magazines here.</div>
+                )}
               </div>
             )}
             {/* magazines issues */}
@@ -223,43 +152,13 @@ const Shop = () => {
                   selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
                 } grid  place-items-start items-start md:gap-5 gap-3`}
               >
-                <MagazineCard
-                  description="EDITO Summer lull For the past few weeks, the return of fine weather and the
-              summer atmosphere that has reigned over France have marked the end of
-              a rather calm first half of 2023 for the sector. Far from the post-Covid
-              outpouring of 2021 and 2022, and the double-digit growth of many
-              companies, forest and wood professionals"
-                  title="MAGAZINE ROOF(24)"
-                  image={require("../assests/images/Product image-10.png")}
-                  price="13.00"
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="CRAFTSMEN & WOOD(30)"
-                  image={require("../assests/images/Product image-8.png")}
-                  price="12.00"
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="THE MAGAZINE DESIGNER(40)"
-                  image={require("../assests/images/Product image-7.png")}
-                  price="23.00"
-                />
-                <MagazineCard
-                  description="  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              optio impedit quibusdam repudiandae, soluta quo eaque suscipit
-              tempore fugiat dolore quia deserunt odio commodi voluptatum,
-              officia sequi nihil, ullam vel."
-                  title="WOODMAG(72)"
-                  image={require("../assests/images/Product image.png")}
-                  price="30.00"
-                />
+                {magazines.length > 0 ? (
+                  magazines.map((magazine) => (
+                    <MagazineCard key={magazine?._id} data={magazine} />
+                  ))
+                ) : (
+                  <div className="loading">No Magazines here.</div>
+                )}
               </div>
             )}
           </div>

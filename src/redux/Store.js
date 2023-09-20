@@ -4,11 +4,12 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE } from "redux-persist";
 import globalStates from "./globalStates";
 import ShopSlice from "./ShopSlice";
 import AuthSlice from "./AuthSlice";
+import GetContentSlice from "./GetContentSlice";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["globalStates", "shop", "auth"],
+  blacklist: ["globalStates", "shop", "auth", "getContent"],
 };
 
 const authPersistConfig = {
@@ -20,6 +21,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
   globalStates: globalStates,
   shop: ShopSlice,
+  getContent: GetContentSlice,
   auth: persistReducer(authPersistConfig, AuthSlice),
 });
 

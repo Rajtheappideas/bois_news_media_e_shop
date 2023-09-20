@@ -117,6 +117,6 @@ Label {
   @apply rounded-lg border font-bold md:text-base text-sm border-gray-300 md:h-12 md:w-12 h-8 w-8 outline-none text-center;
 }
 
-.error {
-  @apply text-darkRed text-sm font-medium capitalize;
+.loading {
+  @apply text-2xl text-center w-full font-semibold;
 }

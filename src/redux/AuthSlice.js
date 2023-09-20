@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { PostUrl } from "../BaseUrl";
+import { GetUrl, PostUrl } from "../BaseUrl";
 
 export const handleRegisterUser = createAsyncThunk(
   "auth/handleRegisterUser",
@@ -24,8 +24,10 @@ export const handleRegisterUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -41,8 +43,10 @@ export const handleLoginUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -58,8 +62,10 @@ export const handleVerifyOtp = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -75,8 +81,10 @@ export const handleForgotPassword = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -92,8 +100,10 @@ export const handleResetPassword = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -112,8 +122,10 @@ export const handleChangePassword = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -121,43 +133,77 @@ export const handleChangePassword = createAsyncThunk(
 export const handleEditProfile = createAsyncThunk(
   "auth/handleEditProfile",
   async (
+    { fname, lname, phone, civility, shippingAddress, token, signal },
+    { rejectWithValue }
+  ) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("profile", {
+        data: {
+          fname,
+          lname,
+          phone,
+          civility,
+          shippingAddress,
+        },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
+export const handleChangeUserAddress = createAsyncThunk(
+  "auth/handleChangeUserAddress",
+  async (
     {
-      name,
-      phone,
-      company,
-      address,
+      addressType,
+      address1,
+      address2,
+      address3,
+      zipCode,
       city,
       country,
-      zipCode,
-      profile,
+      province,
       token,
       signal,
     },
     { rejectWithValue }
   ) => {
-    const data = new FormData();
-    data.append("name", name);
-    data.append("phone", phone);
-    data.append("company", company);
-    data.append("zipCode", zipCode);
-    data.append("profile", profile);
-    data.append("address", address);
-    data.append("city", city);
-    data.append("country", country);
     try {
       signal.current = new AbortController();
-      const response = await PostUrl("profile", {
-        data: data,
+      const response = await PostUrl("address", {
+        data: {
+          addressType,
+          address1,
+          address2,
+          address3,
+          zipCode,
+          city,
+          country,
+          province,
+        },
         signal: signal.current.signal,
         headers: {
           Authorization: token,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      return rejectWithValue(error?.response?.data);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
     }
   }
 );
@@ -297,6 +343,60 @@ const AuthSlice = createSlice({
       state.user = null;
       state.error = payload ?? null;
       state.token = null;
+    });
+    // change password
+    builder.addCase(handleChangePassword.pending, (state, {}) => {
+      state.loading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleChangePassword.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(handleChangePassword.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+    // edit profile
+    builder.addCase(handleEditProfile.pending, (state, {}) => {
+      state.loading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleEditProfile.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.user = payload?.subscriber;
+      state.error = null;
+    });
+    builder.addCase(handleEditProfile.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+    // shipping address
+    builder.addCase(handleChangeUserAddress.pending, (state, {}) => {
+      state.loading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleChangeUserAddress.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.user = {
+        ...state.user,
+        shippingAddress: payload?.shippingAddress,
+        billingAddress: payload?.billingAddress,
+      };
+      state.error = null;
+    });
+    builder.addCase(handleChangeUserAddress.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload ?? null;
     });
   },
 });

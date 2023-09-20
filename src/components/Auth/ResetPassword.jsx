@@ -70,7 +70,6 @@ const ResetPassword = () => {
         if (res?.payload?.status === "success") {
           toast.success(t("Password Reset successfully."));
           dispatch(handleChangeShowResetPassword(false));
-          // window.localStorage.clear()
         }
       });
     }
@@ -79,6 +78,7 @@ const ResetPassword = () => {
   useEffect(() => {
     return () => {
       abortApiCall();
+      window.document.body.style.overflow = "unset";
     };
   }, []);
 

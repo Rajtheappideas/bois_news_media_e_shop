@@ -24,7 +24,7 @@ const Cart = () => {
     <>
       <Helmet title="Cart | E-shop" />
       <div className="Container md:space-y-7 space-y-3 md:py-10 py-5 transition-all duration-100 ease-linear">
-        <HeadNavigationLink />
+        {/* <HeadNavigationLink /> */}
         {/* cart box */}
         <div className="outline-none space-y-3 border ">
           <div className="border overflow-x-scroll scrollbar">

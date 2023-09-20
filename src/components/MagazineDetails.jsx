@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleChangeMagazineShow } from "../redux/ShopSlice";
 import SimilarProducts from "./SimilarProducts";
+import BaseUrl from "../BaseUrl";
 
 const MagazineDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
 
   const dispatch = useDispatch();
 
+  const { singleMagazine } = useSelector((state) => state.root.shop);
+  console.log(singleMagazine);
+
   return (
-    <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
+    <div className="w-full lg:space-y-7 space-y-5">
       {/* back btn */}
       <BsArrowLeft
         size={25}
@@ -18,17 +22,20 @@ const MagazineDetails = () => {
         onClick={() => dispatch(handleChangeMagazineShow(false))}
       />
       {/* img + add to cart details */}
-      <div className="w-full flex md:flex-row flex-col items-start justify-start gap-3">
+      <div className="w-full flex lg:flex-row flex-col items-start justify-start md:gap-5 gap-3">
         <img
-          src={require("../assests/images/Product image-11.png")}
-          alt=""
-          className="md:w-1/2 w-full 2xl:h-[30rem] h-[28rem] object-contain object-center"
+          // src={require("../assests/images/Product image-11.png")}
+          src={BaseUrl.concat(singleMagazine?.image)}
+          alt={singleMagazine?.title}
+          className="lg:w-1/2 md:w-2/3 w-11/12 mx-auto md:max-h-[25rem] max-h-[20rem] object-contain object-center"
         />
-        <div className="md:w-2/3 w-full md:space-y-4 space-y-2">
-          <p className="font-semibold md:text-xl text-lg text-left">
-            BOISmag subscription
+        <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
+          <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
+            {singleMagazine?.title}
           </p>
-          <p className="font-semibold md:text-lg text-darkBlue">From € 95.00</p>
+          <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
+            From € {singleMagazine?.price}.00
+          </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm">Type of support</p>
@@ -64,7 +71,9 @@ const MagazineDetails = () => {
             <span className="text-darkBlue">€ 140.00</span>
           </p>
           {/* btn */}
-          <button className="w-full gray_button md:h-12 h-10">+ Add to cart</button>
+          <button className="w-full gray_button md:h-12 h-10">
+            + Add to cart
+          </button>
           {/* btn */}
           <button className="w-full blue_button md:h-12 uppercase h-10">
             see an extract from the magazine
@@ -76,7 +85,7 @@ const MagazineDetails = () => {
         <p
           className={`${
             activeComponent === "description"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue"
+              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100"
               : "font-medium"
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("description")}
@@ -86,7 +95,7 @@ const MagazineDetails = () => {
         <p
           className={`${
             activeComponent === "further_info"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue"
+              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100"
               : "font-medium"
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
@@ -97,7 +106,8 @@ const MagazineDetails = () => {
       {/* description */}
       {activeComponent === "description" && (
         <div className="md:space-y-4  space-y-2">
-          <p className="md:text-lg">
+          {singleMagazine?.description}
+          {/* <p className="md:text-lg">
             <b>EDITORIAL</b>
           </p>
           <p className="font-medium md:text-lg">SUMMER LULL</p>
@@ -155,7 +165,7 @@ const MagazineDetails = () => {
           </p>
           <p>
             <b>8 AGENDA</b> <br /> <b>9 APPOINTMENTS</b>
-          </p>
+          </p> */}
         </div>
       )}
       {/*further info */}

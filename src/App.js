@@ -19,6 +19,11 @@ import {
   loginAllTabsEventListener,
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
+import SearchPopup from "./components/SearchPopup";
+import {
+  handleGetMagazines,
+  handleGetSubscriptions,
+} from "./redux/ShopSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -42,8 +47,13 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // for all tabe login & logout
     dispatch(loginAllTabsEventListener());
     dispatch(logoutAllTabsEventListener());
+
+    // data fetch
+    dispatch(handleGetMagazines());
+    dispatch(handleGetSubscriptions());
   }, []);
 
   return (
@@ -72,6 +82,7 @@ function App() {
           }
         >
           <Header />
+          <SearchPopup />
           {showSignin && <Signin />}
           {showSignup && <Signup />}
           {showForgotPassword && <ForgotPassword />}

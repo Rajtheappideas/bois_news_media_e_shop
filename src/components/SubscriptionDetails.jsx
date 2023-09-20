@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleChangeSubscriptionShow } from "../redux/ShopSlice";
 import SimilarProducts from "./SimilarProducts";
+import BaseUrl from "../BaseUrl";
 
 const SubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
 
   const dispatch = useDispatch();
+
+  const { singleSubscription } = useSelector((state) => state.root.shop);
 
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
@@ -18,17 +21,20 @@ const SubscriptionDetails = () => {
         onClick={() => dispatch(handleChangeSubscriptionShow(false))}
       />
       {/* img + add to cart details */}
-      <div className="w-full flex md:flex-row flex-col items-start justify-start gap-3">
+      <div className="w-full flex lg:flex-row flex-col items-start justify-start md:gap-5 gap-3">
         <img
-          src={require("../assests/images/Product image-11.png")}
-          alt=""
-          className="md:w-1/2 w-full 2xl:h-[30rem] h-[28rem] object-contain object-center"
+          // src={require("../assests/images/Product image-11.png")}
+          src={BaseUrl.concat(singleSubscription?.image)}
+          alt={singleSubscription?.title}
+          className="lg:w-1/2 w-full max-h-[25rem] object-contain object-center"
         />
-        <div className="md:w-2/3 w-full md:space-y-4 space-y-2">
-          <p className="font-semibold md:text-xl text-lg text-left">
-            BOISmag subscription
+        <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
+          <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
+            {singleSubscription?.title}
           </p>
-          <p className="font-semibold md:text-lg text-darkBlue">From € 95.00</p>
+          <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
+            From € {singleSubscription?.price}.00
+          </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm">Type of support</p>
@@ -72,7 +78,7 @@ const SubscriptionDetails = () => {
         <p
           className={`${
             activeComponent === "description"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue"
+              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
               : "font-medium"
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("description")}
@@ -82,7 +88,7 @@ const SubscriptionDetails = () => {
         <p
           className={`${
             activeComponent === "further_info"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue"
+              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
               : "font-medium"
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
@@ -93,7 +99,8 @@ const SubscriptionDetails = () => {
       {/* description */}
       {activeComponent === "description" && (
         <div className="md:space-y-4  space-y-2">
-          <p className="font-semibold md:text-lg">
+          {singleSubscription?.description}
+          {/* <p className="font-semibold md:text-lg">
             8 issues/year – €115 (metropolitan France)
           </p>
           <p>
@@ -111,7 +118,7 @@ const SubscriptionDetails = () => {
             Example for metropolitan France: Subscribe{" "}
             <b>to Boismag (€115) + Artisans&bois (€55), subscription at €155</b>
             instead of €170
-          </p>
+          </p> */}
         </div>
       )}
       {/*further info */}

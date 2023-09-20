@@ -2,15 +2,15 @@ import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 
-const BillingAddress = ({ setActiveAddress }) => {
+const ShippingAddress = ({ setActiveAddress }) => {
   const { user } = useSelector((state) => state.root.auth);
-  const address = user?.billingAddress;
+  const address = user?.shippingAddress;
   console.log(address);
 
   return (
     <div className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2">
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>Billing Address</span>
+        <span>Shipping Address</span>
         <AiOutlineClose
           onClick={() => setActiveAddress("")}
           role="button"
@@ -44,17 +44,6 @@ const BillingAddress = ({ setActiveAddress }) => {
       <div className="w-full">
         <label htmlFor="company_name" className="Label">
           Company name (optional)
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-        />
-      </div>
-      {/* field of activity */}
-      <div className="w-full">
-        <label htmlFor="field_of_activity" className="Label">
-          Field of activity (optional)
         </label>
         <input
           type="text"
@@ -117,51 +106,6 @@ const BillingAddress = ({ setActiveAddress }) => {
           className="w-full input_field"
         />
       </div>
-      {/* phone + email */}
-      <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="phone" className="Label">
-            phone
-          </label>
-          <input
-            type="number"
-            placeholder="37366873635"
-            className="w-full input_field"
-          />
-        </div>
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="email" className="Label">
-            email
-          </label>
-          <input
-            type="email"
-            placeholder="adam@gmail.com"
-            className="w-full input_field"
-          />
-        </div>
-      </div>
-      {/* vat number */}
-      <div className="w-full">
-        <label htmlFor="vat_number" className="Label">
-          VAT number (optional)
-        </label>
-        <input
-          type="number"
-          placeholder="Type here..."
-          className="w-full input_field"
-        />
-      </div>
-      {/* puchrse order */}
-      <div className="w-full">
-        <label htmlFor="purchase_order" className="Label">
-          purchase order (optional)
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-        />
-      </div>
       {/* btn */}
       <button className="gray_button capitalize md:w-60 w-full md:h-12 h-10">
         save address
@@ -170,4 +114,4 @@ const BillingAddress = ({ setActiveAddress }) => {
   );
 };
 
-export default BillingAddress;
+export default ShippingAddress;

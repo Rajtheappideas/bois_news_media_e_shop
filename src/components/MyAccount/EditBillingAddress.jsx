@@ -1,13 +1,13 @@
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const DeliveryAddress = ({ setActiveAddress }) => {
+const EditBillingAddress = ({ setActiveEditAddress }) => {
   return (
     <div className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2">
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>Order Details</span>
+        <span>Shipping Address</span>
         <AiOutlineClose
-          onClick={() => setActiveAddress("")}
+          onClick={() => setActiveEditAddress("")}
           role="button"
           className="mr-2 md:h-8 md:w-8 h-6 w-6 bg-darkBlue rounded-full text-white p-1"
         />{" "}
@@ -109,4 +109,4 @@ const DeliveryAddress = ({ setActiveAddress }) => {
   );
 };
 
-export default DeliveryAddress;
+export default EditBillingAddress;

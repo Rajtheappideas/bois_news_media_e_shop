@@ -11,7 +11,6 @@ const MagazineDetails = () => {
   const dispatch = useDispatch();
 
   const { singleMagazine } = useSelector((state) => state.root.shop);
-  console.log(singleMagazine);
 
   return (
     <div className="w-full lg:space-y-7 space-y-5">
@@ -28,6 +27,7 @@ const MagazineDetails = () => {
           src={BaseUrl.concat(singleMagazine?.image)}
           alt={singleMagazine?.title}
           className="lg:w-1/2 md:w-2/3 w-11/12 mx-auto md:max-h-[25rem] max-h-[20rem] object-contain object-center"
+          loading="lazy"
         />
         <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">

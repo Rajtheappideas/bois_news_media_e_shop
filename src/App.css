@@ -64,6 +64,12 @@ html {
   background-color: #efefef !important;
 }
 
+.active {
+  background-color: #003F7A;
+  color: white;
+  font-weight: 600;
+}
+
 /* my custom class */
 .error {
   @apply text-red-600 font-medium text-sm capitalize;

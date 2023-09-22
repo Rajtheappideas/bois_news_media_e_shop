@@ -33,14 +33,15 @@ const MagazineCard = ({ data }) => {
           <img
             src={BaseUrl.concat(data?.image)}
             alt={data?.title}
-            className="xl:w-1/5 md:w-1/4 w-full cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-contain object-center md:max-h-[15rem] max-h-[20rem]"
+            className=" md:min-w-[12rem] max-w-[12rem] mx-auto w-full cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-fill object-center"
             onClick={() => handleDispatchAction()}
+            loading="lazy"
           />
-          <div className="space-y-2">
+          <div className="space-y-2 w">
             <p className="font-semibold md:text-left text-center md:text-lg">
               {data?.title}
             </p>
-            <p className="md:text-base md:text-left text-justify text-sm font-medium tracking-normal leading-normal">
+            <p className="md:text-base xl:text-left text-justify text-sm font-medium tracking-normal leading-normal">
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
@@ -56,12 +57,11 @@ const MagazineCard = ({ data }) => {
             alt={data?.title}
             className={`w-full hover:scale-105  transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] object-contain object-center`}
             onClick={() => handleDispatchAction()}
+            loading="lazy"
           />
-          <p className="font-semibold md:text-lg"> {data?.title}</p>
-          <p className="md:text-base xl:text-left text-justify text-sm font-medium tracking-normal leading-normal">
-            {data?.description}
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkBlue">
+          <p className="font-semibold md:text-lg text-center"> {data?.title}</p>
+
+          <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
             From € {data?.price}
           </p>
         </div>

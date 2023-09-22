@@ -2,12 +2,16 @@ import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { PostUrl } from "../BaseUrl";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { handleChangeActiveCategory } from "../redux/ShopSlice";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const inputRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -89,17 +93,35 @@ const Footer = () => {
                 Home
               </li>
             </Link>
-            <Link to="/subscribe" onClick={() => scrollToTop()}>
+            <Link
+              to="/shop"
+              onClick={() => {
+                scrollToTop();
+                dispatch(handleChangeActiveCategory("subscriptions"));
+              }}
+            >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Subscribe
               </li>
             </Link>
-            <Link to="/shop" onClick={() => scrollToTop()}>
+            <Link
+              to="/shop"
+              onClick={() => {
+                scrollToTop();
+                dispatch(handleChangeActiveCategory("view_all"));
+              }}
+            >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Shop
               </li>
             </Link>
-            <Link to="/magazines" onClick={() => scrollToTop()}>
+            <Link
+              to="/shop"
+              onClick={() => {
+                scrollToTop();
+                dispatch(handleChangeActiveCategory("magazines"));
+              }}
+            >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Our Magazines
               </li>

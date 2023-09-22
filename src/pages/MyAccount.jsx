@@ -8,19 +8,29 @@ import ChangePassword from "../components/MyAccount/ChangePassword";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { handleChangeShowSignin } from "../redux/globalStates";
+import useAbortApiCall from "../hooks/useAbortApiCall";
+import { handleGetUserAddress } from "../redux/AuthSlice";
 
 const MyAccount = () => {
   const [activeComponent, setActiveComponent] = useState("profile");
 
-  const { user } = useSelector((state) => state.root.auth);
+  const { user, token } = useSelector((state) => state.root.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { abortApiCall, AbortControllerRef } = useAbortApiCall();
 
   useEffect(() => {
     if (user === null) {
       dispatch(handleChangeShowSignin(true));
       navigate("/");
     }
+    if (user !== null) {
+      dispatch(handleGetUserAddress({ token, signal: AbortControllerRef }));
+    }
+    return () => {
+      abortApiCall();
+    };
   }, []);
 
   return (

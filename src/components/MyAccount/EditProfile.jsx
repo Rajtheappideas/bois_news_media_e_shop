@@ -50,6 +50,10 @@ const EditProfile = ({ setshowEditProfile }) => {
       .max(200, t("Maximum character limit reached"))
       .required(t("address is required"))
       .trim(""),
+    company: yup
+      .string()
+      .max(200, t("Maximum character limit reached"))
+      .trim(""),
     civility: yup
       .string()
       .required(t("Civility is required"))
@@ -83,6 +87,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       )
       .required(t("country is required"))
       .trim(""),
+    mobile: yup.string(),
     phone: yup.string().required(t("phone is required")),
     province: yup
       .string()
@@ -108,10 +113,13 @@ const EditProfile = ({ setshowEditProfile }) => {
       lname: user?.lname,
       phone: user?.phone,
       civility: user?.civility,
+      company: user?.company,
+      mobile: user?.mobile,
       country: user?.shippingAddress?.country,
       city: user?.shippingAddress?.city,
       zipCode: user?.shippingAddress?.zipCode,
       address: user?.shippingAddress?.address1,
+      province: user?.shippingAddress?.province,
       province: user?.shippingAddress?.province,
     },
   });
@@ -125,6 +133,8 @@ const EditProfile = ({ setshowEditProfile }) => {
       address,
       city,
       zipCode,
+      mobile,
+      company,
       country,
       province,
     } = data;
@@ -157,6 +167,8 @@ const EditProfile = ({ setshowEditProfile }) => {
         lname,
         phone,
         civility,
+        mobile,
+        company,
         shippingAddress,
         token,
         signal: AbortControllerRef,
@@ -170,12 +182,6 @@ const EditProfile = ({ setshowEditProfile }) => {
       });
     }
   };
-
-  useEffect(() => {
-    return () => {
-      abortApiCall();
-    };
-  }, []);
 
   return (
     <form
@@ -264,6 +270,61 @@ const EditProfile = ({ setshowEditProfile }) => {
           )}
         />
         <span className="error">{errors?.phone?.message}</span>
+      </div>
+      {/* mobile */}
+      <div className="w-full">
+        <label htmlFor="mobile" className="Label">
+          mobile
+        </label>
+        <Controller
+          name="mobile"
+          control={control}
+          rules={{
+            validate: (value) => isValidPhoneNumber(value),
+          }}
+          render={({ field: { onChange, value } }) => (
+            <PhoneInput
+              country={"in"}
+              onChange={(value) => {
+                onChange((e) => {
+                  setValue("mobile", "+".concat(value));
+                });
+              }}
+              value={value}
+              autocompleteSearch={true}
+              countryCodeEditable={false}
+              enableSearch={true}
+              inputStyle={{
+                width: "100%",
+                background: "#f9f9f9",
+                padding: "22px 0 22px 50px",
+                borderRadius: "5px",
+                fontSize: "1rem",
+                // opacity:'0.7'
+              }}
+              dropdownStyle={{
+                background: "white",
+                color: "#13216e",
+                fontWeight: "600",
+                padding: "0px 0px 0px 10px",
+              }}
+            />
+          )}
+        />
+        <span className="error">{errors?.phone?.message}</span>
+      </div>
+      {/* civility */}
+      <div className="w-full">
+        <label htmlFor="company" className="Label">
+          company
+        </label>
+        <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("company")}
+        />
+        <span className="error">{errors?.company?.message}</span>
       </div>
       {/* civility */}
       <div className="w-full">

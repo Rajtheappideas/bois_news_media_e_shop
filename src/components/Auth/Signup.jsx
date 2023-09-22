@@ -60,6 +60,10 @@ const Signup = () => {
       .max(200, t("Maximum character limit reached"))
       .required(t("address is required"))
       .trim(""),
+    company: yup
+      .string()
+      .max(200, t("Maximum character limit reached"))
+      .trim(""),
     civility: yup
       .string()
       .required(t("Civility is required"))
@@ -94,6 +98,7 @@ const Signup = () => {
       .required(t("country is required"))
       .trim(""),
     phone: yup.string().required(t("phone is required")),
+    mobile: yup.string(),
     email: yup.string().email().required(t("Email is required")).trim(),
     password: yup
       .string()
@@ -139,6 +144,8 @@ const Signup = () => {
       zipCode,
       province,
       country,
+      mobile,
+      company,
     } = data;
     let shippingAddress = {
       address1: address,
@@ -170,6 +177,8 @@ const Signup = () => {
         phone,
         civility,
         password,
+        mobile,
+        company,
         shippingAddress,
         signal: AbortControllerRef,
       })
@@ -316,6 +325,61 @@ const Signup = () => {
             )}
           />
           <span className="error">{errors?.phone?.message}</span>
+        </div>
+        {/* mobile */}
+        <div>
+          <label htmlFor="mobile" className="Label">
+            mobile
+          </label>
+          <Controller
+            name="mobile"
+            control={control}
+            rules={{
+              validate: (value) => isValidPhoneNumber(value),
+            }}
+            render={({ field: { onChange, value } }) => (
+              <PhoneInput
+                country={"in"}
+                onChange={(value) => {
+                  onChange((e) => {
+                    setValue("mobile", "+".concat(value));
+                  });
+                }}
+                autocompleteSearch={true}
+                countryCodeEditable={false}
+                enableSearch={true}
+                inputStyle={{
+                  width: "100%",
+                  background: "#f9f9f9",
+                  padding: "22px 0 22px 50px",
+                  borderRadius: "5px",
+                  fontSize: "1rem",
+                  // opacity:'0.7'
+                }}
+                dropdownStyle={{
+                  background: "white",
+                  color: "#13216e",
+                  fontWeight: "600",
+                  padding: "0px 0px 0px 10px",
+                }}
+              />
+            )}
+          />
+          <span className="error">{errors?.phone?.message}</span>
+        </div>
+        {/* company name */}
+        <div>
+          <label htmlFor="company" className="Label">
+            company name
+          </label>
+          <input
+            type="text"
+            name="company"
+            {...register("company")}
+            className="input_field"
+          />
+
+          <span className="error">{errors?.company?.message}</span>
         </div>
         {/* civility */}
         <div>

@@ -49,7 +49,7 @@ const SearchPopup = () => {
       ></div>
       <div
         ref={modalRef}
-        className={`bg-white w-1/2 flex items-center gap-2 z-10 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all duration-300 origin-center ${
+        className={`bg-white xl:w-1/2 md:w-2/3 w-11/12 flex md:flex-row flex-col items-center gap-2 z-10 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 md:p-4 p-2 rounded-lg transition-all duration-300 origin-center ${
           showSearchModal ? "scale-100" : "scale-0"
         } `}
       >
@@ -58,7 +58,7 @@ const SearchPopup = () => {
           placeholder="Search"
           className="w-full input_field"
         />
-        <button className="blue_button h-12 w-40">Search</button>
+        <button className="blue_button md:h-12 h-10 md:w-40 w-full">Search</button>
       </div>
     </>
   );

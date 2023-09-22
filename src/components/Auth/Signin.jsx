@@ -56,7 +56,7 @@ const Signin = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success("Sign in Successfully.", { duration: 2000 });
+          toast.success("Sign in Successfully.");
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignin(false));
         }

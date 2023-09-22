@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeActiveCategory } from "../redux/ShopSlice";
 
 const Categories = () => {
-  const { activeCategory } = useSelector((state) => state.root.shop);
+  const { activeCategory, magazines, subscriptions } = useSelector(
+    (state) => state.root.shop
+  );
 
   const dispatch = useDispatch();
 
@@ -28,7 +30,7 @@ const Categories = () => {
           } text-black text-left capitalize cursor-pointer`}
           onClick={() => dispatch(handleChangeActiveCategory("subscriptions"))}
         >
-          Subscriptions (4)
+          Subscriptions ({subscriptions?.length ?? "0"})
         </p>
         <p
           onClick={() => dispatch(handleChangeActiveCategory("magazines"))}
@@ -37,15 +39,15 @@ const Categories = () => {
             "underline text-darkBlue underline-offset-2"
           } text-black text-left capitalize cursor-pointer`}
         >
-          Magazines (166){" "}
+          Magazines ({magazines?.length ?? "0"}){" "}
         </p>
         <ul className="list-disc font-semibold pl-6 space-y-2">
           <li
             onClick={() =>
-              dispatch(handleChangeActiveCategory("Craftsmen_Wood"))
+              dispatch(handleChangeActiveCategory("craftsmen_&_wood"))
             }
             className={`${
-              activeCategory === "Craftsmen_Wood" &&
+              activeCategory === "craftsmen_&_wood" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
           >
@@ -53,34 +55,34 @@ const Categories = () => {
           </li>
           <li
             className={`${
-              activeCategory === "WOODmag" &&
+              activeCategory === "woodmag" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
-            onClick={() => dispatch(handleChangeActiveCategory("WOODmag"))}
+            onClick={() => dispatch(handleChangeActiveCategory("woodmag"))}
           >
             WOODmag (72)
           </li>
           <li
             className={`${
-              activeCategory === "The_magazine_designer" &&
+              activeCategory === "the_magazine_designer" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
             onClick={() =>
-              dispatch(handleChangeActiveCategory("The_magazine_designer"))
+              dispatch(handleChangeActiveCategory("the_magazine_designer"))
             }
           >
             The magazine designer
           </li>
           <li
             className={`${
-              activeCategory === "Magazine_roof" &&
+              activeCategory === "roofing_magazine" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
             onClick={() =>
-              dispatch(handleChangeActiveCategory("Magazine_roof"))
+              dispatch(handleChangeActiveCategory("roofing_magazine"))
             }
           >
-            Magazine roof (24)
+            Roofing magazine (24)
           </li>
         </ul>
       </div>

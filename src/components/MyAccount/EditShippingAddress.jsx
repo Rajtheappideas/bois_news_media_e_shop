@@ -16,9 +16,10 @@ import { useForm } from "react-hook-form";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
 
 const EditShippingAddress = ({ setActiveEditAddress }) => {
-  const { user, token } = useSelector((state) => state.root.auth);
-  const address = user?.shippingAddress;
-  console.log(address);
+  const { addresses, token, addressLoading } = useSelector(
+    (state) => state.root.auth
+  );
+  const shippingAddress = addresses?.shippingAddress;
 
   const dispatch = useDispatch();
 
@@ -27,48 +28,15 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
   const editAddressSchema = yup.object({
-    fname: yup
-      .string()
-      .required(t("FirstName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("FirstName can only contain Latin letters.")
-      ),
-    lname: yup
-      .string()
-      .required(t("LastName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("LastName can only contain Latin letters.")
-      ),
-    address: yup
+    address1: yup
       .string()
       .max(200, t("Maximum character limit reached"))
-      .required(t("address is required"))
-      .trim(""),
-    civility: yup
-      .string()
-      .required(t("Civility is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("Civility can only contain Latin letters.")
-      ),
+      .required(t("address  1 is required")),
+    address2: yup.string().max(200, t("Maximum character limit reached")),
+    address3: yup.string().max(200, t("Maximum character limit reached")),
     zipCode: yup
       .string()
-      .max(6, t("max 6 number allowed"))
-      .min(5, t("min 5 number required"))
+      .matches(/^\d{5}(?:[-\s]\d{4})?$/, "Enter valid code")
       .required(t("zipcode is required"))
       .trim(""),
     country: yup
@@ -77,75 +45,56 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
         /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
         t("country can only contain Latin letters.")
       )
-      .required(t("country is required"))
-      .trim(""),
+      .required(t("country is required")),
     city: yup
       .string()
       .matches(
         /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
         t("country can only contain Latin letters.")
       )
-      .required(t("country is required"))
-      .trim(""),
-    phone: yup.string().required(t("phone is required")),
-    email: yup.string().email().required(t("Email is required")).trim(),
-    password: yup
-      .string()
-      .required(t("Password is required"))
-      .matches(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/,
-        t(
-          "Minimum 8 characters, at least one special character, at least one digit"
-        )
-      )
-      .trim(),
+      .required(t("country is required")),
     province: yup
       .string()
       .matches(
         /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
         t("province can only contain Latin letters.")
-      )
-      .trim(""),
+      ),
   });
 
   const {
     register,
     handleSubmit,
     getValues,
-    setValue,
-    control,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
     resolver: yupResolver(editAddressSchema),
+    defaultValues: {
+      address1: shippingAddress?.address1,
+      address2: shippingAddress?.address2,
+      address3: shippingAddress?.address3,
+      zipCode: shippingAddress?.zipCode,
+      province: shippingAddress?.province,
+      country: shippingAddress?.country,
+      city: shippingAddress?.city,
+    },
   });
 
   const onSubmit = (data) => {
-    const { phone, address, city, zipCode, province, country } = data;
+    const { address1, address2, address3, city, zipCode, province, country } =
+      data;
 
-    if (!isPossiblePhoneNumber(phone) || !isValidPhoneNumber(phone)) {
-      toast.remove();
-      toast.error(t("Phone is invalid"));
-      return true;
-    } else if (
-      (getValues("mobile") !== "" && !isPossiblePhoneNumber(phone)) ||
-      !isValidPhoneNumber(phone)
-    ) {
-      toast.remove();
-      toast.error(t("Phone is invalid"));
-      return true;
-    }
-
+    if (!isDirty) return;
     const response = dispatch(
       handleChangeUserAddress({
         addressType: "shipping",
-        address1: address,
-        address2: "",
-        address3: "",
-        zipCode,
+        address1,
+        address2,
+        address3,
         city,
-        country,
         province,
+        country,
+        zipCode,
         token,
         signal: AbortControllerRef,
       })
@@ -166,7 +115,10 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
   }, []);
 
   return (
-    <div className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
+    >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
         <span>Shipping Address</span>
         <AiOutlineClose
@@ -198,49 +150,45 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
           />
         </div>
       </div> */}
-      {/* company name */}
+      {/* address 1*/}
       <div className="w-full">
-        <label htmlFor="company_name" className="Label">
-          Company name (optional)
+        <label htmlFor="address_1" className="Label">
+          address 1
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address1")}
         />
+        <span className="error">{errors?.address1?.message}</span>
       </div>
-      {/* country */}
+      {/* address 2*/}
       <div className="w-full">
-        <label htmlFor="country" className="Label">
-          country
+        <label htmlFor="address_2" className="Label">
+          address 2
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address2")}
         />
+        <span className="error">{errors?.address2?.message}</span>
       </div>
-      {/* street */}
+
+      {/* address 3*/}
       <div className="w-full">
-        <label htmlFor="street_address" className="Label">
-          street address
+        <label htmlFor="address_3" className="Label">
+          address 3
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address3")}
         />
-      </div>
-      {/* state */}
-      <div className="w-full">
-        <label htmlFor="state" className="Label">
-          state
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-        />
+        <span className="error">{errors?.address3?.message}</span>
       </div>
       {/* city */}
       <div className="w-full">
@@ -251,7 +199,9 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("city")}
         />
+        <span className="error">{errors?.city?.message}</span>
       </div>
       {/* postal code */}
       <div className="w-full">
@@ -262,13 +212,44 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("zipCode")}
         />
+        <span className="error">{errors?.zipCode?.message}</span>
+      </div>
+      {/* province */}
+      <div className="w-full">
+        <label htmlFor="province" className="Label">
+          province
+        </label>
+        <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("province")}
+        />
+        <span className="error">{errors?.province?.message}</span>
+      </div>
+      {/* country */}
+      <div className="w-full">
+        <label htmlFor="country" className="Label">
+          country
+        </label>
+        <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("country")}
+        />
+        <span className="error">{errors?.country?.message}</span>
       </div>
       {/* btn */}
-      <button className="gray_button capitalize md:w-60 w-full md:h-12 h-10">
-        save address
+      <button
+        disabled={addressLoading}
+        className="gray_button capitalize md:w-60 w-full md:h-12 h-10"
+      >
+        {addressLoading ? "Saving..." : "Save address"}
       </button>
-    </div>
+    </form>
   );
 };
 

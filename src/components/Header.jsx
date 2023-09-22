@@ -5,8 +5,9 @@ import {
   AiOutlineShoppingCart,
   AiOutlineSearch,
   AiOutlineClose,
+  AiOutlineDown,
 } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeShowSearch,
@@ -17,16 +18,24 @@ import {
 import { handleLogout } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
 import { GetUrl } from "../BaseUrl";
+import { useLocation } from "react-router-dom";
 import { handleChangeActiveCategory } from "../redux/ShopSlice";
 
 const Header = () => {
   const [showDropdown, setshowDropdown] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [dropDownList, setDropDownList] = useState("buy_by_number");
 
   const { user } = useSelector((state) => state.root.auth);
+  const { subscriptions, subscriptionLoading } = useSelector(
+    (state) => state.root.shop
+  );
 
   const dropDownRef = useRef(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -68,6 +77,16 @@ const Header = () => {
       window.removeEventListener("resize", () => {});
     };
   }, [openSidebar, window.innerWidth]);
+
+  useEffect(() => {
+    if (window.location.href.includes("shop")) {
+      setActiveLink("shop");
+    } else if (location.pathname === "/") {
+      setActiveLink("home");
+    } else if (window.location.href.includes("contact")) {
+      setActiveLink("contact");
+    }
+  }, [location]);
 
   return (
     <header>
@@ -158,6 +177,7 @@ const Header = () => {
           </Link>
           {/* links for desktop */}
           <div className="lg:flex items-center lg:gap-x-5 gap-x-2 select-none hidden">
+            {/* home */}
             <Link
               to="/"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
@@ -169,6 +189,7 @@ const Header = () => {
             >
               Home
             </Link>
+            {/* shop */}
             <Link
               to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
@@ -183,6 +204,7 @@ const Header = () => {
             >
               Shop
             </Link>
+            {/* subscribe */}
             <Link
               to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold text-sm cursor-pointer ${
@@ -196,49 +218,112 @@ const Header = () => {
               }}
             >
               subscribe
-              <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
-                <p className="p-3 hover:bg-darkGray hover:text-white transition-all duration-100">
-                  BOISMAG SUBSCRIPTION
-                </p>
-                <p className="p-2 hover:bg-darkGray hover:text-white transition-all duration-100">
-                  SUBSCRIPTION L’AGENCEUR MAGAZINE
-                </p>
-                <p className="p-2 hover:bg-darkGray hover:text-white transition-all duration-100">
-                  ARTISANS & WOOD SUBSCRIPTION
-                </p>
-                <p className="p-3 hover:bg-darkGray hover:text-white transition-all duration-100">
-                  SUBSCRIPTION ROOFING MAGAZINE
-                </p>
-              </div>
+              {!subscriptionLoading && subscriptions?.length > 0 && (
+                <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
+                  {subscriptions?.map((subscription) => (
+                    <p
+                      key={subscription?._id}
+                      className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                    >
+                      {subscription?.title}
+                    </p>
+                  ))}
+                </div>
+              )}
             </Link>
-            <Link
+            {/* buy by number */}
+            <p
               to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "buy_by_number"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
-              } `}
-              onClick={() => {
-                setActiveLink("buy_by_number");
-                dispatch(handleChangeActiveCategory("subscriptions"));
-              }}
+              } relative group`}
             >
-              buy by number
-            </Link>
-            <Link
-              to="/shop"
+              <Link
+                to="/shop"
+                onClick={() => {
+                  setActiveLink("buy_by_number");
+                  dispatch(handleChangeActiveCategory("magazines"));
+                }}
+              >
+                buy by number
+              </Link>
+              <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
+                <p
+                  onClick={() => {
+                    dispatch(handleChangeActiveCategory("woodmag"));
+                  }}
+                  className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                >
+                  WOODmag
+                </p>
+                <p
+                  onClick={() => {
+                    dispatch(
+                      handleChangeActiveCategory("the_magazine_designer")
+                    );
+                  }}
+                  className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                >
+                  The magazine designer
+                </p>
+                <p
+                  onClick={() => {
+                    dispatch(handleChangeActiveCategory("craftsmen_&_wood"));
+                  }}
+                  className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                >
+                  Craftsmen & Wood
+                </p>
+                <p
+                  onClick={() => {
+                    dispatch(handleChangeActiveCategory("roofing_magazine"));
+                  }}
+                  className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                >
+                  Roofing magazine
+                </p>
+              </div>
+            </p>
+            {/* our magaziens */}
+            <p
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "our_magazines"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
-              } `}
-              onClick={() => {
-                setActiveLink("our_magazines");
-                dispatch(handleChangeActiveCategory("magazines"));
-              }}
+              } relative group`}
             >
-              our magazines
-            </Link>
+              <span>our magazines</span>
+              <div className="absolute group-hover:scale-100  z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
+                <Link to="https://www.boisnewsmedia.com/" target="_blank">
+                  <p className="p-3 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                    BOIS NEWS MEDIA
+                  </p>
+                </Link>
+                <Link to="https://www.boismag.com/" target="_blank">
+                  <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                    BOISMAG
+                  </p>
+                </Link>
+                <Link to="https://www.artisansbois.com/" target="_blank">
+                  <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                    ARTISANS & BOIS
+                  </p>
+                </Link>
+                <Link to="https://l-agenceur.com/" target="_blank">
+                  <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                    L’AGENCEUR MAGAZINE
+                  </p>
+                </Link>
+                <Link to="https://www.toituremagazine.com/" target="_blank">
+                  <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                    TOITURE MAGAZINE
+                  </p>
+                </Link>
+              </div>
+            </p>
+            {/* contact */}
             <Link
               to="/contact-us"
               className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
@@ -250,7 +335,7 @@ const Header = () => {
             >
               contact
             </Link>
-            |
+            |{/* cart */}
             <p className="relative">
               {user !== null ? (
                 <Link to="cart">
@@ -295,6 +380,7 @@ const Header = () => {
           onClick={() => setOpenSidebar(false)}
         />
         <ul className="md:w-1/2 w-full mx-auto space-y-5 px-10">
+          {/* home */}
           <li
             className={`${
               activeLink === "home"
@@ -312,6 +398,7 @@ const Header = () => {
               home
             </Link>
           </li>
+          {/* shop */}
           <li
             className={`${
               activeLink === "shop"
@@ -330,6 +417,7 @@ const Header = () => {
               shop
             </Link>
           </li>
+          {/* subscribe */}
           <li
             className={`${
               activeLink === "subscribe"
@@ -348,42 +436,143 @@ const Header = () => {
               subscribe
             </Link>
           </li>
+          {/* buy by number */}
           <li
             className={`${
               activeLink === "buy_by_number"
                 ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
                 : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            } uppercase transition-all duration-300 space-y-2`}
           >
-            <Link
-              to="/shop"
-              onClick={() => {
-                setActiveLink("buy_by_number");
-                setOpenSidebar(false);
-                dispatch(handleChangeActiveCategory("magazines"));
-              }}
+            <p className="flex justify-between items-center">
+              <Link
+                to="/shop"
+                onClick={() => {
+                  setActiveLink("buy_by_number");
+                  setOpenSidebar(false);
+                  dispatch(handleChangeActiveCategory("magazines"));
+                }}
+              >
+                buy by number
+              </Link>
+              <AiOutlineDown
+                size={20}
+                onClick={() => {
+                  dropDownList === ""
+                    ? setDropDownList("buy_by_number")
+                    : setDropDownList("");
+                }}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${
+                  dropDownList === "buy_by_number" ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </p>
+            <div
+              className={`whitespace-nowrap rounded-lg font-medium transition-all duration-300 origin-top ${
+                dropDownList === "buy_by_number" ? "block" : "hidden"
+              }  space-y-2 bg-gray-100`}
             >
-              buy by number
-            </Link>
+              <p
+                onClick={() => {
+                  dispatch(handleChangeActiveCategory("woodmag"));
+                  setOpenSidebar(false);
+                  navigate("/shop");
+                  setDropDownList("");
+                }}
+                className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+              >
+                WOODmag
+              </p>
+              <p
+                onClick={() => {
+                  dispatch(handleChangeActiveCategory("the_magazine_designer"));
+                  setOpenSidebar(false);
+                  navigate("/shop");
+                  setDropDownList("");
+                }}
+                className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+              >
+                The magazine designer
+              </p>
+              <p
+                onClick={() => {
+                  dispatch(handleChangeActiveCategory("craftsmen_&_wood"));
+                  setOpenSidebar(false);
+                  navigate("/shop");
+                  setDropDownList("");
+                }}
+                className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+              >
+                Craftsmen & Wood
+              </p>
+              <p
+                onClick={() => {
+                  dispatch(handleChangeActiveCategory("roofing_magazine"));
+                  setOpenSidebar(false);
+                  navigate("/shop");
+                  setDropDownList("");
+                }}
+                className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+              >
+                Roofing magazine
+              </p>
+            </div>
           </li>
+          {/* our mmagazines */}
           <li
             className={`${
-              activeLink === "our_magazine"
+              activeLink === "our_magazines"
                 ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
                 : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            } uppercase transition-all duration-300 space-y-2`}
           >
-            <Link
-              to="/shop"
-              onClick={() => {
-                setActiveLink("our_magazine");
-                setOpenSidebar(false);
-                dispatch(handleChangeActiveCategory("magazines"));
-              }}
+            <p className="flex justify-between items-center">
+              <span>our magazines</span>
+              <AiOutlineDown
+                size={20}
+                onClick={() => {
+                  dropDownList === ""
+                    ? setDropDownList("our_magazines")
+                    : setDropDownList("");
+                }}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${
+                  dropDownList === "our_magazines" ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </p>
+            <div
+              className={`whitespace-nowrap rounded-lg font-medium transition-all duration-300 origin-top ${
+                dropDownList === "our_magazines" ? "block" : "hidden"
+              }  space-y-2 bg-gray-100`}
             >
-              our magazines
-            </Link>
+              <Link to="https://www.boisnewsmedia.com/" target="_blank">
+                <p className="p-3 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                  BOIS NEWS MEDIA
+                </p>
+              </Link>
+              <Link to="https://www.boismag.com/" target="_blank">
+                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                  BOISMAG
+                </p>
+              </Link>
+              <Link to="https://www.artisansbois.com/" target="_blank">
+                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                  ARTISANS & BOIS
+                </p>
+              </Link>
+              <Link to="https://l-agenceur.com/" target="_blank">
+                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                  L’AGENCEUR MAGAZINE
+                </p>
+              </Link>
+              <Link to="https://www.toituremagazine.com/" target="_blank">
+                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                  TOITURE MAGAZINE
+                </p>
+              </Link>
+            </div>
           </li>
+          {/* contact */}
           <li
             className={`${
               activeLink === "contact"
@@ -401,6 +590,7 @@ const Header = () => {
               contact
             </Link>
           </li>
+          {/* cart */}
           <li
             className={`${
               activeLink === "cart"
@@ -430,22 +620,19 @@ const Header = () => {
               </Link>
             )}
           </li>
+          {/* search */}
           <li
             className={`${
               activeLink === "search"
                 ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
                 : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            } uppercase transition-all duration-300 cursor-pointer`}
+            onClick={() => {
+              setOpenSidebar(false);
+              dispatch(handleChangeShowSearch(true));
+            }}
           >
-            <Link
-              to="/search"
-              onClick={() => {
-                setActiveLink("search");
-                setOpenSidebar(false);
-              }}
-            >
-              search
-            </Link>
+            search
           </li>
         </ul>
       </div>

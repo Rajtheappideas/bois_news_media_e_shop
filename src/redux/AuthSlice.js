@@ -5,7 +5,18 @@ import { GetUrl, PostUrl } from "../BaseUrl";
 export const handleRegisterUser = createAsyncThunk(
   "auth/handleRegisterUser",
   async (
-    { fname, lname, email, phone, civility, password, shippingAddress, signal },
+    {
+      fname,
+      lname,
+      email,
+      phone,
+      civility,
+      password,
+      mobile,
+      company,
+      shippingAddress,
+      signal,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -18,6 +29,8 @@ export const handleRegisterUser = createAsyncThunk(
           phone,
           password,
           civility,
+          mobile,
+          company,
           shippingAddress,
         },
         signal: signal.current.signal,
@@ -133,7 +146,17 @@ export const handleChangePassword = createAsyncThunk(
 export const handleEditProfile = createAsyncThunk(
   "auth/handleEditProfile",
   async (
-    { fname, lname, phone, civility, shippingAddress, token, signal },
+    {
+      fname,
+      lname,
+      phone,
+      civility,
+      mobile,
+      company,
+      shippingAddress,
+      token,
+      signal,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -144,8 +167,32 @@ export const handleEditProfile = createAsyncThunk(
           lname,
           phone,
           civility,
+          mobile,
+          company,
           shippingAddress,
         },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
+export const handleGetUserAddress = createAsyncThunk(
+  "auth/handleGetUserAddress",
+  async ({ token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await GetUrl("address", {
         signal: signal.current.signal,
         headers: {
           Authorization: token,
@@ -170,10 +217,10 @@ export const handleChangeUserAddress = createAsyncThunk(
       address1,
       address2,
       address3,
-      zipCode,
       city,
-      country,
       province,
+      country,
+      zipCode,
       token,
       signal,
     },
@@ -216,6 +263,8 @@ const initialState = {
   token: null,
   verifyToken: null,
   email: null,
+  addresses: null,
+  addressLoading: false,
 };
 
 const AuthSlice = createSlice({
@@ -377,24 +426,44 @@ const AuthSlice = createSlice({
       state.success = false;
       state.error = payload ?? null;
     });
-    // shipping address
-    builder.addCase(handleChangeUserAddress.pending, (state, {}) => {
+    // get user address
+    builder.addCase(handleGetUserAddress.pending, (state, {}) => {
       state.loading = true;
       state.success = false;
       state.error = null;
     });
-    builder.addCase(handleChangeUserAddress.fulfilled, (state, { payload }) => {
+    builder.addCase(handleGetUserAddress.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.success = true;
-      state.user = {
-        ...state.user,
+      state.success = true;
+      state.addresses = {
+        shippingAddress: payload?.shippingAddress,
+        billingAddress: payload?.billingAddress,
+      };
+      state.error = null;
+    });
+    builder.addCase(handleGetUserAddress.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+    // change user address
+    builder.addCase(handleChangeUserAddress.pending, (state, {}) => {
+      state.addressLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleChangeUserAddress.fulfilled, (state, { payload }) => {
+      state.addressLoading = false;
+      state.success = true;
+      state.addresses = {
         shippingAddress: payload?.shippingAddress,
         billingAddress: payload?.billingAddress,
       };
       state.error = null;
     });
     builder.addCase(handleChangeUserAddress.rejected, (state, { payload }) => {
-      state.loading = false;
+      state.addressLoading = false;
       state.success = false;
       state.error = payload ?? null;
     });

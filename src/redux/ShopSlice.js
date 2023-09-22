@@ -17,6 +17,21 @@ export const handleGetMagazines = createAsyncThunk(
   }
 );
 
+export const handleGetLastestMagazines = createAsyncThunk(
+  "getContent/handleGetLastestMagazines",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await GetUrl("magazine/latest");
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 export const handleGetSubscriptions = createAsyncThunk(
   "getContent/handleGetSubscriptions",
   async (_, { rejectWithValue }) => {
@@ -45,7 +60,9 @@ const initialState = {
   singleMagazine: null,
   singleSubscription: null,
   magazines: [],
+  latestMagazines: [],
   subscriptions: [],
+  allMagazinesAndSubscriptions: [],
 };
 
 const ShopSlice = createSlice({
@@ -89,6 +106,20 @@ const ShopSlice = createSlice({
       state.magazines = payload?.magazines;
     });
     builder.addCase(handleGetMagazines.rejected, (state, { payload }) => {
+      state.magazineLoading = false;
+      state.error = payload ?? null;
+    });
+    // get latest magazines
+    builder.addCase(handleGetLastestMagazines.pending, (state, {}) => {
+      state.magazineLoading = true;
+      state.error = null;
+    });
+    builder.addCase(handleGetLastestMagazines.fulfilled, (state, { payload }) => {
+      state.magazineLoading = false;
+      state.error = null;
+      state.latestMagazines = payload?.magazines;
+    });
+    builder.addCase(handleGetLastestMagazines.rejected, (state, { payload }) => {
       state.magazineLoading = false;
       state.error = payload ?? null;
     });

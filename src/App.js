@@ -20,10 +20,7 @@ import {
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
 import SearchPopup from "./components/SearchPopup";
-import {
-  handleGetMagazines,
-  handleGetSubscriptions,
-} from "./redux/ShopSlice";
+import { handleGetLastestMagazines, handleGetMagazines, handleGetSubscriptions } from "./redux/ShopSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -53,6 +50,7 @@ function App() {
 
     // data fetch
     dispatch(handleGetMagazines());
+    // dispatch(handleGetLastestMagazines());
     dispatch(handleGetSubscriptions());
   }, []);
 

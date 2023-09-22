@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 const BillingAddress = ({ setActiveAddress }) => {
   const { user } = useSelector((state) => state.root.auth);
   const address = user?.billingAddress;
-  console.log(address);
+  // console.log(address);
 
   return (
     <div className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2">

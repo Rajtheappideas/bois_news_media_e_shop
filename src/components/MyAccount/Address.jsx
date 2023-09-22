@@ -9,7 +9,7 @@ const Address = () => {
   const [activeAddress, setActiveAddress] = useState("");
   const [activeEditAddress, setActiveEditAddress] = useState("");
 
-  const { user, loading } = useSelector((s) => s.root.auth);
+  const { addresses, loading } = useSelector((s) => s.root.auth);
 
   return (
     <>
@@ -32,24 +32,16 @@ const Address = () => {
 
           {activeAddress === "" && activeEditAddress === "" && (
             <div className="w-full grid md:grid-cols-2 place-items-start items-start gap-4">
-              {Object.values(user?.billingAddress).length > 0 ? (
+              {addresses !== null ? (
                 <div className="space-y-2 w-full">
                   <p className="heading">Billing address</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
                     <p>
-                      <b className="capitalize">
-                        {user?.fname} {user?.lname}
-                      </b>
-                    </p>
-                    <p>
-                      {user?.billingAddress?.zipCode} &nbsp;
-                      {user?.billingAddress?.address1}&nbsp;
-                      {user?.billingAddress?.city}&nbsp;
-                      {user?.billingAddress?.province}
-                      <br /> {user?.billingAddress?.country} <br />{" "}
-                      {user?.phone}
-                      <br />
-                      {user?.email}
+                      {addresses?.billingAddress?.zipCode}, <br />
+                      {addresses?.billingAddress?.address1}, <br />
+                      {addresses?.billingAddress?.city}, <br />
+                      {addresses?.billingAddress?.province}, <br />
+                      {addresses?.billingAddress?.country}, <br />
                     </p>
                     <button
                       onClick={() => setActiveEditAddress("billing")}
@@ -74,24 +66,16 @@ const Address = () => {
                   </div>
                 </div>
               )}
-              {Object.values(user?.shippingAddress).length > 0 ? (
+              {addresses !== null ? (
                 <div className="space-y-2 w-full">
-                  <p className="heading">Delivery address</p>
+                  <p className="heading">Shipping address</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
                     <p>
-                      <b className="capitalize">
-                        {user?.fname} {user?.lname}
-                      </b>
-                    </p>
-                    <p>
-                      {user?.shippingAddress?.zipCode} &nbsp;
-                      {user?.shippingAddress?.address1}&nbsp;
-                      {user?.shippingAddress?.city}&nbsp;
-                      {user?.shippingAddress?.province}
-                      <br /> {user?.shippingAddress?.country} <br />{" "}
-                      {user?.phone}
-                      <br />
-                      {user?.email}
+                      {addresses?.shippingAddress?.zipCode}, <br />
+                      {addresses?.shippingAddress?.address1}, <br />
+                      {addresses?.shippingAddress?.city}, <br />
+                      {addresses?.shippingAddress?.province}, <br />
+                      {addresses?.shippingAddress?.country}, <br />
                     </p>
                     <button
                       onClick={() => setActiveEditAddress("shipping")}

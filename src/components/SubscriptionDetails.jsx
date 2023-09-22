@@ -27,6 +27,7 @@ const SubscriptionDetails = () => {
           src={BaseUrl.concat(singleSubscription?.image)}
           alt={singleSubscription?.title}
           className="lg:w-1/2 w-full max-h-[25rem] object-contain object-center"
+          loading="lazy"
         />
         <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">

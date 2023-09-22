@@ -62,7 +62,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>
@@ -75,7 +75,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>
@@ -88,7 +88,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>
@@ -101,7 +101,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>
@@ -114,7 +114,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>
@@ -127,7 +127,7 @@ const SimilarProducts = () => {
           <p className="font-semibold md:text-xl">
             Artisans & Wood subscription
           </p>
-          <p className="font-semibold text-darkGray md:text-base">
+          <p className="font-semibold md:text-xl text-lg text-darkGray">
             From € 45.00
           </p>
         </SwiperSlide>

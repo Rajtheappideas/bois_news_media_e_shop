@@ -87,7 +87,8 @@ const ContactUs = () => {
       setLoading(false);
       toast.success(data?.message);
       reset();
-      resetField("phone");
+      captchaRef?.current?.props?.grecaptcha?.reset();
+      resetField("phone", undefined);
     } catch (error) {
       toast.error(error?.response?.data?.message);
       setLoading(false);
@@ -102,8 +103,6 @@ const ContactUs = () => {
       abortApiCall();
     };
   }, []);
-
-  console.log(getValues());
 
   return (
     <>

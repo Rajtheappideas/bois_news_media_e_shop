@@ -37,6 +37,11 @@ const Profile = () => {
                 <div className="md:w-40 w-20 font-semibold">Phone: </div>
                 <div className="flex-1">{user?.phone}</div>
               </div>
+              {/* mobile */}
+              <div className="flex items-center gap-3">
+                <div className="md:w-40 w-20 font-semibold">Mobile: </div>
+                <div className="flex-1">{user?.mobile ?? "-"}</div>
+              </div>
               {/* civility */}
               <div className="flex items-center gap-3">
                 <div className="md:w-40 w-20 font-semibold">Civlity: </div>
@@ -53,7 +58,9 @@ const Profile = () => {
               <div className="flex items-center gap-3">
                 <div className="md:w-40 w-20 font-semibold">Province: </div>
                 <div className="flex-1">
-                  {user?.shippingAddress?.province ?? "-"}
+                  {user?.shippingAddress?.province === "" || undefined
+                    ? "-"
+                    : user?.shippingAddress?.province}
                 </div>
               </div>
               {/* country */}

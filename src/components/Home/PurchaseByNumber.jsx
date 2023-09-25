@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PurchaseByNumber = ({
   bgColor,
@@ -64,9 +65,14 @@ const PurchaseByNumber = ({
           </div>
         </div>
         <div className="text-center">
-          <button className="bg-white active:scale-90 transition-all duration-100 hover:bg-black hover:text-white text-black text-center rounded-lg lg:w-1/4 md:w-1/3 font-medium p-2">
-            Discover previous issues
-          </button>
+          <Link
+            to="/shop"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <button className="bg-white active:scale-90 transition-all duration-100 hover:bg-black hover:text-white text-black text-center rounded-lg lg:w-1/4 md:w-1/3 font-medium p-2">
+              Discover previous issues
+            </button>
+          </Link>
         </div>
       </div>
     </div>

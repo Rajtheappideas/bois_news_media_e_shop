@@ -17,7 +17,6 @@ import {
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
-import { GetUrl } from "../BaseUrl";
 import { useLocation } from "react-router-dom";
 import { handleChangeActiveCategory } from "../redux/ShopSlice";
 
@@ -79,13 +78,20 @@ const Header = () => {
   }, [openSidebar, window.innerWidth]);
 
   useEffect(() => {
-    if (window.location.href.includes("shop")) {
+    if (location.pathname.includes("shop")) {
       setActiveLink("shop");
     } else if (location.pathname === "/") {
       setActiveLink("home");
-    } else if (window.location.href.includes("contact")) {
+    } else if (location.pathname.includes("contact")) {
       setActiveLink("contact");
+    } else if (
+      !window.location.href.includes("contact") ||
+      !window.location.href.includes("/") ||
+      !window.location.href.includes("shop")
+    ) {
+      setActiveLink("");
     }
+    console.log(location);
   }, [location]);
 
   return (
@@ -180,7 +186,7 @@ const Header = () => {
             {/* home */}
             <Link
               to="/"
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "home"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -192,7 +198,7 @@ const Header = () => {
             {/* shop */}
             <Link
               to="/shop"
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "shop"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -207,7 +213,7 @@ const Header = () => {
             {/* subscribe */}
             <Link
               to="/shop"
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${
                 activeLink === "subscribe"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -234,7 +240,7 @@ const Header = () => {
             {/* buy by number */}
             <p
               to="/shop"
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "buy_by_number"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -288,7 +294,7 @@ const Header = () => {
             </p>
             {/* our magaziens */}
             <p
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "our_magazines"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -326,7 +332,7 @@ const Header = () => {
             {/* contact */}
             <Link
               to="/contact-us"
-              className={`uppercase transition-all 2xl:text-xl duration-100 active:scale-95 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "contact"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"

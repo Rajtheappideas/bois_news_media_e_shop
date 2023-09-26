@@ -5,7 +5,7 @@ import {
   handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
 import BaseUrl from "../BaseUrl";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const MagazineCard = ({ data, from }) => {
@@ -13,6 +13,7 @@ const MagazineCard = ({ data, from }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDispatchAction = () => {
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
@@ -24,7 +25,7 @@ const MagazineCard = ({ data, from }) => {
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => {
-      if (!window.location.href.includes("shop")) return navigate("shop");
+      if (!location.pathname.includes("shop")) return navigate("shop");
     }, 300);
   };
 

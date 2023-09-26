@@ -30,93 +30,111 @@ const Shop = () => {
   // pagination logic
   const magazinesPerPage = 12;
   const pageVisited = pageNumber * magazinesPerPage;
-  let displayMagazines = displayAccordingToCategory().slice(
+  let displayMagazines = showMagazines.slice(
     pageVisited,
     magazinesPerPage + pageVisited
   );
-  const pageCount = Math.ceil(
-    displayAccordingToCategory().length / magazinesPerPage
-  );
+  const pageCount = Math.ceil(showMagazines.length / magazinesPerPage);
   const changePage = ({ selected }) => {
     setPageNumber(selected);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  function displayAccordingToCategory() {
-    if (activeCategory === "view_all") {
-      return allMagazinesAndSubscriptions;
-    } else if (activeCategory === "subscriptions") {
-      return subscriptions;
-    } else if (activeCategory === "magazines") {
-      return magazines;
-    } else if (activeCategory === "boismag") {
-      return (
-        magazines.length > 0 &&
-        magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("boismag")
-        )
-      );
-    } else if (activeCategory === "agenceur") {
-      return (
-        magazines.length > 0 &&
-        magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("agenceur")
-        )
-      );
-    } else if (activeCategory === "artisans&bois") {
-      return (
-        magazines.length > 0 &&
-        magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("artisans&bois")
-        )
-      );
-    } else if (activeCategory === "toiture") {
-      return (
-        magazines.length > 0 &&
-        magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("toiture")
-        )
-      );
-    }
-  }
-
   function paginationResult() {
     return `${
-      displayMagazines?.length > 0
+      showMagazines?.length > 0
         ? pageNumber * magazinesPerPage === 0
           ? 1
           : pageNumber * magazinesPerPage + 1
         : 0
     } - ${
-      !displayMagazines
+      !showMagazines
         ? 0
-        : displayMagazines?.length < magazinesPerPage
-        ? displayMagazines?.length
-        : magazinesPerPage * (pageNumber + 1) > displayMagazines?.length
-        ? displayMagazines?.length
+        : showMagazines?.length < magazinesPerPage
+        ? showMagazines?.length
+        : magazinesPerPage * (pageNumber + 1) > showMagazines?.length
+        ? showMagazines?.length
         : magazinesPerPage * (pageNumber + 1)
-    } of ${displayMagazines?.length ?? 0} results`;
+    } of ${showMagazines?.length ?? 0} results`;
   }
 
-  function handleFilter() {
+  function handleChangeMagazinesAccordingToCategory() {
+    if (activeCategory === "view_all") {
+      setShowMagazines(allMagazinesAndSubscriptions);
+      handleFilter(allMagazinesAndSubscriptions);
+      return;
+    } else if (activeCategory === "subscriptions") {
+      setShowMagazines(subscriptions);
+      handleFilter(subscriptions);
+      return;
+    } else if (activeCategory === "magazines") {
+      setShowMagazines(magazines);
+      handleFilter(magazines);
+      return;
+    } else if (activeCategory === "boismag") {
+      if (magazines.length > 0) {
+        const updatedMagazines = magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("boismag")
+        );
+        setShowMagazines(updatedMagazines);
+        handleFilter(updatedMagazines);
+        return;
+      }
+      return setShowMagazines([]);
+    } else if (activeCategory === "agenceur") {
+      if (magazines.length > 0) {
+        const updatedMagazines = magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("agenceur")
+        );
+        setShowMagazines(updatedMagazines);
+        handleFilter(updatedMagazines);
+        return;
+      }
+      return setShowMagazines([]);
+    } else if (activeCategory === "artisans_and_bois") {
+      if (magazines.length > 0) {
+        const updatedMagazines = magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("artisans_and_bois")
+        );
+        setShowMagazines(updatedMagazines);
+        handleFilter(updatedMagazines);
+        return;
+      }
+      return setShowMagazines([]);
+    } else if (activeCategory === "toiture") {
+      if (magazines.length > 0) {
+        const updatedMagazines = magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("toiture")
+        );
+        setShowMagazines(updatedMagazines);
+        handleFilter(updatedMagazines);
+        return;
+      }
+      return setShowMagazines([]);
+    }
+  }
+
+  function handleFilter(items) {
     if (activeFilter === "new_to_old") {
-      return setShowMagazines(displayMagazines);
+      return handleChangeMagazinesAccordingToCategory();
     } else if (activeFilter === "old_to_new") {
-      return setShowMagazines(displayMagazines?.slice()?.reverse());
+      return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {
-      displayMagazines?.sort((a, b) => {
+      const highToLow = items?.slice().sort((a, b) => {
         return b.price - a.price;
       });
+      return setShowMagazines(highToLow);
     } else if (activeFilter === "low_to_high") {
-      displayMagazines?.sort((a, b) => {
+      const lowToHigh = items?.slice().sort((a, b) => {
         return a.price - b.price;
       });
+      return setShowMagazines(lowToHigh);
     }
   }
 
   useEffect(() => {
-    setShowMagazines(displayMagazines);
-    handleFilter();
+    handleChangeMagazinesAccordingToCategory();
+    setPageNumber(0);
   }, [activeCategory, activeFilter]);
 
   return (
@@ -196,8 +214,8 @@ const Shop = () => {
             >
               {magazineLoading || subscriptionLoading ? (
                 <div className="loading col-span-full">Loading...</div>
-              ) : displayMagazines?.length > 0 ? (
-                showMagazines?.map((magazine) => (
+              ) : showMagazines.length > 0 ? (
+                displayMagazines?.map((magazine) => (
                   <MagazineCard key={magazine?._id} data={magazine} />
                 ))
               ) : (
@@ -233,6 +251,7 @@ const Shop = () => {
                   containerClassName=""
                   activeClassName="active"
                   className="flex items-center md:gap-3 gap-2 flex-wrap"
+                  forcePage={pageNumber}
                 />
               </div>
             </div>

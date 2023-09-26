@@ -4,11 +4,12 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE } from "redux-persist";
 import globalStates from "./globalStates";
 import ShopSlice from "./ShopSlice";
 import AuthSlice from "./AuthSlice";
+import CartSlice from "./CartSlice";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["globalStates", "shop", "auth"],
+  blacklist: ["globalStates", "shop", "auth", "cart"],
 };
 
 const authPersistConfig = {
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   globalStates: globalStates,
   shop: ShopSlice,
   auth: persistReducer(authPersistConfig, AuthSlice),
+  cart: CartSlice,
 });
 
 const persisteRoot = persistReducer(rootPersistConfig, rootReducer);

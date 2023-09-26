@@ -5,11 +5,13 @@ import {
   handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
 import BaseUrl from "../BaseUrl";
+import { useNavigate } from "react-router-dom";
 
 const MagazineCard = ({ data, from }) => {
   const { selectedView } = useSelector((state) => state.root.shop);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleDispatchAction = () => {
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
@@ -19,7 +21,10 @@ const MagazineCard = ({ data, from }) => {
         type: data?.magazineId ? "magazine" : "subscription",
       })
     );
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      navigate("shop");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 300);
   };
 
   return (
@@ -64,9 +69,11 @@ const MagazineCard = ({ data, from }) => {
           />
           <p className="font-semibold md:text-lg text-center"> {data?.title}</p>
 
-          <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-            From € {data?.price}
-          </p>
+          {from !== "purchase_by_number" && (
+            <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
+              From € {data?.price}
+            </p>
+          )}
         </div>
       )}
     </div>

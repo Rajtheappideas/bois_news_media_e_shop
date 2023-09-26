@@ -21,6 +21,7 @@ import { useLocation } from "react-router-dom";
 import {
   handleChangeActiveCategory,
   handleChangeMagazineOrSubscriptionShow,
+  handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
 
 const Header = () => {
@@ -41,6 +42,33 @@ const Header = () => {
 
   const dispatch = useDispatch();
 
+  const handleOnClick = (category) => {
+    dispatch(handleChangeActiveCategory(category));
+    dispatch(handleChangeMagazineOrSubscriptionShow(false));
+    setDropDownList("");
+    setOpenSidebar(false);
+    navigate("/shop");
+  };
+
+  const handleOnClickForSubscription = (id) => {
+    dispatch(handleChangeMagazineOrSubscriptionShow(true));
+    dispatch(
+      handleChangeSingleMagazineOrSubscription({
+        id,
+        type: "subscription",
+      })
+    );
+    setOpenSidebar(false);
+    setTimeout(() => {
+      navigate("/shop");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 300);
+  };
+
+  function handleClickOutside() {
+    setshowDropdown(false);
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -56,10 +84,6 @@ const Header = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, [handleClickOutside, showDropdown]);
-
-  function handleClickOutside() {
-    setshowDropdown(false);
-  }
 
   useEffect(() => {
     if (openSidebar && window.innerWidth >= 1024) {
@@ -214,8 +238,7 @@ const Header = () => {
               Shop
             </Link>
             {/* subscribe */}
-            <Link
-              to="/shop"
+            <div
               className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${
                 activeLink === "subscribe"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
@@ -224,7 +247,6 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("subscribe");
                 dispatch(handleChangeActiveCategory("subscriptions"));
-                dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
               subscribe
@@ -232,6 +254,9 @@ const Header = () => {
                 <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
                   {subscriptions?.map((subscription) => (
                     <p
+                      onClick={() =>
+                        handleOnClickForSubscription(subscription?._id)
+                      }
                       key={subscription?._id}
                       className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                     >
@@ -240,7 +265,7 @@ const Header = () => {
                   ))}
                 </div>
               )}
-            </Link>
+            </div>
             {/* buy by number */}
             <div
               to="/shop"
@@ -263,41 +288,35 @@ const Header = () => {
               <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
                 <p
                   onClick={() => {
-                    dispatch(handleChangeActiveCategory("woodmag"));
-                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                    handleOnClick("boismag");
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  WOODmag
+                  BOISMAG
                 </p>
                 <p
                   onClick={() => {
-                    dispatch(
-                      handleChangeActiveCategory("the_magazine_designer")
-                    );
-                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                    handleOnClick("artisans_and_bois");
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  The magazine designer
+                  ARTISANS & BOIS
                 </p>
                 <p
                   onClick={() => {
-                    dispatch(handleChangeActiveCategory("craftsmen_&_wood"));
-                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                    handleOnClick("agenceur");
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  Craftsmen & Wood
+                  L’AGENCEUR MAGAZINE
                 </p>
                 <p
                   onClick={() => {
-                    dispatch(handleChangeActiveCategory("roofing_magazine"));
-                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                    handleOnClick("toiture");
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  Roofing magazine
+                  TOITURE MAGAZINE
                 </p>
               </div>
             </div>
@@ -394,7 +413,7 @@ const Header = () => {
           className="cursor-pointer ml-auto"
           onClick={() => setOpenSidebar(false)}
         />
-        <ul className="md:w-1/2 w-full mx-auto space-y-5 px-10">
+        <ul className="md:w-1/2 w-full mx-auto md:space-y-5 space-y-3 md:px-10 px-5">
           {/* home */}
           <li
             className={`${
@@ -441,17 +460,54 @@ const Header = () => {
                 : "bg-none font-medium"
             } uppercase transition-all duration-300 `}
           >
-            <Link
-              to="/shop"
+            <div
+              className="flex justify-between items-center cursor-pointer select-none"
               onClick={() => {
-                setActiveLink("subscribe");
-                setOpenSidebar(false);
-                dispatch(handleChangeActiveCategory("subscriptions"));
-                dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                dropDownList === "" ||
+                dropDownList === "buy_by_number" ||
+                dropDownList === "our_magazines"
+                  ? setDropDownList("subscribe")
+                  : setDropDownList("");
               }}
             >
-              subscribe
-            </Link>
+              <p
+                onClick={() => {
+                  dispatch(handleChangeActiveCategory("subscriptions"));
+                  dispatch(handleChangeMagazineOrSubscriptionShow(false));
+                }}
+              >
+                subscribe
+              </p>
+              <AiOutlineDown
+                size={20}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${
+                  dropDownList === "subscribe" ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </div>
+
+            {/* dropdown */}
+            <div
+              className={`rounded-lg font-medium transition-all duration-300 origin-top ${
+                dropDownList === "subscribe" ? "block" : "hidden"
+              }  space-y-2 bg-gray-100`}
+            >
+              {!subscriptionLoading && subscriptions?.length > 0 && (
+                <div className="space-y-1 text-sm">
+                  {subscriptions?.map((subscription) => (
+                    <p
+                      onClick={() =>
+                        handleOnClickForSubscription(subscription?._id)
+                      }
+                      key={subscription?._id}
+                      className="p-1 md:pl-5 pl-2 cursor-pointer break-words hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
+                    >
+                      {subscription?.title}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
           </li>
           {/* buy by number */}
           <li
@@ -461,82 +517,68 @@ const Header = () => {
                 : "bg-none font-medium"
             } uppercase transition-all duration-300 space-y-2`}
           >
-            <p className="flex justify-between items-center">
-              <Link
-                to="/shop"
+            <div
+              className="flex justify-between items-center cursor-pointer select-none"
+              onClick={() => {
+                dropDownList === "" ||
+                dropDownList === "subscribe" ||
+                dropDownList === "our_magazines"
+                  ? setDropDownList("buy_by_number")
+                  : setDropDownList("");
+              }}
+            >
+              <p
                 onClick={() => {
-                  setActiveLink("buy_by_number");
-                  setOpenSidebar(false);
                   dispatch(handleChangeActiveCategory("magazines"));
-                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                  dispatch(handleChangeMagazineOrSubscriptionShow(false));
                 }}
               >
                 buy by number
-              </Link>
+              </p>
               <AiOutlineDown
                 size={20}
-                onClick={() => {
-                  dropDownList === ""
-                    ? setDropDownList("buy_by_number")
-                    : setDropDownList("");
-                }}
                 className={`ransition-all duration-100 cursor-pointer ease-linear ${
                   dropDownList === "buy_by_number" ? "rotate-180" : "rotate-0"
                 }`}
               />
-            </p>
+            </div>
+            {/* dropdown */}
             <div
-              className={`whitespace-nowrap rounded-lg font-medium transition-all duration-300 origin-top ${
+              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${
                 dropDownList === "buy_by_number" ? "block" : "hidden"
-              }  space-y-2 bg-gray-100`}
+              }  space-y-1 bg-gray-100`}
             >
               <p
                 onClick={() => {
-                  dispatch(handleChangeActiveCategory("woodmag"));
-                  setOpenSidebar(false);
-                  navigate("/shop");
-                  setDropDownList("");
-                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                  handleOnClick("boismag");
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                WOODmag
+                BOISmag
               </p>
               <p
                 onClick={() => {
-                  dispatch(handleChangeActiveCategory("the_magazine_designer"));
-                  setOpenSidebar(false);
-                  navigate("/shop");
-                  setDropDownList("");
-                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                  handleOnClick("artisans_and_bois");
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                The magazine designer
+                Artisans & bois
               </p>
               <p
                 onClick={() => {
-                  dispatch(handleChangeActiveCategory("craftsmen_&_wood"));
-                  setOpenSidebar(false);
-                  navigate("/shop");
-                  setDropDownList("");
-                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                  handleOnClick("agenceur");
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                Craftsmen & Wood
+                agenceur
               </p>
               <p
                 onClick={() => {
-                  dispatch(handleChangeActiveCategory("roofing_magazine"));
-                  setOpenSidebar(false);
-                  navigate("/shop");
-                  setDropDownList("");
-                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                  handleOnClick("toiture");
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                Roofing magazine
+                Toiture magazine
               </p>
             </div>
           </li>
@@ -548,47 +590,52 @@ const Header = () => {
                 : "bg-none font-medium"
             } uppercase transition-all duration-300 space-y-2`}
           >
-            <p className="flex justify-between items-center">
+            <div
+              className="flex justify-between items-center select-none cursor-pointer"
+              onClick={() => {
+                dropDownList === "" ||
+                dropDownList === "buy_by_number" ||
+                dropDownList === "subscribe"
+                  ? setDropDownList("our_magazines")
+                  : setDropDownList("");
+              }}
+            >
               <span>our magazines</span>
               <AiOutlineDown
                 size={20}
-                onClick={() => {
-                  dropDownList === ""
-                    ? setDropDownList("our_magazines")
-                    : setDropDownList("");
-                }}
                 className={`ransition-all duration-100 cursor-pointer ease-linear ${
                   dropDownList === "our_magazines" ? "rotate-180" : "rotate-0"
                 }`}
               />
-            </p>
+            </div>
+            {/* dropdown */}
             <div
-              className={`whitespace-nowrap rounded-lg font-medium transition-all duration-300 origin-top ${
+              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${
                 dropDownList === "our_magazines" ? "block" : "hidden"
-              }  space-y-2 bg-gray-100`}
+              }  space-y-1 bg-gray-100`}
             >
               <Link to="https://www.boisnewsmedia.com/" target="_blank">
-                <p className="p-3 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                <p className="p-2 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   BOIS NEWS MEDIA
                 </p>
               </Link>
               <Link to="https://www.boismag.com/" target="_blank">
-                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   BOISMAG
                 </p>
               </Link>
               <Link to="https://www.artisansbois.com/" target="_blank">
-                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   ARTISANS & BOIS
                 </p>
               </Link>
               <Link to="https://l-agenceur.com/" target="_blank">
-                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   L’AGENCEUR MAGAZINE
                 </p>
               </Link>
               <Link to="https://www.toituremagazine.com/" target="_blank">
-                <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
+                <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   TOITURE MAGAZINE
                 </p>
               </Link>

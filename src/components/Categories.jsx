@@ -44,17 +44,17 @@ const Categories = () => {
         <ul className="list-disc font-semibold pl-6 space-y-2">
           <li
             onClick={() =>
-              dispatch(handleChangeActiveCategory("artisans&bois"))
+              dispatch(handleChangeActiveCategory("artisans_and_bois"))
             }
             className={`${
-              activeCategory === "artisans&bois" &&
+              activeCategory === "artisans_and_bois" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
           >
-            Craftsmen & Wood (
+            Artisans & Bois  (
             {magazines.length > 0 &&
               magazines.filter((magazine) =>
-                magazine?.magazineTitle.includes("artisans&bois")
+                magazine?.magazineTitle.includes("artisans_and_bois")
               ).length}
             )
           </li>
@@ -65,7 +65,7 @@ const Categories = () => {
             } cursor-pointer`}
             onClick={() => dispatch(handleChangeActiveCategory("boismag"))}
           >
-            WOODmag (
+            BOISmag (
             {magazines.length > 0 &&
               magazines.filter((magazine) =>
                 magazine?.magazineTitle.includes("boismag")
@@ -79,7 +79,7 @@ const Categories = () => {
             } cursor-pointer`}
             onClick={() => dispatch(handleChangeActiveCategory("agenceur"))}
           >
-            The magazine designer (
+            L’agenceur magazine(
             {magazines.length > 0 &&
               magazines.filter((magazine) =>
                 magazine?.magazineTitle.includes("agenceur")
@@ -93,7 +93,7 @@ const Categories = () => {
             } cursor-pointer`}
             onClick={() => dispatch(handleChangeActiveCategory("toiture"))}
           >
-            Roofing magazine (
+            Toiture magazine (
             {magazines.length > 0 &&
               magazines.filter((magazine) =>
                 magazine?.magazineTitle.includes("toiture")

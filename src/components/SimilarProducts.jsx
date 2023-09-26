@@ -57,16 +57,6 @@ const SimilarProducts = ({ similarMagazines }) => {
         {similarMagazines.map((magazine) => (
           <SwiperSlide key={magazine?._id} className="space-y-3">
             <MagazineCard data={magazine} from="similar_products" />
-            {/* <img
-              src={BaseUrl.concat(magazine?.image)}
-              alt={magazine?.title}
-              className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-              onClick={()=>{}}
-            />
-            <p className="font-semibold md:text-xl">{magazine?.title}</p>
-            <p className="font-semibold md:text-xl text-lg text-darkGray">
-              From € {magazine?.price}.00
-            </p> */}
           </SwiperSlide>
         ))}
       </Swiper>

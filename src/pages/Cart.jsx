@@ -10,6 +10,9 @@ const Cart = () => {
   const [showAddressFields, setshowAddressFields] = useState(false);
 
   const { user } = useSelector((state) => state.root.auth);
+  const { cart } = useSelector((state) => state.root.cart);
+  console.log(cart);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -83,6 +86,7 @@ const Cart = () => {
                       type="number"
                       placeholder="1"
                       className="outline-none w-20 p-1 border border-darkGray"
+                      min={0}
                     />
                   </td>
                   <td className="p-4 whitespace-nowrap text-right font-semibold">
@@ -131,6 +135,7 @@ const Cart = () => {
                       type="number"
                       placeholder="1"
                       className="outline-none w-20 p-1 border border-darkGray"
+                      min={0}
                     />
                   </td>
                   <td className="p-4 whitespace-nowrap text-right font-semibold">
@@ -169,9 +174,9 @@ const Cart = () => {
             </div>
             <div className="font-medium md:text-base text-sm text-right space-y-2">
               <p>€ 135.00</p>
-              <div className="text-darkGray cursor-pointer font-semibold space-y-3">
+              <div className="text-darkGray font-semibold space-y-3">
                 <p
-                  className="inline-block w-auto"
+                  className="inline-block w-auto cursor-pointer"
                   onClick={() => setshowAddressFields(!showAddressFields)}
                 >
                   Select address
@@ -187,8 +192,8 @@ const Cart = () => {
                 {/* address fields */}
                 <div
                   className={`${
-                    showAddressFields ? "scale-100 h-full" : "scale-0 h-0 w-0"
-                  } transition-all duration-300 origin-top-right flex flex-col gap-2 md:w-60 w-auto`}
+                    showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
+                  } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
                 >
                   <select name="country" className="input_field w-full">
                     <option label="Country"></option>

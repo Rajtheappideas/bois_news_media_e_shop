@@ -58,7 +58,7 @@ const initialState = {
   subscriptionLoading: false,
   singleMagazineOrSubscription: null,
   magazines: [],
-  latestMagazines: [],
+  latestMagazines: null,
   subscriptions: [],
   allMagazinesAndSubscriptions: [],
 };

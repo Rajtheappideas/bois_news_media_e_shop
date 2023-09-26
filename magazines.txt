@@ -1,4 +1,4 @@
-Artisans & Bois=Craftsmen & Wood
-BOISmag =WOODmag
-L’agenceur magazine  =  The magazine designer
-Toiture magazine=Roofing magazine
+artisans&bois=Craftsmen & Wood
+boismag =WOODmag
+agenceur  =  The magazine designer
+toiture =Roofing magazine

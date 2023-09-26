@@ -1,28 +1,25 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleChangeMagazineShow,
-  handleChangeSingleMagazine,
-  handleChangeSingleSubscription,
-  handleChangeSubscriptionShow,
+  handleChangeMagazineOrSubscriptionShow,
+  handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
 import BaseUrl from "../BaseUrl";
 
-const MagazineCard = ({ data }) => {
-  const { selectedView, activeCategory } = useSelector(
-    (state) => state.root.shop
-  );
+const MagazineCard = ({ data, from }) => {
+  const { selectedView } = useSelector((state) => state.root.shop);
 
   const dispatch = useDispatch();
 
   const handleDispatchAction = () => {
-    if (activeCategory === "magazines") {
-      dispatch(handleChangeMagazineShow(true));
-      dispatch(handleChangeSingleMagazine(data?._id));
-    } else if (activeCategory === "subscriptions") {
-      dispatch(handleChangeSubscriptionShow(true));
-      dispatch(handleChangeSingleSubscription(data?._id));
-    }
+    dispatch(handleChangeMagazineOrSubscriptionShow(true));
+    dispatch(
+      handleChangeSingleMagazineOrSubscription({
+        id: data?._id,
+        type: data?.magazineId ? "magazine" : "subscription",
+      })
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -33,11 +30,11 @@ const MagazineCard = ({ data }) => {
           <img
             src={BaseUrl.concat(data?.image)}
             alt={data?.title}
-            className=" md:min-w-[12rem] max-w-[12rem] mx-auto w-full cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-fill object-center"
+            className=" md:min-w-[12rem] max-w-[12rem] md:mx-0 mx-auto w-full cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-fill object-center"
             onClick={() => handleDispatchAction()}
             loading="lazy"
           />
-          <div className="space-y-2 w">
+          <div className="space-y-2 w-full">
             <p className="font-semibold md:text-left text-center md:text-lg">
               {data?.title}
             </p>
@@ -51,12 +48,18 @@ const MagazineCard = ({ data }) => {
         </div>
       ) : (
         //  vertical card
-        <div className="md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer border md:border-0 md:p-0 p-3">
+        <div
+          onClick={() => handleDispatchAction()}
+          className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer ${
+            from === "similar_products" ? "border-0" : "border"
+          }  md:border-0 md:p-0 p-3`}
+        >
           <img
             src={BaseUrl.concat(data?.image)}
             alt={data?.title}
-            className={`w-full hover:scale-105  transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] object-contain object-center`}
-            onClick={() => handleDispatchAction()}
+            className={`w-full hover:scale-105  transition-all duration-300 lg:max-h-[25rem] ${
+              from === "similar_products" && "md:min-h-[25rem] min-h-[20rem]"
+            } max-h-[20rem] object-contain object-center`}
             loading="lazy"
           />
           <p className="font-semibold md:text-lg text-center"> {data?.title}</p>

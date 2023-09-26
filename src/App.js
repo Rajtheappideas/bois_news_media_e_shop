@@ -50,7 +50,7 @@ function App() {
 
     // data fetch
     dispatch(handleGetMagazines());
-    // dispatch(handleGetLastestMagazines());
+    dispatch(handleGetLastestMagazines());
     dispatch(handleGetSubscriptions());
   }, []);
 

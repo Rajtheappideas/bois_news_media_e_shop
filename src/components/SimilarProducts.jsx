@@ -1,15 +1,16 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import BaseUrl from "../BaseUrl";
+import MagazineCard from "./MagazineCard";
 
-const SimilarProducts = () => {
+const SimilarProducts = ({ similarMagazines }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
   return (
     <div className="space-y-3 relative">
       <p className="heading">Similar Prodcuts</p>
@@ -53,84 +54,21 @@ const SimilarProducts = () => {
         }}
         className="py-8 "
       >
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-3.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-1.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-2.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-11.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-4.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
-        <SwiperSlide className="space-y-3">
-          <img
-            src={require("../assests/images/Product image-8.png")}
-            alt=""
-            className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
-          />
-          <p className="font-semibold md:text-xl">
-            Artisans & Wood subscription
-          </p>
-          <p className="font-semibold md:text-xl text-lg text-darkGray">
-            From € 45.00
-          </p>
-        </SwiperSlide>
+        {similarMagazines.map((magazine) => (
+          <SwiperSlide key={magazine?._id} className="space-y-3">
+            <MagazineCard data={magazine} from="similar_products" />
+            {/* <img
+              src={BaseUrl.concat(magazine?.image)}
+              alt={magazine?.title}
+              className="w-full xl:min-h-[28rem] md:min-h-[25rem] min-h-[20rem]  xl:max-h-[28rem] md:max-h-[25rem] max-h-[20rem] object-fill object-center"
+              onClick={()=>{}}
+            />
+            <p className="font-semibold md:text-xl">{magazine?.title}</p>
+            <p className="font-semibold md:text-xl text-lg text-darkGray">
+              From € {magazine?.price}.00
+            </p> */}
+          </SwiperSlide>
+        ))}
       </Swiper>
       <button
         type="button"

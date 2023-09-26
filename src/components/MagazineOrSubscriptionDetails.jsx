@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeSubscriptionShow } from "../redux/ShopSlice";
+import { handleChangeMagazineOrSubscriptionShow } from "../redux/ShopSlice";
 import SimilarProducts from "./SimilarProducts";
 import BaseUrl from "../BaseUrl";
+import { useEffect } from "react";
 
-const SubscriptionDetails = () => {
+const MagazineOrSubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
+  const [similarMagazines, setSimilarMagazines] = useState([]);
 
   const dispatch = useDispatch();
 
-  const { singleSubscription } = useSelector((state) => state.root.shop);
+  const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
+    useSelector((state) => state.root.shop);
+
+  useEffect(() => {
+    setSimilarMagazines(
+      allMagazinesAndSubscriptions.filter((m) =>
+        m?.magazineTitle.includes(singleMagazineOrSubscription?.magazineTitle)
+      )
+    );
+  }, []);
 
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
@@ -18,23 +29,23 @@ const SubscriptionDetails = () => {
       <BsArrowLeft
         size={25}
         role="button"
-        onClick={() => dispatch(handleChangeSubscriptionShow(false))}
+        onClick={() => dispatch(handleChangeMagazineOrSubscriptionShow(false))}
       />
       {/* img + add to cart details */}
       <div className="w-full flex lg:flex-row flex-col items-start justify-start md:gap-5 gap-3">
         <img
           // src={require("../assests/images/Product image-11.png")}
-          src={BaseUrl.concat(singleSubscription?.image)}
-          alt={singleSubscription?.title}
+          src={BaseUrl.concat(singleMagazineOrSubscription?.image)}
+          alt={singleMagazineOrSubscription?.title}
           className="lg:w-1/2 w-full max-h-[25rem] object-contain object-center"
           loading="lazy"
         />
         <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
-            {singleSubscription?.title}
+            {singleMagazineOrSubscription?.title}
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            From € {singleSubscription?.price}.00
+            From € {singleMagazineOrSubscription?.price}.00
           </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
@@ -52,8 +63,8 @@ const SubscriptionDetails = () => {
               <option value="EEC / Switzerland / Dom-tom&_digital">
                 EEC / Switzerland / Dom-tom
               </option>
-              <option value="option1">option1</option>
-              <option value="option2">option2</option>
+              <option value="Metropolitan France">Metropolitan France</option>
+              <option value=" Rest of the world"> Rest of the world</option>
             </select>
           </div>
           {/* qty */}
@@ -100,26 +111,7 @@ const SubscriptionDetails = () => {
       {/* description */}
       {activeComponent === "description" && (
         <div className="md:space-y-4  space-y-2">
-          {singleSubscription?.description}
-          {/* <p className="font-semibold md:text-lg">
-            8 issues/year – €115 (metropolitan France)
-          </p>
-          <p>
-            Review on the latest news from wood professionals (INDUSTRY - TRADE
-            - CONSTRUCTION) Topics covered: sawmill, equipment, wood energy,
-            carpentry, logging, parquet, terrace, panels, wood treatment, etc.
-          </p>
-          <p>
-            Take advantage of discounts by subscribing to our other magazines:{" "}
-            <br /> <b>2 titles:</b>
-            -€15 – <b>3 titles:</b>
-            -€30 – <b>4 titles:</b>- €40
-          </p>
-          <p>
-            Example for metropolitan France: Subscribe{" "}
-            <b>to Boismag (€115) + Artisans&bois (€55), subscription at €155</b>
-            instead of €170
-          </p> */}
+          {singleMagazineOrSubscription?.description}
         </div>
       )}
       {/*further info */}
@@ -145,9 +137,11 @@ const SubscriptionDetails = () => {
         </div>
       )}
       {/* similar products */}
-      <SimilarProducts />
+      {similarMagazines.length > 0 && (
+        <SimilarProducts similarMagazines={similarMagazines} />
+      )}
     </div>
   );
 };
 
-export default SubscriptionDetails;
+export default MagazineOrSubscriptionDetails;

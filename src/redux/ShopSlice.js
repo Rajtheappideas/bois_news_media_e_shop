@@ -53,12 +53,10 @@ const initialState = {
   success: false,
   selectedView: "grid",
   activeCategory: "view_all",
-  showSubscriptionDetails: false,
-  showMagazineDetails: false,
+  showMagazineOrSubscriptionDetails: false,
   magazineLoading: false,
   subscriptionLoading: false,
-  singleMagazine: null,
-  singleSubscription: null,
+  singleMagazineOrSubscription: null,
   magazines: [],
   latestMagazines: [],
   subscriptions: [],
@@ -75,23 +73,24 @@ const ShopSlice = createSlice({
     handleChangeActiveCategory: (state, { payload }) => {
       state.activeCategory = payload;
     },
-    handleChangeSubscriptionShow: (state, { payload }) => {
-      state.showSubscriptionDetails = payload;
+    handleChangeMagazineOrSubscriptionShow: (state, { payload }) => {
+      state.showMagazineOrSubscriptionDetails = payload;
     },
-    handleChangeMagazineShow: (state, { payload }) => {
-      state.showMagazineDetails = payload;
-    },
-    handleChangeSingleMagazine: (state, { payload }) => {
-      const findMagazine = state.magazines.find(
-        (magazine) => magazine?._id === payload
-      );
-      state.singleMagazine = findMagazine;
-    },
-    handleChangeSingleSubscription: (state, { payload }) => {
-      const findSubscription = state.subscriptions.find(
-        (subscription) => subscription?._id === payload
-      );
-      state.singleSubscription = findSubscription;
+    handleChangeSingleMagazineOrSubscription: (
+      state,
+      { payload: { id, type } }
+    ) => {
+      if (type === "magazine") {
+        const findMagazine = state.magazines.find(
+          (magazine) => magazine?._id === id
+        );
+        state.singleMagazineOrSubscription = findMagazine;
+      } else {
+        const findSubscription = state.subscriptions.find(
+          (subscription) => subscription?._id === id
+        );
+        state.singleMagazineOrSubscription = findSubscription;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -104,6 +103,10 @@ const ShopSlice = createSlice({
       state.magazineLoading = false;
       state.error = null;
       state.magazines = payload?.magazines;
+      state.allMagazinesAndSubscriptions = [
+        ...state.allMagazinesAndSubscriptions,
+        ...payload?.magazines,
+      ];
     });
     builder.addCase(handleGetMagazines.rejected, (state, { payload }) => {
       state.magazineLoading = false;
@@ -114,15 +117,21 @@ const ShopSlice = createSlice({
       state.magazineLoading = true;
       state.error = null;
     });
-    builder.addCase(handleGetLastestMagazines.fulfilled, (state, { payload }) => {
-      state.magazineLoading = false;
-      state.error = null;
-      state.latestMagazines = payload?.magazines;
-    });
-    builder.addCase(handleGetLastestMagazines.rejected, (state, { payload }) => {
-      state.magazineLoading = false;
-      state.error = payload ?? null;
-    });
+    builder.addCase(
+      handleGetLastestMagazines.fulfilled,
+      (state, { payload }) => {
+        state.magazineLoading = false;
+        state.error = null;
+        state.latestMagazines = payload?.magazines;
+      }
+    );
+    builder.addCase(
+      handleGetLastestMagazines.rejected,
+      (state, { payload }) => {
+        state.magazineLoading = false;
+        state.error = payload ?? null;
+      }
+    );
     // get subscriptions
     builder.addCase(handleGetSubscriptions.pending, (state, {}) => {
       state.subscriptionLoading = true;
@@ -132,6 +141,10 @@ const ShopSlice = createSlice({
       state.subscriptionLoading = false;
       state.error = null;
       state.subscriptions = payload?.subscriptions;
+      state.allMagazinesAndSubscriptions = [
+        ...state.allMagazinesAndSubscriptions,
+        ...payload?.subscriptions,
+      ];
     });
     builder.addCase(handleGetSubscriptions.rejected, (state, { payload }) => {
       state.subscriptionLoading = false;
@@ -143,10 +156,8 @@ const ShopSlice = createSlice({
 export const {
   handleChangeGridView,
   handleChangeActiveCategory,
-  handleChangeMagazineShow,
-  handleChangeSubscriptionShow,
-  handleChangeSingleMagazine,
-  handleChangeSingleSubscription,
+  handleChangeMagazineOrSubscriptionShow,
+  handleChangeSingleMagazineOrSubscription,
 } = ShopSlice.actions;
 
 export default ShopSlice.reducer;

@@ -44,45 +44,61 @@ const Categories = () => {
         <ul className="list-disc font-semibold pl-6 space-y-2">
           <li
             onClick={() =>
-              dispatch(handleChangeActiveCategory("craftsmen_&_wood"))
+              dispatch(handleChangeActiveCategory("artisans&bois"))
             }
             className={`${
-              activeCategory === "craftsmen_&_wood" &&
+              activeCategory === "artisans&bois" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
           >
-            Craftsmen & Wood (30)
+            Craftsmen & Wood (
+            {magazines.length > 0 &&
+              magazines.filter((magazine) =>
+                magazine?.magazineTitle.includes("artisans&bois")
+              ).length}
+            )
           </li>
           <li
             className={`${
-              activeCategory === "woodmag" &&
+              activeCategory === "boismag" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
-            onClick={() => dispatch(handleChangeActiveCategory("woodmag"))}
+            onClick={() => dispatch(handleChangeActiveCategory("boismag"))}
           >
-            WOODmag (72)
+            WOODmag (
+            {magazines.length > 0 &&
+              magazines.filter((magazine) =>
+                magazine?.magazineTitle.includes("boismag")
+              ).length}
+            )
           </li>
           <li
             className={`${
-              activeCategory === "the_magazine_designer" &&
+              activeCategory === "agenceur" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
-            onClick={() =>
-              dispatch(handleChangeActiveCategory("the_magazine_designer"))
-            }
+            onClick={() => dispatch(handleChangeActiveCategory("agenceur"))}
           >
-            The magazine designer
+            The magazine designer (
+            {magazines.length > 0 &&
+              magazines.filter((magazine) =>
+                magazine?.magazineTitle.includes("agenceur")
+              ).length}
+            )
           </li>
           <li
             className={`${
-              activeCategory === "roofing_magazine" &&
+              activeCategory === "toiture" &&
               "text-darkBlue underline underline-offset-2"
             } cursor-pointer`}
-            onClick={() =>
-              dispatch(handleChangeActiveCategory("roofing_magazine"))
-            }
+            onClick={() => dispatch(handleChangeActiveCategory("toiture"))}
           >
-            Roofing magazine (24)
+            Roofing magazine (
+            {magazines.length > 0 &&
+              magazines.filter((magazine) =>
+                magazine?.magazineTitle.includes("toiture")
+              ).length}
+            )
           </li>
         </ul>
       </div>

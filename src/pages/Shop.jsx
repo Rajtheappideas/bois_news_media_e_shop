@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeadNavigationLink from "../components/HeadNavigationLink";
 import Categories from "../components/Categories";
 import { BsChevronLeft, BsChevronRight, BsFillGridFill } from "react-icons/bs";
@@ -6,132 +6,126 @@ import { IoListOutline } from "react-icons/io5";
 import MagazineCard from "../components/MagazineCard";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeGridView } from "../redux/ShopSlice";
-import SubscriptionDetails from "../components/SubscriptionDetails";
-import MagazineDetails from "../components/MagazineDetails";
+import MagazineOrSubscriptionDetails from "../components/MagazineOrSubscriptionDetails";
 import ReactPaginate from "react-paginate";
-import { useEffect } from "react";
 
 const Shop = () => {
   const [pageNumber, setPageNumber] = useState(0);
-  const [allMagazinesAndSubscriptions, setAllMagazinesAndSubscriptions] =
-    useState([]);
+  const [activeFilter, setActiveFilter] = useState("");
+  const [showMagazines, setShowMagazines] = useState([]);
 
   const {
     selectedView,
     activeCategory,
-    showSubscriptionDetails,
-    showMagazineDetails,
+    showMagazineOrSubscriptionDetails,
     magazines,
     subscriptions,
     magazineLoading,
     subscriptionLoading,
+    allMagazinesAndSubscriptions,
   } = useSelector((state) => state.root.shop);
 
   const dispatch = useDispatch();
 
   // pagination logic
-
   const magazinesPerPage = 12;
   const pageVisited = pageNumber * magazinesPerPage;
-  const displayMagazines = magazines?.slice(
+  let displayMagazines = displayAccordingToCategory().slice(
     pageVisited,
     magazinesPerPage + pageVisited
   );
-  const pageCount = Math.ceil(magazines?.length / magazinesPerPage);
+  const pageCount = Math.ceil(
+    displayAccordingToCategory().length / magazinesPerPage
+  );
   const changePage = ({ selected }) => {
     setPageNumber(selected);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  useEffect(() => {
-    if (
-      !magazineLoading &&
-      !subscriptionLoading &&
-      magazines?.length > 0 &&
-      subscriptions?.length > 0
-    ) {
-      setAllMagazinesAndSubscriptions([...subscriptions, ...magazines]);
-    }
-  }, [magazineLoading, subscriptionLoading, magazines, subscriptions]);
-
-  function paginationResult() {
+  function displayAccordingToCategory() {
     if (activeCategory === "view_all") {
-      return `${
-        allMagazinesAndSubscriptions?.length > 0
-          ? pageNumber * magazinesPerPage === 0
-            ? 1
-            : pageNumber * magazinesPerPage + 1
-          : 0
-      } - ${
-        !allMagazinesAndSubscriptions
-          ? 0
-          : allMagazinesAndSubscriptions?.length < magazinesPerPage
-          ? allMagazinesAndSubscriptions?.length
-          : magazinesPerPage * (pageNumber + 1) >
-            allMagazinesAndSubscriptions?.length
-          ? allMagazinesAndSubscriptions?.length
-          : magazinesPerPage * (pageNumber + 1)
-      } of ${allMagazinesAndSubscriptions?.length ?? 0} results`;
+      return allMagazinesAndSubscriptions;
     } else if (activeCategory === "subscriptions") {
-      return `${
-        subscriptions?.length > 0
-          ? pageNumber * magazinesPerPage === 0
-            ? 1
-            : pageNumber * magazinesPerPage + 1
-          : 0
-      } - ${
-        !subscriptions
-          ? 0
-          : subscriptions?.length < magazinesPerPage
-          ? subscriptions?.length
-          : magazinesPerPage * (pageNumber + 1) > subscriptions?.length
-          ? subscriptions?.length
-          : magazinesPerPage * (pageNumber + 1)
-      } of ${subscriptions?.length ?? 0} results`;
+      return subscriptions;
     } else if (activeCategory === "magazines") {
-      return `${
-        magazines?.length > 0
-          ? pageNumber * magazinesPerPage === 0
-            ? 1
-            : pageNumber * magazinesPerPage + 1
-          : 0
-      } - ${
-        !magazines
-          ? 0
-          : magazines?.length < magazinesPerPage
-          ? magazines?.length
-          : magazinesPerPage * (pageNumber + 1) > magazines?.length
-          ? magazines?.length
-          : magazinesPerPage * (pageNumber + 1)
-      } of ${magazines?.length ?? 0} results`;
-    } else {
-      return `${
-        magazines?.length > 0
-          ? pageNumber * magazinesPerPage === 0
-            ? 1
-            : pageNumber * magazinesPerPage + 1
-          : 0
-      } - ${
-        !magazines
-          ? 0
-          : magazines?.length < magazinesPerPage
-          ? magazines?.length
-          : magazinesPerPage * (pageNumber + 1) > magazines?.length
-          ? magazines?.length
-          : magazinesPerPage * (pageNumber + 1)
-      } of ${magazines?.length ?? 0} results`;
+      return magazines;
+    } else if (activeCategory === "boismag") {
+      return (
+        magazines.length > 0 &&
+        magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("boismag")
+        )
+      );
+    } else if (activeCategory === "agenceur") {
+      return (
+        magazines.length > 0 &&
+        magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("agenceur")
+        )
+      );
+    } else if (activeCategory === "artisans&bois") {
+      return (
+        magazines.length > 0 &&
+        magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("artisans&bois")
+        )
+      );
+    } else if (activeCategory === "toiture") {
+      return (
+        magazines.length > 0 &&
+        magazines.filter((magazine) =>
+          magazine?.magazineTitle.includes("toiture")
+        )
+      );
     }
   }
+
+  function paginationResult() {
+    return `${
+      displayMagazines?.length > 0
+        ? pageNumber * magazinesPerPage === 0
+          ? 1
+          : pageNumber * magazinesPerPage + 1
+        : 0
+    } - ${
+      !displayMagazines
+        ? 0
+        : displayMagazines?.length < magazinesPerPage
+        ? displayMagazines?.length
+        : magazinesPerPage * (pageNumber + 1) > displayMagazines?.length
+        ? displayMagazines?.length
+        : magazinesPerPage * (pageNumber + 1)
+    } of ${displayMagazines?.length ?? 0} results`;
+  }
+
+  function handleFilter() {
+    if (activeFilter === "new_to_old") {
+      return setShowMagazines(displayMagazines);
+    } else if (activeFilter === "old_to_new") {
+      return setShowMagazines(displayMagazines?.slice()?.reverse());
+    } else if (activeFilter === "high_to_low") {
+      displayMagazines?.sort((a, b) => {
+        return b.price - a.price;
+      });
+    } else if (activeFilter === "low_to_high") {
+      displayMagazines?.sort((a, b) => {
+        return a.price - b.price;
+      });
+    }
+  }
+
+  useEffect(() => {
+    setShowMagazines(displayMagazines);
+    handleFilter();
+  }, [activeCategory, activeFilter]);
 
   return (
     <div className="Container space-y-5 lg:py-10 py-5">
       {/* <HeadNavigationLink /> */}
-      {/* subscription Detais */}
-      {showSubscriptionDetails && <SubscriptionDetails />}
 
-      {/* magazine Detais */}
-      {showMagazineDetails && <MagazineDetails />}
-      {!showMagazineDetails && !showSubscriptionDetails && (
+      {/* magazine or subscription Detais */}
+      {showMagazineOrSubscriptionDetails && <MagazineOrSubscriptionDetails />}
+      {!showMagazineOrSubscriptionDetails && (
         <div className="w-full flex lg:flex-row flex-col items-start gap-3">
           <div className="lg:w-3/12 w-full">
             <Categories />
@@ -183,6 +177,9 @@ const Shop = () => {
                 <select
                   name="sort"
                   className="bg-gray-100 p-2 border outline-none font-medium"
+                  onChange={(e) => {
+                    setActiveFilter(e.target.value);
+                  }}
                 >
                   <option value="new_to_old">Newest to Oldest</option>
                   <option value="old_to_new">Oldest to Newest</option>
@@ -191,85 +188,28 @@ const Shop = () => {
                 </select>
               </div>
             </div>
-            {/* view all magazines */}
-            {activeCategory === "view_all" && (
-              <div
-                className={`w-full py-4 ${
-                  selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
-                } grid  place-items-start items-start md:gap-5 gap-3`}
-              >
-                {magazineLoading || subscriptionLoading ? (
-                  <div className="loading col-span-full">Loading...</div>
-                ) : allMagazinesAndSubscriptions?.length > 0 ? (
-                  allMagazinesAndSubscriptions?.map((magazine) => (
-                    <MagazineCard key={magazine?._id} data={magazine} />
-                  ))
-                ) : (
-                  <div className="loading col-span-full">No Subscriptions here.</div>
-                )}
-              </div>
-            )}
-            {/* subscriptions  */}
-            {activeCategory === "subscriptions" && (
-              <div
-                className={`w-full py-4 ${
-                  selectedView === "grid" && "md:grid-cols-2"
-                } grid  place-items-start items-start md:gap-5 gap-3`}
-              >
-                {subscriptionLoading ? (
-                  <div className="loading col-span-full">Loading...</div>
-                ) : subscriptions?.length > 0 ? (
-                  subscriptions?.map((subscription) => (
-                    <MagazineCard key={subscription?._id} data={subscription} />
-                  ))
-                ) : (
-                  <div className="loading col-span-full">No Subscriptions here.</div>
-                )}
-              </div>
-            )}
-            {/* magazines all */}
-            {activeCategory === "magazines" && (
-              <div
-                className={`w-full py-4 ${
-                  selectedView === "grid" && "md:grid-cols-2"
-                } grid  place-items-start items-start md:gap-5 gap-3`}
-              >
-                {magazineLoading ? (
-                  <div className="loading col-span-full">Loading...</div>
-                ) : magazines?.length > 0 ? (
-                  magazines?.map((magazine) => (
-                    <MagazineCard key={magazine?._id} data={magazine} />
-                  ))
-                ) : (
-                  <div className="loading col-span-full">No Magazines here.</div>
-                )}
-              </div>
-            )}
-            {/* magazines issues */}
-            {(activeCategory === "woodmag" ||
-              activeCategory === "the_magazine_designer" ||
-              activeCategory === "roofing_magazine" ||
-              activeCategory === "craftsmen_&_wood") && (
-              <div
-                className={`w-full py-4 ${
-                  selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
-                } grid  place-items-start items-start md:gap-5 gap-3`}
-              >
-                {magazineLoading || subscriptionLoading ? (
-                  <div className="loading col-span-full">Loading...</div>
-                ) : magazines?.length > 0 ? (
-                  magazines?.map((magazine) => (
-                    <MagazineCard key={magazine?._id} data={magazine} />
-                  ))
-                ) : (
-                  <div className="loading col-span-full">No Magazines here.</div>
-                )}
-              </div>
-            )}
 
+            <div
+              className={`w-full py-4 ${
+                selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
+              } grid  place-items-start items-start md:gap-5 gap-3`}
+            >
+              {magazineLoading || subscriptionLoading ? (
+                <div className="loading col-span-full">Loading...</div>
+              ) : displayMagazines?.length > 0 ? (
+                showMagazines?.map((magazine) => (
+                  <MagazineCard key={magazine?._id} data={magazine} />
+                ))
+              ) : (
+                <div className="loading col-span-full">
+                  No Subscriptions or Magazines here.
+                </div>
+              )}
+            </div>
+
+            {/* pagination */}
             <div className="flex xl:flex-row flex-col items-center w-full gap-3 ">
               <div className="w-full border border-BORDERGRAY bg-white p-3 flex md:flex-row flex-col gap-3 items-center justify-between">
-                {/* pagination */}
                 <ReactPaginate
                   onPageChange={changePage}
                   previousLabel={

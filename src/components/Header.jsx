@@ -18,7 +18,10 @@ import {
 import { handleLogout } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
-import { handleChangeActiveCategory } from "../redux/ShopSlice";
+import {
+  handleChangeActiveCategory,
+  handleChangeMagazineOrSubscriptionShow,
+} from "../redux/ShopSlice";
 
 const Header = () => {
   const [showDropdown, setshowDropdown] = useState(false);
@@ -91,7 +94,6 @@ const Header = () => {
     ) {
       setActiveLink("");
     }
-    console.log(location);
   }, [location]);
 
   return (
@@ -206,6 +208,7 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("shop");
                 dispatch(handleChangeActiveCategory("view_all"));
+                dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
               Shop
@@ -221,6 +224,7 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("subscribe");
                 dispatch(handleChangeActiveCategory("subscriptions"));
+                dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
               subscribe
@@ -238,7 +242,7 @@ const Header = () => {
               )}
             </Link>
             {/* buy by number */}
-            <p
+            <div
               to="/shop"
               className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "buy_by_number"
@@ -251,6 +255,7 @@ const Header = () => {
                 onClick={() => {
                   setActiveLink("buy_by_number");
                   dispatch(handleChangeActiveCategory("magazines"));
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
               >
                 buy by number
@@ -259,6 +264,7 @@ const Header = () => {
                 <p
                   onClick={() => {
                     dispatch(handleChangeActiveCategory("woodmag"));
+                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
@@ -269,6 +275,7 @@ const Header = () => {
                     dispatch(
                       handleChangeActiveCategory("the_magazine_designer")
                     );
+                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
@@ -277,6 +284,7 @@ const Header = () => {
                 <p
                   onClick={() => {
                     dispatch(handleChangeActiveCategory("craftsmen_&_wood"));
+                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
@@ -285,15 +293,16 @@ const Header = () => {
                 <p
                   onClick={() => {
                     dispatch(handleChangeActiveCategory("roofing_magazine"));
+                    dispatch(handleChangeMagazineOrSubscriptionShow(null));
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
                   Roofing magazine
                 </p>
               </div>
-            </p>
+            </div>
             {/* our magaziens */}
-            <p
+            <div
               className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
                 activeLink === "our_magazines"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
@@ -328,7 +337,7 @@ const Header = () => {
                   </p>
                 </Link>
               </div>
-            </p>
+            </div>
             {/* contact */}
             <Link
               to="/contact-us"
@@ -342,7 +351,7 @@ const Header = () => {
               contact
             </Link>
             |{/* cart */}
-            <p className="relative">
+            <div className="relative">
               {user !== null ? (
                 <Link to="cart">
                   <AiOutlineShoppingCart size={25} />
@@ -358,7 +367,7 @@ const Header = () => {
                   </span>
                 </p>
               )}
-            </p>
+            </div>
             {/* <Link to="search"> */}
             <AiOutlineSearch
               size={25}
@@ -418,6 +427,7 @@ const Header = () => {
                 setActiveLink("shop");
                 setOpenSidebar(false);
                 dispatch(handleChangeActiveCategory("view_all"));
+                dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
               shop
@@ -437,6 +447,7 @@ const Header = () => {
                 setActiveLink("subscribe");
                 setOpenSidebar(false);
                 dispatch(handleChangeActiveCategory("subscriptions"));
+                dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
               subscribe
@@ -457,6 +468,7 @@ const Header = () => {
                   setActiveLink("buy_by_number");
                   setOpenSidebar(false);
                   dispatch(handleChangeActiveCategory("magazines"));
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
               >
                 buy by number
@@ -484,6 +496,7 @@ const Header = () => {
                   setOpenSidebar(false);
                   navigate("/shop");
                   setDropDownList("");
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
@@ -495,6 +508,7 @@ const Header = () => {
                   setOpenSidebar(false);
                   navigate("/shop");
                   setDropDownList("");
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
@@ -506,6 +520,7 @@ const Header = () => {
                   setOpenSidebar(false);
                   navigate("/shop");
                   setDropDownList("");
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
@@ -517,6 +532,7 @@ const Header = () => {
                   setOpenSidebar(false);
                   navigate("/shop");
                   setDropDownList("");
+                  dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >

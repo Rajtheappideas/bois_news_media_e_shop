@@ -124,5 +124,5 @@ Label {
 }
 
 .loading {
-  @apply text-2xl text-center w-full font-semibold;
+  @apply md:text-2xl text-center w-full font-semibold;
 }

@@ -11,6 +11,7 @@ const initialState = {
   showResetPassword: false,
   language: JSON.parse(window.localStorage.getItem("lang")) ?? "en",
   showSearchModal: false,
+  searchMagazines: [],
 };
 
 const logoutChannel = new BroadcastChannel("handleLogout");
@@ -28,6 +29,9 @@ const globalStates = createSlice({
     },
     handleChangeShowSearch: (state, { payload }) => {
       state.showSearchModal = payload;
+    },
+    handleChangeSearchMagazines: (state, { payload }) => {
+      state.searchMagazines = payload;
     },
     handleChangeShowForgotPassword: (state, { payload }) => {
       state.showForgotPassword = payload;
@@ -82,6 +86,7 @@ export const {
   logoutAllTabsEventListener,
   handleChangeShowResetPassword,
   handleChangeShowSearch,
+  handleChangeSearchMagazines,
 } = globalStates.actions;
 
 export default globalStates.reducer;

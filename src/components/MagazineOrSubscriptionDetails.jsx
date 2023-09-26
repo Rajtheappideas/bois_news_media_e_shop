@@ -21,7 +21,7 @@ const MagazineOrSubscriptionDetails = () => {
         m?.magazineTitle.includes(singleMagazineOrSubscription?.magazineTitle)
       )
     );
-  }, []);
+  }, [singleMagazineOrSubscription]);
 
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
@@ -68,14 +68,16 @@ const MagazineOrSubscriptionDetails = () => {
             </select>
           </div>
           {/* qty */}
-          <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
-            <input
-              type="number"
-              placeholder="1"
-              className="w-full p-2 border outline-none"
-            />
-          </div>
+          {!singleMagazineOrSubscription?.subscriptionId && (
+            <div className="w-full flex items-center gap-3 font-semibold">
+              <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
+              <input
+                type="number"
+                placeholder="1"
+                className="w-full p-2 border outline-none"
+              />
+            </div>
+          )}
           {/* price */}
           <p className="font-semibold md:text-xl text-lg">
             Price:

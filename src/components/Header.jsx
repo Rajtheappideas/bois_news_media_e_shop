@@ -245,11 +245,16 @@ const Header = () => {
                   : "border-0 text-black font-medium"
               } relative group`}
               onClick={() => {
-                setActiveLink("subscribe");
                 dispatch(handleChangeActiveCategory("subscriptions"));
               }}
             >
-              subscribe
+              <span
+                onClick={() =>
+                  dispatch(handleChangeMagazineOrSubscriptionShow(false))
+                }
+              >
+                subscribe
+              </span>
               {!subscriptionLoading && subscriptions?.length > 0 && (
                 <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
                   {subscriptions?.map((subscription) => (
@@ -471,10 +476,10 @@ const Header = () => {
               }}
             >
               <p
-                onClick={() => {
-                  dispatch(handleChangeActiveCategory("subscriptions"));
-                  dispatch(handleChangeMagazineOrSubscriptionShow(false));
-                }}
+                // onClick={() => {
+                //   dispatch(handleChangeActiveCategory("subscriptions"));
+                //   dispatch(handleChangeMagazineOrSubscriptionShow(false));
+                // }}
               >
                 subscribe
               </p>
@@ -527,14 +532,7 @@ const Header = () => {
                   : setDropDownList("");
               }}
             >
-              <p
-                onClick={() => {
-                  dispatch(handleChangeActiveCategory("magazines"));
-                  dispatch(handleChangeMagazineOrSubscriptionShow(false));
-                }}
-              >
-                buy by number
-              </p>
+              <p>buy by number</p>
               <AiOutlineDown
                 size={20}
                 className={`ransition-all duration-100 cursor-pointer ease-linear ${

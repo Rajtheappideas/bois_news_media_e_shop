@@ -116,7 +116,7 @@ const Shop = () => {
 
   function handleFilter(items) {
     if (activeFilter === "new_to_old") {
-      return handleChangeMagazinesAccordingToCategory();
+      return setShowMagazines(items)
     } else if (activeFilter === "old_to_new") {
       return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {

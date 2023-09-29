@@ -5,15 +5,130 @@ import { handleChangeMagazineOrSubscriptionShow } from "../redux/ShopSlice";
 import SimilarProducts from "./SimilarProducts";
 import BaseUrl from "../BaseUrl";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { handleAddProductToCart } from "../redux/CartSlice";
 
 const MagazineOrSubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
   const [similarMagazines, setSimilarMagazines] = useState([]);
+  const [selectedTypeOfSupport, setSelectedTypeOfSupport] = useState("");
+  const [selectedShippingZone, setSelectedShippingZone] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   const dispatch = useDispatch();
 
   const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
     useSelector((state) => state.root.shop);
+
+  const { cart } = useSelector((state) => state.root.cart);
+
+  let isAlreadyInCart = false;
+
+  const findIncart =
+    cart !== undefined &&
+    cart?.length > 0 &&
+    cart?.find((p) => p._id === singleMagazineOrSubscription?._id);
+
+  if (findIncart) {
+    isAlreadyInCart = true;
+  } else {
+    isAlreadyInCart = false;
+  }
+
+  function priceForMagazineAndSubscription(from) {
+    if (!selectedTypeOfSupport) return;
+    if (selectedTypeOfSupport === "digital") {
+      return parseFloat(singleMagazineOrSubscription?.digitalPrice);
+    } else if (selectedShippingZone === "EEC_Switzerland_Overseas") {
+      if (from === "base_price") {
+        return singleMagazineOrSubscription?.paperPrice
+          ?.EEC_Switzerland_Overseas;
+      }
+      if (singleMagazineOrSubscription?.magazineId) {
+        return (
+          parseFloat(
+            singleMagazineOrSubscription?.paperPrice?.EEC_Switzerland_Overseas
+          ) * parseFloat(quantity)
+        );
+      }
+      return singleMagazineOrSubscription?.paperPrice?.EEC_Switzerland_Overseas;
+    } else if (selectedShippingZone === "RestOfTheWorld") {
+      if (singleMagazineOrSubscription?.magazineId) {
+        return (
+          parseFloat(singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld) *
+          parseFloat(quantity)
+        );
+      }
+      if (from === "base_price") {
+        return parseFloat(
+          singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld
+        );
+      }
+      return singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld;
+    } else if (selectedShippingZone === "MetropolitanFrance") {
+      if (singleMagazineOrSubscription?.magazineId) {
+        return (
+          parseFloat(
+            singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance
+          ) * parseFloat(quantity)
+        );
+      }
+      if (from === "base_price") {
+        return parseFloat(
+          singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance
+        );
+      }
+      return singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance;
+    }
+  }
+
+  const handleOnchageQuantity = (e) => {
+    toast.remove();
+    if (e.target.value < 1) {
+      setQuantity(1);
+      return toast.error(
+        "Quantity should not less than 1 and value should be valid"
+      );
+    } 
+    // else if (!/^(?=.*[1-9])\d{1,3}(?:\.\d\d?)?$/.test(e.target.value)) {
+    //   return toast.error(
+    //     "Quantity should not be more than 3 digits and quantity should valid value"
+    //   );
+    // }
+    setQuantity(e.target.value);
+  };
+
+  const handleProductAddToCartFunction = () => {
+    toast.remove();
+    if (
+      selectedShippingZone === "" ||
+      selectedTypeOfSupport === "" ||
+      (selectedTypeOfSupport === "paperAndDigital" &&
+        !singleMagazineOrSubscription?.subscriptionId &&
+        quantity === "")
+    ) {
+      return toast.error("Please fill all the fields.");
+    }
+    if (quantity.length > 3) {
+      return toast.error("Quantity should not be more than 3 digits");
+    }
+    dispatch(
+      handleAddProductToCart({
+        selectedShippingZone,
+        selectedTypeOfSupport,
+        quantity,
+        _id: singleMagazineOrSubscription?._id,
+        isSubscription: singleMagazineOrSubscription?.subscriptionId
+          ? true
+          : false,
+        price: priceForMagazineAndSubscription("base_price"),
+        title: singleMagazineOrSubscription?.title,
+      })
+    );
+    setSelectedShippingZone("");
+    setSelectedTypeOfSupport("");
+    setQuantity(1);
+  };
 
   useEffect(() => {
     setSimilarMagazines(
@@ -21,7 +136,11 @@ const MagazineOrSubscriptionDetails = () => {
         m?.magazineTitle.includes(singleMagazineOrSubscription?.magazineTitle)
       )
     );
-  }, [singleMagazineOrSubscription]);
+  }, [singleMagazineOrSubscription, selectedTypeOfSupport]);
+
+  useEffect(() => {
+    priceForMagazineAndSubscription();
+  }, [selectedShippingZone]);
 
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
@@ -34,57 +153,95 @@ const MagazineOrSubscriptionDetails = () => {
       {/* img + add to cart details */}
       <div className="w-full flex lg:flex-row flex-col items-start justify-start md:gap-5 gap-3">
         <img
-          // src={require("../assests/images/Product image-11.png")}
           src={BaseUrl.concat(singleMagazineOrSubscription?.image)}
           alt={singleMagazineOrSubscription?.title}
           className="lg:w-1/2 w-full max-h-[25rem] object-contain object-center"
           loading="lazy"
         />
+        {/* input fields */}
         <div className="lg:w-2/3 w-full md:space-y-4 space-y-2">
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
             {singleMagazineOrSubscription?.title}
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            From € {singleMagazineOrSubscription?.price}.00
+            From €&nbsp;
+            {Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(singleMagazineOrSubscription?.digitalPrice)}
           </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm">Type of support</p>
-            <select name="type_of_support" className="border p-2 w-full">
-              <option value="paper_&_digital">Paper and Digital</option>
-              <option value="paper">Paper</option>
+            <p className="md:w-3/12 md:text-base text-sm md:whitespace-nowrap">Type of support</p>
+            <select
+              disabled={isAlreadyInCart}
+              name="type_of_support"
+              onChange={(e) => setSelectedTypeOfSupport(e.target.value)}
+              className="border p-2 w-full outline-none font-light"
+              value={selectedTypeOfSupport}
+            >
+              <option label="Choose an option"></option>
+              <option value="paperAndDigital">Paper and Digital</option>
               <option value="digital">Digital</option>
             </select>
           </div>
           {/* shipping area */}
           <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm">Shipping area</p>
-            <select name="shipping_area" className="border p-2 w-full">
-              <option value="EEC / Switzerland / Dom-tom&_digital">
+            <select
+              onChange={(e) => setSelectedShippingZone(e.target.value)}
+              disabled={isAlreadyInCart}
+              name="shipping_area"
+              className="border p-2 w-full font-light outline-none"
+              value={selectedShippingZone}
+            >
+              <option label="Select your shipping zone"></option>
+              <option value="EEC_Switzerland_Overseas">
                 EEC / Switzerland / Dom-tom
               </option>
-              <option value="Metropolitan France">Metropolitan France</option>
-              <option value=" Rest of the world"> Rest of the world</option>
+              <option value="MetropolitanFrance">Metropolitan France</option>
+              <option value="RestOfTheWorld"> Rest of the world</option>
             </select>
           </div>
           {/* qty */}
-          {!singleMagazineOrSubscription?.subscriptionId && (
-            <div className="w-full flex items-center gap-3 font-semibold">
-              <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
-              <input
-                type="number"
-                placeholder="1"
-                className="w-full p-2 border outline-none"
-              />
-            </div>
-          )}
+          {!singleMagazineOrSubscription?.subscriptionId &&
+            selectedTypeOfSupport === "paperAndDigital" && (
+              <div className="w-full flex items-center gap-3 font-semibold">
+                <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
+                <input
+                  type="number"
+                  disabled={isAlreadyInCart}
+                  placeholder="1"
+                  className="w-full p-2 border outline-none"
+                  value={quantity}
+                  min={1}
+                  onChange={(e) => handleOnchageQuantity(e)}
+                />
+              </div>
+            )}
           {/* price */}
-          <p className="font-semibold md:text-xl text-lg">
-            Price:
-            <span className="text-darkBlue">€ 140.00</span>
-          </p>
+          {selectedShippingZone && selectedTypeOfSupport && (
+            <p className="font-semibold md:text-xl text-lg space-x-2">
+              <span>Price:</span>
+              <span className="text-darkBlue">
+                €&nbsp;
+                {Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 2,
+                }).format(priceForMagazineAndSubscription())}
+              </span>
+            </p>
+          )}
           {/* btn */}
-          <button className="w-full gray_button h-12">+ Add to cart</button>
+          <button
+            className={`w-full gray_button h-12 ${
+              isAlreadyInCart && "cursor-not-allowed"
+            } `}
+            onClick={() => {
+              handleProductAddToCartFunction();
+            }}
+            disabled={isAlreadyInCart}
+          >
+            {isAlreadyInCart ? "Already in cart" : "+ Add to cart"}
+          </button>
         </div>
       </div>
       {/* tab btns */}

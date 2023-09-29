@@ -31,6 +31,7 @@ const Header = () => {
   const [dropDownList, setDropDownList] = useState("buy_by_number");
 
   const { user } = useSelector((state) => state.root.auth);
+  const { cart } = useSelector((state) => state.root.cart);
   const { subscriptions, subscriptionLoading } = useSelector(
     (state) => state.root.shop
   );
@@ -85,6 +86,7 @@ const Header = () => {
     };
   }, [handleClickOutside, showDropdown]);
 
+  // for auto close when screen size > tablet
   useEffect(() => {
     if (openSidebar && window.innerWidth >= 1024) {
       setOpenSidebar(false);
@@ -121,7 +123,7 @@ const Header = () => {
   }, [location]);
 
   return (
-    <header>
+    <header className="sticky top-0 bg-white w-full z-10">
       {/* fist div */}
       <div className="bg-darkBlue w-full text-white md:py-4 py-2">
         <div className="Container w-full flex items-center justify-between md:text-base text-sm">
@@ -239,7 +241,7 @@ const Header = () => {
             </Link>
             {/* subscribe */}
             <div
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${
+              className={`uppercase transition-all hover:bg-gray-200 hover:p-1 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${
                 activeLink === "subscribe"
                   ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
                   : "border-0 text-black font-medium"
@@ -379,8 +381,8 @@ const Header = () => {
               {user !== null ? (
                 <Link to="cart">
                   <AiOutlineShoppingCart size={25} />
-                  <span className="absolute rounded-full -top-3 -right-2 min-w-[1rem] min-h-[1rem] text-sm w-auto h-auto bg-darkBlue text-white text-center ">
-                    0
+                  <span className="absolute rounded-full -top-3 -right-2 min-w-[1.3rem] leading-[1.3rem] align-middle text-sm bg-darkBlue text-white text-center ">
+                    {cart !== undefined && cart?.length > 0 ? cart?.length : 0}
                   </span>
                 </Link>
               ) : (
@@ -409,16 +411,16 @@ const Header = () => {
       </div>
       {/* mobile sidebar */}
       <div
-        className={`fixed top-0 left-0 z-20 p-2 transition-all origin-top-right duration-300 min-h-screen max-h-screen w-screen bg-white text-black ${
+        className={`fixed top-0 left-0 z-20 p-2 pt-10 transition-all origin-top-right duration-300 min-h-screen max-h-screen w-screen bg-white text-black ${
           openSidebar ? "scale-100" : "scale-0"
         }`}
       >
         <AiOutlineClose
           size={30}
-          className="cursor-pointer ml-auto"
+          className="cursor-pointer absolute top-14 right-5"
           onClick={() => setOpenSidebar(false)}
         />
-        <ul className="md:w-1/2 w-full mx-auto md:space-y-5 space-y-3 md:px-10 px-5">
+        <ul className="md:w-1/2 w-[85%] md:mx-auto md:space-y-5 space-y-3 md:px-10 px-5">
           {/* home */}
           <li
             className={`${
@@ -476,10 +478,10 @@ const Header = () => {
               }}
             >
               <p
-                // onClick={() => {
-                //   dispatch(handleChangeActiveCategory("subscriptions"));
-                //   dispatch(handleChangeMagazineOrSubscriptionShow(false));
-                // }}
+              // onClick={() => {
+              //   dispatch(handleChangeActiveCategory("subscriptions"));
+              //   dispatch(handleChangeMagazineOrSubscriptionShow(false));
+              // }}
               >
                 subscribe
               </p>

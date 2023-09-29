@@ -59,7 +59,7 @@ const MagazineCard = ({ data, from }) => {
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
-              From € {data?.price}
+              From € {data?.digitalPrice}
             </p>
           </div>
         </div>
@@ -74,18 +74,14 @@ const MagazineCard = ({ data, from }) => {
           <img
             src={BaseUrl.concat(data?.image)}
             alt={data?.title}
-            className={`w-full hover:scale-105 transition-all duration-300 lg:max-h-[25rem]  max-h-[20rem]  ${
-              from === "similar_products"
-                ? "md:min-h-[25rem] min-h-[20rem]"
-                : "min-h-[20rem] lg:min-h-[25rem]"
-            } object-contain object-center`}
+            className={`w-full hover:scale-105 transition-all duration-300 lg:max-h-[25rem]  max-h-[20rem] min-h-[20rem] lg:min-h-[25rem] object-contain object-center`}
             loading="lazy"
           />
           <p className="font-semibold md:text-lg text-center"> {data?.title}</p>
 
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-              From € {data?.price}
+              From € {data?.digitalPrice}
             </p>
           )}
         </div>

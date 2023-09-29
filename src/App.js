@@ -20,7 +20,12 @@ import {
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
 import SearchPopup from "./components/SearchPopup";
-import { handleGetLastestMagazines, handleGetMagazines, handleGetSubscriptions } from "./redux/ShopSlice";
+import {
+  handleGetLastestMagazines,
+  handleGetMagazines,
+  handleGetSubscriptions,
+} from "./redux/ShopSlice";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -79,6 +84,7 @@ function App() {
             </div>
           }
         >
+          <ScrollToTop />
           <Header />
           <SearchPopup />
           {showSignin && <Signin />}

@@ -1,14 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import useAbortApiCall from "../../hooks/useAbortApiCall";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AddressSchema } from "../../schemas/schema";
+import { handleChangeUserAddress } from "../../redux/AuthSlice";
+import toast from "react-hot-toast";
 
 const ShippingAddress = ({ setActiveAddress }) => {
-  const { user } = useSelector((state) => state.root.auth);
-  const address = user?.shippingAddress;
-  console.log(address);
+  const { user, token, addressLoading } = useSelector(
+    (state) => state.root.auth
+  );
+
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isDirty },
+  } = useForm({
+    shouldFocusError: true,
+    resolver: yupResolver(AddressSchema),
+    defaultValues: {
+      address1: "",
+      address2: "",
+      address3: "",
+      zipCode: "",
+      province: "",
+      country: "",
+      city: "",
+    },
+  });
+
+  const onSubmit = (data) => {
+    const { address1, address2, address3, city, zipCode, province, country } =
+      data;
+
+    if (!isDirty) return;
+    const response = dispatch(
+      handleChangeUserAddress({
+        addressType: "shipping",
+        address1,
+        address2,
+        address3,
+        city,
+        province,
+        country,
+        zipCode,
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.success("address added successfully.", { duration: 2000 });
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      abortApiCall();
+    };
+  }, []);
 
   return (
-    <div className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
+    >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
         <span>Shipping Address</span>
         <AiOutlineClose
@@ -18,71 +84,67 @@ const ShippingAddress = ({ setActiveAddress }) => {
         />{" "}
       </p>
       {/* name */}
-      <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="first_name" className="Label">
-            First name
-          </label>
-          <input
-            type="text"
-            placeholder="john"
-            className="w-full input_field"
-          />
-        </div>
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="last_name" className="Label">
-            Last name
-          </label>
-          <input
-            type="text"
-            placeholder="adam"
-            className="w-full input_field"
-          />
-        </div>
+      {/* <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
+      <div className="md:w-1/2 w-full">
+        <label htmlFor="first_name" className="Label">
+          First name
+        </label>
+        <input
+          type="text"
+          placeholder="john"
+          className="w-full input_field"
+        />
       </div>
-      {/* company name */}
+      <div className="md:w-1/2 w-full">
+        <label htmlFor="last_name" className="Label">
+          Last name
+        </label>
+        <input
+          type="text"
+          placeholder="adam"
+          className="w-full input_field"
+        />
+      </div>
+    </div> */}
+      {/* address 1*/}
       <div className="w-full">
-        <label htmlFor="company_name" className="Label">
-          Company name (optional)
+        <label htmlFor="address_1" className="Label">
+          address 1
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address1")}
         />
+        <span className="error">{errors?.address1?.message}</span>
       </div>
-      {/* country */}
+      {/* address 2*/}
       <div className="w-full">
-        <label htmlFor="country" className="Label">
-          country
+        <label htmlFor="address_2" className="Label">
+          address 2
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address2")}
         />
+        <span className="error">{errors?.address2?.message}</span>
       </div>
-      {/* street */}
+
+      {/* address 3*/}
       <div className="w-full">
-        <label htmlFor="street_address" className="Label">
-          street address
+        <label htmlFor="address_3" className="Label">
+          address 3
         </label>
         <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("address3")}
         />
-      </div>
-      {/* state */}
-      <div className="w-full">
-        <label htmlFor="state" className="Label">
-          state
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-        />
+        <span className="error">{errors?.address3?.message}</span>
       </div>
       {/* city */}
       <div className="w-full">
@@ -93,7 +155,9 @@ const ShippingAddress = ({ setActiveAddress }) => {
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("city")}
         />
+        <span className="error">{errors?.city?.message}</span>
       </div>
       {/* postal code */}
       <div className="w-full">
@@ -104,13 +168,44 @@ const ShippingAddress = ({ setActiveAddress }) => {
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
+          {...register("zipCode")}
         />
+        <span className="error">{errors?.zipCode?.message}</span>
+      </div>
+      {/* province */}
+      <div className="w-full">
+        <label htmlFor="province" className="Label">
+          province
+        </label>
+        <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("province")}
+        />
+        <span className="error">{errors?.province?.message}</span>
+      </div>
+      {/* country */}
+      <div className="w-full">
+        <label htmlFor="country" className="Label">
+          country
+        </label>
+        <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("country")}
+        />
+        <span className="error">{errors?.country?.message}</span>
       </div>
       {/* btn */}
-      <button className="gray_button capitalize md:w-60 w-full md:h-12 h-10">
-        save address
+      <button
+        disabled={addressLoading}
+        className="gray_button capitalize md:w-60 w-full md:h-12 h-10"
+      >
+        {addressLoading ? "Saving..." : "Save address"}
       </button>
-    </div>
+    </form>
   );
 };
 

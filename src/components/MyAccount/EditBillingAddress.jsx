@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
+import { AddressSchema } from "../../schemas/schema";
 
 const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -21,40 +22,6 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
-  const editAddressSchema = yup.object({
-    address1: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .required(t("address  1 is required")),
-    address2: yup.string().max(200, t("Maximum character limit reached")),
-    address3: yup.string().max(200, t("Maximum character limit reached")),
-    zipCode: yup
-      .string()
-      .matches(/^\d{5}(?:[-\s]\d{4})?$/, "Enter valid code")
-      .required(t("zipcode is required"))
-      .trim(""),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required")),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required")),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("province can only contain Latin letters.")
-      ),
-  });
-
   const {
     register,
     handleSubmit,
@@ -62,7 +29,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(editAddressSchema),
+    resolver: yupResolver(AddressSchema),
     defaultValues: {
       address1: billingAddress?.address1,
       address2: billingAddress?.address2,
@@ -96,11 +63,17 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("Address edited Successfully."), { duration: 2000 });
+          toast.success(t("address edited successfully."), { duration: 2000 });
         }
       });
     }
   };
+
+  useEffect(() => {
+    return () => {
+      abortApiCall();
+    };
+  }, []);
 
   return (
     <form

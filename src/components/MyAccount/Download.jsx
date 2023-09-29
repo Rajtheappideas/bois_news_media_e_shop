@@ -25,7 +25,7 @@ const Download = () => {
                       <img
                         src={BaseUrl.concat(magazine?.image)}
                         alt={magazine?.title}
-                        className="w-fit md:h-48 h-32 object-contain object-center"
+                        className="w-40 md:h-48 h-32 object-contain object-center"
                       />
                       <p>
                         <b>{magazine?.title}</b>
@@ -36,7 +36,11 @@ const Download = () => {
                     </td>
 
                     <td className="md:p-4 p-3 font-medium text-center">
-                      <a href={BaseUrl.concat(magazine?.pdf)} download>
+                      <a
+                        href={BaseUrl.concat(magazine?.pdf)}
+                        target="_blank"
+                        download
+                      >
                         <button className="uppercase gray_button">
                           download
                         </button>

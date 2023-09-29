@@ -121,12 +121,12 @@ const Shop = () => {
       return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {
       const highToLow = items?.slice().sort((a, b) => {
-        return b.price - a.price;
+        return b.digitalPrice - a.digitalPrice;
       });
       return setShowMagazines(highToLow);
     } else if (activeFilter === "low_to_high") {
       const lowToHigh = items?.slice().sort((a, b) => {
-        return a.price - b.price;
+        return a.digitalPrice - b.digitalPrice;
       });
       return setShowMagazines(lowToHigh);
     }
@@ -145,7 +145,7 @@ const Shop = () => {
       {showMagazineOrSubscriptionDetails && <MagazineOrSubscriptionDetails />}
       {!showMagazineOrSubscriptionDetails && (
         <div className="w-full flex lg:flex-row flex-col items-start gap-3">
-          <div className="lg:w-3/12 w-full">
+          <div className="lg:w-3/12 w-full lg:sticky top-36 bg-white">
             <Categories />
           </div>
           <div className="lg:w-9/12 w-full space-y-3">

@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
+import { AddressSchema } from "../../schemas/schema";
 
 const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -27,40 +28,6 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
-  const editAddressSchema = yup.object({
-    address1: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .required(t("address  1 is required")),
-    address2: yup.string().max(200, t("Maximum character limit reached")),
-    address3: yup.string().max(200, t("Maximum character limit reached")),
-    zipCode: yup
-      .string()
-      .matches(/^\d{5}(?:[-\s]\d{4})?$/, "Enter valid code")
-      .required(t("zipcode is required"))
-      .trim(""),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required")),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required")),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("province can only contain Latin letters.")
-      ),
-  });
-
   const {
     register,
     handleSubmit,
@@ -68,7 +35,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(editAddressSchema),
+    resolver: yupResolver(AddressSchema),
     defaultValues: {
       address1: shippingAddress?.address1,
       address2: shippingAddress?.address2,
@@ -102,7 +69,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("Address edited Successfully."), { duration: 2000 });
+          toast.success(t("address edited successfully."), { duration: 2000 });
         }
       });
     }

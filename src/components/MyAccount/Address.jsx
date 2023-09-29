@@ -32,7 +32,8 @@ const Address = () => {
 
           {activeAddress === "" && activeEditAddress === "" && (
             <div className="w-full grid md:grid-cols-2 place-items-start items-start gap-4">
-              {addresses !== null ? (
+              {addresses !== null &&
+              Object.values(addresses?.billingAddress).length > 0 ? (
                 <div className="space-y-2 w-full">
                   <p className="heading">Billing address</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
@@ -66,7 +67,8 @@ const Address = () => {
                   </div>
                 </div>
               )}
-              {addresses !== null ? (
+              {addresses !== null &&
+              Object.values(addresses?.shippingAddress).length > 0 ? (
                 <div className="space-y-2 w-full">
                   <p className="heading">Shipping address</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">

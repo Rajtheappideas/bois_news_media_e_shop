@@ -6,11 +6,35 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import BaseUrl from "../BaseUrl";
-import MagazineCard from "./MagazineCard";
+import {
+  handleChangeMagazineOrSubscriptionShow,
+  handleChangeSingleMagazineOrSubscription,
+} from "../redux/ShopSlice";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SimilarProducts = ({ similarMagazines }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleDispatchAction = (type, id) => {
+    dispatch(handleChangeMagazineOrSubscriptionShow(true));
+    dispatch(
+      handleChangeSingleMagazineOrSubscription({
+        id,
+        type,
+      })
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      if (!location.pathname.includes("shop")) return navigate("shop");
+    }, 300);
+  };
+
   return (
     <div className="space-y-3 relative">
       <p className="heading">Similar Prodcuts</p>
@@ -56,7 +80,29 @@ const SimilarProducts = ({ similarMagazines }) => {
       >
         {similarMagazines.map((magazine) => (
           <SwiperSlide key={magazine?._id} className="space-y-3">
-            <MagazineCard data={magazine} from="similar_products" />
+            <div
+              onClick={() =>
+                handleDispatchAction(
+                  magazine?.magazineId ? "magazine" : "subscription",
+                  magazine?._id
+                )
+              }
+              className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer md:border-0 md:p-0 p-3`}
+            >
+              <img
+                src={BaseUrl.concat(magazine?.image)}
+                alt={magazine?.title}
+                className={`w-full hover:scale-105 transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] md:min-h-[25rem] sm:min-h-[20rem] min-h-[15rem] object-contain object-center`}
+                loading="lazy"
+              />
+              <p className="font-semibold md:text-lg text-center">
+                {magazine?.title}
+              </p>
+
+              <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
+                From € {magazine?.digitalPrice}
+              </p>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>

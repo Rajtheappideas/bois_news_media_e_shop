@@ -17,8 +17,16 @@ const Footer = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSubscribeNewsLetter = async () => {
+  const handleSubscribeNewsLetter = async (e) => {
+    e.preventDefault();
+    toast.remove();
     if (!email) return inputRef.current.focus();
+    if (
+      !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/.test(
+        email
+      )
+    )
+      return toast.error("Enter valid email");
     setLoading(true);
     try {
       await PostUrl("newsletter", {
@@ -50,7 +58,7 @@ const Footer = () => {
               Sign up to receive email updates about courses
             </p>
           </div>
-          <div className="flex items-center lg:w-fit gap-2 w-full justify-center">
+          <form className="flex items-center lg:w-fit gap-2 w-full justify-center">
             <input
               type="email"
               placeholder="Enter your email"
@@ -60,14 +68,13 @@ const Footer = () => {
               ref={inputRef}
             />
             <button
-              type="button"
               className="uppercase text-white bg-black text-center w-auto p-2"
-              onClick={() => handleSubscribeNewsLetter()}
+              onClick={(e) => handleSubscribeNewsLetter(e)}
               disabled={loading}
             >
               {loading ? "subscribing..." : "subscribe"}
             </button>
-          </div>
+          </form>
         </div>
       </div>
       {/* footer */}
@@ -140,32 +147,56 @@ const Footer = () => {
             <span className="bg-darkBlue w-14 absolute -bottom-1 left-0 h-0.5 rounded-lg" />
           </p>
           <ul className="font-medium ">
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://www.boisnewsmedia.com/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Wood News Media
               </li>
             </Link>
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://www.boismag.com/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Wood Mag
               </li>
             </Link>
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://www.artisansbois.com/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Craftsmen & Wood
               </li>
             </Link>
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://l-agenceur.com/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 The magazine designer
               </li>
             </Link>
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://www.toituremagazine.com/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 Magazine Roofing
               </li>
             </Link>
-            <Link to="/" onClick={() => scrollToTop()}>
+            <Link
+              to="https://woodpartners.fr/"
+              target="_blank"
+              onClick={() => scrollToTop()}
+            >
               <li className="hover:border-l-4  my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
                 WoodPartners
               </li>

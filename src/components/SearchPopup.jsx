@@ -20,6 +20,7 @@ const SearchPopup = () => {
 
   const handleSearchMagazines = (e) => {
     e.preventDefault();
+    toast.remove();
     if (!searchTerm) return toast.error("Enter a word");
     const filteredProducts = allMagazinesAndSubscriptions.filter((entry) =>
       Object.values(entry).some((val) => {
@@ -30,9 +31,13 @@ const SearchPopup = () => {
     );
     toast.remove();
     if (!filteredProducts.length > 0) return toast.error("Magazine not found");
-    dispatch(handleChangeSearchMagazines(filteredProducts));
-    handleClickOutside();
-    navigate("/search", { state: { searchTerm } });
+    toast.loading("Searching...");
+    setTimeout(() => {
+      toast.remove();
+      dispatch(handleChangeSearchMagazines(filteredProducts));
+      handleClickOutside();
+      navigate("/search", { state: { searchTerm } });
+    }, 2000);
   };
 
   useEffect(() => {

@@ -19,6 +19,7 @@ import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
+import { signupSchema } from "../../schemas/schema";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -31,93 +32,6 @@ const Signup = () => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-
-  const signupSchema = yup.object({
-    fname: yup
-      .string()
-      .required(t("FirstName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("FirstName can only contain Latin letters.")
-      ),
-    lname: yup
-      .string()
-      .required(t("LastName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("LastName can only contain Latin letters.")
-      ),
-    address: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .required(t("address is required"))
-      .trim(""),
-    company: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .trim(""),
-    civility: yup
-      .string()
-      .required(t("Civility is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("Civility can only contain Latin letters.")
-      ),
-    zipCode: yup
-      .string()
-      .max(6, t("max 6 number allowed"))
-      .min(5, t("min 5 number required"))
-      .required(t("zipcode is required"))
-      .trim(""),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required"))
-      .trim(""),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required"))
-      .trim(""),
-    phone: yup.string().required(t("phone is required")),
-    mobile: yup.string(),
-    email: yup.string().email().required(t("Email is required")).trim(),
-    password: yup
-      .string()
-      .required(t("Password is required"))
-      .matches(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/,
-        t(
-          "Minimum 8 characters, at least one special character, at least one digit"
-        )
-      )
-      .trim(),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("province can only contain Latin letters.")
-      )
-      .trim(""),
-  });
 
   const {
     register,

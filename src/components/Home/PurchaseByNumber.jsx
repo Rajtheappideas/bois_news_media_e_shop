@@ -43,23 +43,11 @@ const PurchaseByNumber = ({
 
         <div className="grid lg:grid-cols-3 md:grid-cols-2 items-start place-items-start md:gap-5 gap-3">
           {magazines?.map((magazine) => (
-            <MagazineCard data={magazine} from="purchase_by_number" />
-
-            // <div
-            //   key={magazine?._id}
-            //   className="w-full h-auto md:space-y-3 space-y-1"
-            //   onClick={()=>{}}
-            // >
-            //   <img
-            //     src={BaseUrl.concat(magazine?.image)}
-            //     alt={magazine?.title}
-            //     className="w-full 2xl:h-[30rem] lg:h-96 h-80 object-contain object-center"
-            //     loading="lazy"
-            //   />
-            //   <p className="md:text-lg text-sm w-48 text-center font-medium mx-auto">
-            //     {magazine?.title}
-            //   </p>
-            // </div>
+            <MagazineCard
+              key={magazine?._id}
+              data={magazine}
+              from="purchase_by_number"
+            />
           ))}
         </div>
         <div className="text-center">

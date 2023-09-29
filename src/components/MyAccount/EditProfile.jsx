@@ -10,9 +10,9 @@ import {
   isValidPhoneNumber,
 } from "react-phone-number-input";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import toast from "react-hot-toast";
 import { handleEditProfile } from "../../redux/AuthSlice";
+import { profileSchema } from "../../schemas/schema";
 
 const EditProfile = ({ setshowEditProfile }) => {
   const { user, token, loading } = useSelector((state) => state.root.auth);
@@ -21,82 +21,6 @@ const EditProfile = ({ setshowEditProfile }) => {
   const dispatch = useDispatch();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-
-  const editProfileSchema = yup.object({
-    fname: yup
-      .string()
-      .required(t("FirstName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("FirstName can only contain Latin letters.")
-      ),
-    lname: yup
-      .string()
-      .required(t("LastName is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("LastName can only contain Latin letters.")
-      ),
-    address: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .required(t("address is required"))
-      .trim(""),
-    company: yup
-      .string()
-      .max(200, t("Maximum character limit reached"))
-      .trim(""),
-    civility: yup
-      .string()
-      .required(t("Civility is required"))
-      .trim()
-      .max(60, t("Max character limit reached"))
-      .min(3, t("minimum three character required"))
-      .typeError(t("Only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("Civility can only contain Latin letters.")
-      ),
-    zipCode: yup
-      .string()
-      .max(6, t("max 6 number allowed"))
-      .min(5, t("min 5 number required"))
-      .required(t("zipcode is required"))
-      .trim(""),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required"))
-      .trim(""),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("country can only contain Latin letters.")
-      )
-      .required(t("country is required"))
-      .trim(""),
-    mobile: yup.string(),
-    phone: yup.string().required(t("phone is required")),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("province can only contain Latin letters.")
-      )
-      .trim(""),
-  });
 
   const {
     register,
@@ -107,7 +31,7 @@ const EditProfile = ({ setshowEditProfile }) => {
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(editProfileSchema),
+    resolver: yupResolver(profileSchema),
     defaultValues: {
       fname: user?.fname,
       lname: user?.lname,
@@ -182,6 +106,8 @@ const EditProfile = ({ setshowEditProfile }) => {
       });
     }
   };
+
+  console.log(errors);
 
   return (
     <form

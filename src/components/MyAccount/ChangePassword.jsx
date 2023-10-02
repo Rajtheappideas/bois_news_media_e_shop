@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleChangePassword } from "../../redux/AuthSlice";

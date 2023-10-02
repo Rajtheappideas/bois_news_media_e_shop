@@ -42,7 +42,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
         { quantity: e.target.value, _id: product?._id },
       ]);
     }
-    setQuantity(e.target.value);
+    setQuantity(e.target.value.replace(/\b0+/g, ""));
   };
 
   const handleRemoveFromCart = () => {

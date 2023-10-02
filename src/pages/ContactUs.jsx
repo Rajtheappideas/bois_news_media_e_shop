@@ -9,7 +9,6 @@ import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
 } from "react-phone-number-input";
-import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";

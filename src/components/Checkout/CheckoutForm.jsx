@@ -154,6 +154,18 @@ const CheckoutForm = () => {
           className="w-full input_field"
         />
       </div>
+      {/* check box for shipping address */}
+      <div className="flex items-center gap-3 w-full justify-start">
+        <input
+          type="checkbox"
+          placeholder="Type here..."
+          className="w-6 h-6"
+          id="diff_shipping_address"
+        />
+        <label htmlFor="diff_shipping_address" className="Label select-none">
+          {t("Ship to a different address?")}
+        </label>
+      </div>
       {/* order note */}
       <textarea
         name="order_note"

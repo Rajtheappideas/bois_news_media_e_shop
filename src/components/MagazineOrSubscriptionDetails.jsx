@@ -87,6 +87,7 @@ const MagazineOrSubscriptionDetails = () => {
 
   const handleOnchageQuantity = (e) => {
     toast.remove();
+
     if (e.target.value < 1) {
       setQuantity(1);
       return toast.error(
@@ -98,7 +99,7 @@ const MagazineOrSubscriptionDetails = () => {
     //     "Quantity should not be more than 3 digits and quantity should valid value"
     //   );
     // }
-    setQuantity(e.target.value);
+    setQuantity(e.target.value.replace(/\b0+/g, ""));
   };
 
   const handleProductAddToCartFunction = () => {
@@ -145,6 +146,7 @@ const MagazineOrSubscriptionDetails = () => {
     priceForMagazineAndSubscription();
   }, [selectedShippingZone]);
 
+  console.log(quantity);
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
       {/* back btn */}
@@ -190,12 +192,14 @@ const MagazineOrSubscriptionDetails = () => {
             >
               <option label="Choose an option"></option>
               <option value="paperAndDigital">{t("Paper and Digital")}</option>
-              <option value="digital">{("Digital")}</option>
+              <option value="digital">{"Digital"}</option>
             </select>
           </div>
           {/* shipping area */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm">{t("Shipping area")}</p>
+            <p className="md:w-3/12 md:text-base text-sm">
+              {t("Shipping area")}
+            </p>
             <select
               onChange={(e) => setSelectedShippingZone(e.target.value)}
               disabled={isAlreadyInCart}
@@ -211,7 +215,9 @@ const MagazineOrSubscriptionDetails = () => {
               <option value="EEC_Switzerland_Overseas">
                 EEC / Switzerland / Dom-tom
               </option>
-              <option value="MetropolitanFrance">{t("Metropolitan France")}</option>
+              <option value="MetropolitanFrance">
+                {t("Metropolitan France")}
+              </option>
               <option value="RestOfTheWorld">{t("Rest of the world")}</option>
             </select>
           </div>
@@ -219,7 +225,9 @@ const MagazineOrSubscriptionDetails = () => {
           {!singleMagazineOrSubscription?.subscriptionId &&
             selectedTypeOfSupport === "paperAndDigital" && (
               <div className="w-full flex items-center gap-3 font-semibold">
-                <p className="md:w-3/12 md:text-base text-sm">{t("Quantity")}</p>
+                <p className="md:w-3/12 md:text-base text-sm">
+                  {t("Quantity")}
+                </p>
                 <input
                   type="number"
                   disabled={isAlreadyInCart}
@@ -294,7 +302,7 @@ const MagazineOrSubscriptionDetails = () => {
               <b>{t("Type of support")}:</b>
             </span>{" "}
             &nbsp;
-            <span>{(t("Digital (pdf), Paper and digital (pdf)"))}</span>
+            <span>{t("Digital (pdf), Paper and digital (pdf)")}</span>
           </p>
           <p>
             <span>

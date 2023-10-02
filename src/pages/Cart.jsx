@@ -86,13 +86,13 @@ const Cart = () => {
               </div>
 
               <div className="w-full flex md:flex-row flex-col items-center justify-between md:gap-2 gap-5 lg:px-4 px-2 py-3">
-                <div className="flex items-center md:flex-nowrap flex-wrap gap-2 md:w-1/2">
+                <div className="flex items-center md:flex-nowrap flex-wrap gap-2">
                   <input
                     type="text"
                     className="border border-gray-300 rounded-lg p-3 input_field"
                     placeholder="Promo Code"
                   />
-                  <button className="uppercase gray_button w-auto md:whitespace-nowrap">
+                  <button className="uppercase gray_button w-full md:min-h-[3rem]">
                     {t("Apply Promo code")}
                   </button>
                 </div>

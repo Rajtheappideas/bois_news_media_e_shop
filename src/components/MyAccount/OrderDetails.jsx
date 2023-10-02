@@ -1,13 +1,16 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { AiOutlineClose } from "react-icons/ai";
 
 const OrderDetails = ({ setShowOrderDetails }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="md:space-y-3 space-y-2">
       <div className="md:space-y-3 space-y-2 w-full border border-gray-300 md:text-lg text-sm">
         {/* heading */}
         <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-          <span>Order Details</span>
+          <span>{t("Order Details")}</span>
           <AiOutlineClose
             onClick={() => setShowOrderDetails(false)}
             role="button"
@@ -17,19 +20,19 @@ const OrderDetails = ({ setShowOrderDetails }) => {
         {/* order no, status, date */}
         <div className="w-full flex items-center md:justify-around flex-wrap gap-3 md:px-0 px-3">
           <div>
-            Order No : <b>#4536</b>
+            {t("Order No")} : <b>#4536</b>
           </div>
           <div>
-            Order Date : <b>August 23, 2023</b>
+            {t("Order Date")} : <b>August 23, 2023</b>
           </div>
           <div>
-            Order Status : <b>Hold</b>
+            {t("Order Status")} : <b>Hold</b>
           </div>
         </div>
         <hr />
         {/* heading */}
         <div className="md:p-4 p-2 font-semibold flex justify-between items-center">
-          <p>Product</p>
+          <p>{t("Product")}</p>
           <p>Total</p>
         </div>
         <hr />
@@ -39,8 +42,8 @@ const OrderDetails = ({ setShowOrderDetails }) => {
             <p>
               <b>BOISmag subscription</b>
             </p>
-            <p>Type of support : Digital (PDF)</p>
-            <p>Shipping area : Metropolitan France</p>
+            <p>{t("Type of support")} : Digital (PDF)</p>
+            <p>{t("Shipping area")} : Metropolitan France</p>
           </div>
           <div className="text-right md:text-base text-sm">€ 115.00</div>
         </div>
@@ -59,32 +62,32 @@ const OrderDetails = ({ setShowOrderDetails }) => {
         <hr />
         {/* sub total */}
         <div className="md:p-4 p-2 font-medium flex justify-between items-center">
-          <p>Sub Total</p>
+          <p>{t("Sub Total")}</p>
           <p>€ 135.00</p>
         </div>
         <hr />
         {/* shipping */}
         <div className="md:p-4 p-2 font-medium flex justify-between items-center">
-          <p>Shipping</p>
+          <p>{t("Shipping")}</p>
           <p>Free</p>
         </div>
         <hr />
         {/* payment method */}
         <div className="md:p-4 p-2 font-medium flex justify-between items-center">
-          <p>Payment method</p>
+          <p>{t("Payment method")}</p>
           <p>Bank transfer</p>
         </div>
         <hr />
         {/* total */}
         <div className="md:p-4 p-2 font-semibold flex justify-between items-center">
-          <p>Total</p>
+          <p>{t("Total")}</p>
           <p>€ 135.00</p>
         </div>
       </div>
       {/* address */}
       <div className="w-full grid md:grid-cols-2 place-items-start items-start md:gap-4 gap-5">
         <div className="space-y-2 w-full">
-          <p className="heading">Billing address</p>
+          <p className="heading">{t("Billing address")}</p>
           <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
             <p>
               <b>John Adam</b>
@@ -96,7 +99,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           </div>
         </div>
         <div className="space-y-2 w-full">
-          <p className="heading">Delivery address</p>
+          <p className="heading">{t("Delivery address")}</p>
           <div className="w-full md:p-4 p-2 border border-gray-300 space-y-2">
             <p>
               <b>John Adam</b>

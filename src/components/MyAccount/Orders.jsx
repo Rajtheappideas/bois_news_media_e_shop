@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import OrderDetails from "./OrderDetails";
+import { useTranslation } from "react-i18next";
 
 const Orders = () => {
   const [showOrderDetails, setShowOrderDetails] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -15,11 +18,11 @@ const Orders = () => {
         <div className="border border-gray-300 w-full overflow-x-scroll scrollbar ">
           <table className="w-full overflow-x-scroll">
             <thead className="w-full border-b border-gray-300">
-              <th className="md:p-4 p-2 text-center">Order</th>
-              <th className="md:p-4 p-2 text-center">Date</th>
-              <th className="md:p-4 p-2 text-center">Status</th>
-              <th className="md:p-4 p-2 text-center">Total</th>
-              <th className="md:p-4 p-2 text-center">Action</th>
+              <th className="md:p-4 p-2 text-center">{t("Order")}</th>
+              <th className="md:p-4 p-2 text-center">{t("Date")}</th>
+              <th className="md:p-4 p-2 text-center">{t("Status")}</th>
+              <th className="md:p-4 p-2 text-center">{t("Total")}</th>
+              <th className="md:p-4 p-2 text-center">{t("Action")}</th>
             </thead>
             <tbody>
               <tr>
@@ -40,7 +43,7 @@ const Orders = () => {
                     className="uppercase gray_button"
                     onClick={() => setShowOrderDetails(true)}
                   >
-                    view
+                    {t("view")}
                   </button>
                 </td>
               </tr>
@@ -62,7 +65,7 @@ const Orders = () => {
                     className="uppercase gray_button"
                     onClick={() => setShowOrderDetails(true)}
                   >
-                    view
+                    {t("view")}
                   </button>
                 </td>
               </tr>

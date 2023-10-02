@@ -26,7 +26,7 @@ const ForgotPassword = () => {
   const { t } = useTranslation();
 
   const signinSchema = yup.object({
-    email: yup.string().email().required(t("Email is required")).trim(),
+    email: yup.string().email().required(t("email is required")).trim(),
   });
 
   const { loading, user, error } = useSelector((state) => state.root.auth);
@@ -56,7 +56,7 @@ const ForgotPassword = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("Check your mails."), { duration: 4000 });
+          toast.success(t("check your mails"), { duration: 4000 });
           dispatch(handleStoreUserEmail(getValues("email")));
           dispatch(handleChangeShowOtpField(true));
           dispatch(handleChangeShowForgotPassword(false));
@@ -100,14 +100,14 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="absolute z-10 inset-0 bg-black bg-opacity-50">
+    <div className="fixed z-10 inset-0 bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={forgotRef}
         className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
       >
         <div className="w-full flex items-center justify-between">
-          <p className="font-semibold text-left md:text-lg">Forgot Password</p>
+          <p className="font-semibold text-left md:text-lg capitalize">{t("Forgot password")}</p>
           <AiOutlineClose
             size={20}
             role="button"
@@ -117,12 +117,11 @@ const ForgotPassword = () => {
           />
         </div>
         <p className="text-gray-400 text-sm">
-          Please enter your username or email address. You will receive a link
-          by email to create a new password.
+          {t("Please enter your username or email address. You will receive a link by email to create a new password.")}
         </p>
         <div>
           <label htmlFor="email" className="Label">
-            E-mail
+            {t("E-mail")}
           </label>
           <input
             type="email"
@@ -134,7 +133,7 @@ const ForgotPassword = () => {
         <span className="error">{errors?.email?.message}</span>
 
         <button disabled={loading} type="submit" className="gray_button w-full">
-          {loading ? "Submitting..." : "submit"}
+          {loading ? t("submitting").concat("...") : t("submit")}
         </button>
       </form>
     </div>

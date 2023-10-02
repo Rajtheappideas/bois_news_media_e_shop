@@ -12,14 +12,19 @@ import {
 } from "../redux/ShopSlice";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SimilarProducts = ({ similarMagazines }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   const handleDispatchAction = (type, id) => {
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
@@ -37,7 +42,7 @@ const SimilarProducts = ({ similarMagazines }) => {
 
   return (
     <div className="space-y-3 relative">
-      <p className="heading">Similar Prodcuts</p>
+      <p className="heading">{t("Similar Prodcuts")}</p>
       <Swiper
         modules={[Navigation]}
         spaceBetween={10}
@@ -100,7 +105,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                From € {magazine?.digitalPrice}
+                {t("From")} € {magazine?.digitalPrice}
               </p>
             </div>
           </SwiperSlide>

@@ -13,6 +13,7 @@ import {
   handleChangeShowSearch,
   handleChangeShowSignin,
   handleChangeShowSignup,
+  handleChangeUserLanguage,
   handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
@@ -23,6 +24,7 @@ import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const [showDropdown, setshowDropdown] = useState(false);
@@ -31,6 +33,7 @@ const Header = () => {
   const [dropDownList, setDropDownList] = useState("buy_by_number");
 
   const { user } = useSelector((state) => state.root.auth);
+  const { userLanguage } = useSelector((state) => state.root.globalStates);
   const { cart } = useSelector((state) => state.root.cart);
   const { subscriptions, subscriptionLoading } = useSelector(
     (state) => state.root.shop
@@ -42,6 +45,19 @@ const Header = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+
+  const handlechangelanguage = (value) => {
+    if (value === "en") {
+      window.localStorage.setItem("lang", JSON.stringify("en"));
+      dispatch(handleChangeUserLanguage("en"));
+      window.location.reload();
+    } else {
+      window.localStorage.setItem("lang", JSON.stringify("fr"));
+      dispatch(handleChangeUserLanguage("fr"));
+      window.location.reload();
+    }
+  };
 
   const handleOnClick = (category) => {
     dispatch(handleChangeActiveCategory(category));
@@ -49,6 +65,7 @@ const Header = () => {
     setDropDownList("");
     setOpenSidebar(false);
     navigate("/shop");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleOnClickForSubscription = (id) => {
@@ -129,12 +146,12 @@ const Header = () => {
         <div className="Container w-full flex items-center justify-between md:text-base text-sm">
           <div className=" uppercase relative select-none ">
             <p
-              className="cursor-pointer"
+              className="cursor-pointer uppercase"
               onClick={() => {
                 setshowDropdown(!showDropdown);
               }}
             >
-              eng{" "}
+              {userLanguage}{" "}
               <BsChevronDown
                 className={`inline-block ml-1 ${
                   showDropdown ? "rotate-180" : "rotate-0"
@@ -148,10 +165,16 @@ const Header = () => {
                 showDropdown ? "scale-100" : "scale-0"
               } origin-top-left p-1 space-y-1 rounded-lg drop-shadow-xl shadow-xl bg-white text-black`}
             >
-              <p className="cursor-pointer pl-2 hover:bg-gray-200 hover:font-semibold">
+              <p
+                onClick={() => handlechangelanguage("en")}
+                className="cursor-pointer pl-2 hover:bg-gray-200 hover:font-semibold"
+              >
                 eng
               </p>
-              <p className="cursor-pointer pl-2 hover:bg-gray-200 hover:font-semibold">
+              <p
+                onClick={() => handlechangelanguage("fr")}
+                className="cursor-pointer pl-2 hover:bg-gray-200 hover:font-semibold"
+              >
                 fr
               </p>
             </div>
@@ -164,7 +187,7 @@ const Header = () => {
                   dispatch(handleChangeShowSignup(true));
                 }}
               >
-                Register
+                {t("register")}
               </span>{" "}
               |{" "}
               <span
@@ -173,19 +196,25 @@ const Header = () => {
                   dispatch(handleChangeShowSignin(true));
                 }}
               >
-                Login
+                {t("login")}
               </span>
             </div>
           ) : (
             <div className="flex items-center gap-x-3">
-              <Link to="/my-account" className="uppercase cursor-pointer">
+              <Link
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                to="/my-account"
+                className="uppercase cursor-pointer"
+              >
                 {user?.fname} {user?.lname}
               </Link>
               |
               <span
                 className="uppercase cursor-pointer"
                 onClick={() => {
-                  toast.loading("Logout...");
+                  toast.loading(t("Logout").concat("..."));
                   setTimeout(() => {
                     toast.remove();
                     dispatch(handleLogout());
@@ -193,7 +222,7 @@ const Header = () => {
                   }, 2000);
                 }}
               >
-                Log out
+                {t("logout")}
               </span>
             </div>
           )}
@@ -221,7 +250,7 @@ const Header = () => {
               } `}
               onClick={() => setActiveLink("home")}
             >
-              Home
+              {t("home")}
             </Link>
             {/* shop */}
             <Link
@@ -237,7 +266,7 @@ const Header = () => {
                 dispatch(handleChangeMagazineOrSubscriptionShow(null));
               }}
             >
-              Shop
+              {t("shop")}
             </Link>
             {/* subscribe */}
             <div
@@ -255,7 +284,7 @@ const Header = () => {
                   dispatch(handleChangeMagazineOrSubscriptionShow(false))
                 }
               >
-                subscribe
+                {t("subscribe")}
               </span>
               {!subscriptionLoading && subscriptions?.length > 0 && (
                 <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
@@ -290,7 +319,7 @@ const Header = () => {
                   dispatch(handleChangeMagazineOrSubscriptionShow(null));
                 }}
               >
-                buy by number
+                {t("buy_by_number")}
               </Link>
               <div className="absolute group-hover:scale-100 z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
                 <p
@@ -299,7 +328,7 @@ const Header = () => {
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  BOISMAG
+                  {t("boismag")}
                 </p>
                 <p
                   onClick={() => {
@@ -307,7 +336,7 @@ const Header = () => {
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  ARTISANS & BOIS
+                  {t("artisans_and_bois")}
                 </p>
                 <p
                   onClick={() => {
@@ -315,7 +344,7 @@ const Header = () => {
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  L’AGENCEUR MAGAZINE
+                  {t("agenceur")}
                 </p>
                 <p
                   onClick={() => {
@@ -323,7 +352,7 @@ const Header = () => {
                   }}
                   className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                 >
-                  TOITURE MAGAZINE
+                  {t("toiture")}
                 </p>
               </div>
             </div>
@@ -335,31 +364,31 @@ const Header = () => {
                   : "border-0 text-black font-medium"
               } relative group`}
             >
-              <span>our magazines</span>
+              <span>{t("our_magazines")}</span>
               <div className="absolute group-hover:scale-100  z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
                 <Link to="https://www.boisnewsmedia.com/" target="_blank">
                   <p className="p-3 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    BOIS NEWS MEDIA
+                    {t("bois_news_media")}
                   </p>
                 </Link>
                 <Link to="https://www.boismag.com/" target="_blank">
                   <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    BOISMAG
+                    {t("boismag")}
                   </p>
                 </Link>
                 <Link to="https://www.artisansbois.com/" target="_blank">
                   <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    ARTISANS & BOIS
+                    {t("artisans_and_bois")}
                   </p>
                 </Link>
                 <Link to="https://l-agenceur.com/" target="_blank">
                   <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    L’AGENCEUR MAGAZINE
+                    {t("agenceur")}
                   </p>
                 </Link>
                 <Link to="https://www.toituremagazine.com/" target="_blank">
                   <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    TOITURE MAGAZINE
+                    {t("toiture")}
                   </p>
                 </Link>
               </div>
@@ -374,7 +403,7 @@ const Header = () => {
               } relative`}
               onClick={() => setActiveLink("contact")}
             >
-              contact
+              {t("contact")}
             </Link>
             |{/* cart */}
             <div className="relative">
@@ -434,9 +463,10 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("home");
                 setOpenSidebar(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             >
-              home
+              {t("home")}
             </Link>
           </li>
           {/* shop */}
@@ -454,9 +484,10 @@ const Header = () => {
                 setOpenSidebar(false);
                 dispatch(handleChangeActiveCategory("view_all"));
                 dispatch(handleChangeMagazineOrSubscriptionShow(null));
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             >
-              shop
+              {t("shop")}
             </Link>
           </li>
           {/* subscribe */}
@@ -483,7 +514,7 @@ const Header = () => {
               //   dispatch(handleChangeMagazineOrSubscriptionShow(false));
               // }}
               >
-                subscribe
+                {t("subscribe")}
               </p>
               <AiOutlineDown
                 size={20}
@@ -503,9 +534,10 @@ const Header = () => {
                 <div className="space-y-1 text-sm">
                   {subscriptions?.map((subscription) => (
                     <p
-                      onClick={() =>
-                        handleOnClickForSubscription(subscription?._id)
-                      }
+                      onClick={() => {
+                        handleOnClickForSubscription(subscription?._id);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
                       key={subscription?._id}
                       className="p-1 md:pl-5 pl-2 cursor-pointer break-words hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
                     >
@@ -534,7 +566,7 @@ const Header = () => {
                   : setDropDownList("");
               }}
             >
-              <p>buy by number</p>
+              <p>{t("buy_by_number")}</p>
               <AiOutlineDown
                 size={20}
                 className={`ransition-all duration-100 cursor-pointer ease-linear ${
@@ -554,7 +586,7 @@ const Header = () => {
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                BOISmag
+                {t("boismag")}
               </p>
               <p
                 onClick={() => {
@@ -562,7 +594,7 @@ const Header = () => {
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                Artisans & bois
+                {t("artisans_and_bois")}
               </p>
               <p
                 onClick={() => {
@@ -570,7 +602,7 @@ const Header = () => {
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                agenceur
+                {t("agenceur")}
               </p>
               <p
                 onClick={() => {
@@ -578,7 +610,7 @@ const Header = () => {
                 }}
                 className="p-1 pl-6 cursor-pointer hover:bg-darkGray uppercase hover:text-white transition-all duration-100"
               >
-                Toiture magazine
+                {t("toiture")}
               </p>
             </div>
           </li>
@@ -616,27 +648,27 @@ const Header = () => {
             >
               <Link to="https://www.boisnewsmedia.com/" target="_blank">
                 <p className="p-2 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  BOIS NEWS MEDIA
+                  {t("bois_news_media")}
                 </p>
               </Link>
               <Link to="https://www.boismag.com/" target="_blank">
                 <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  BOISMAG
+                  {t("boismag")}
                 </p>
               </Link>
               <Link to="https://www.artisansbois.com/" target="_blank">
                 <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  ARTISANS & BOIS
+                  {t("artisans_and_bois")}
                 </p>
               </Link>
               <Link to="https://l-agenceur.com/" target="_blank">
                 <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  L’AGENCEUR MAGAZINE
+                  {"agenceur"}
                 </p>
               </Link>
               <Link to="https://www.toituremagazine.com/" target="_blank">
                 <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  TOITURE MAGAZINE
+                  {t("toiture")}
                 </p>
               </Link>
             </div>
@@ -654,9 +686,10 @@ const Header = () => {
               onClick={() => {
                 setActiveLink("contact");
                 setOpenSidebar(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             >
-              contact
+              {t("contact")}
             </Link>
           </li>
           {/* cart */}
@@ -675,7 +708,7 @@ const Header = () => {
                   setOpenSidebar(false);
                 }}
               >
-                cart
+                {t("cart")}
               </span>
             ) : (
               <Link
@@ -683,9 +716,10 @@ const Header = () => {
                 onClick={() => {
                   setActiveLink("cart");
                   setOpenSidebar(false);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >
-                cart
+                {t("cart")}
               </Link>
             )}
           </li>
@@ -701,7 +735,7 @@ const Header = () => {
               dispatch(handleChangeShowSearch(true));
             }}
           >
-            search
+            {t("search")}
           </li>
         </ul>
       </div>

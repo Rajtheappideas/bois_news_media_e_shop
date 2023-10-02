@@ -1,10 +1,14 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 
 const Terms = () => {
+  const { t } = useTranslation();
   return (
     <>
-      <Helmet title="Terms & Conditions | E-shop" />
+      <Helmet>
+        <title>{t("Terms & Conditions")} | E-shop</title>
+      </Helmet>
       {/* bg img + heading */}
       <div className="relative md:h-80 h-60">
         <img
@@ -14,7 +18,7 @@ const Terms = () => {
           loading="lazy"
         />
         <h1 className="font-bold text-white uppercase md:text-4xl text-2xl text-center absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
-          Terms & Conditions
+          {t("Terms & Conditions")}
         </h1>
       </div>
       <div className="lg:space-y-5 space-y-2 Container md:py-10 py-4 text-justify">

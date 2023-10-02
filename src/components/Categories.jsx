@@ -4,6 +4,7 @@ import { handleChangeActiveCategory } from "../redux/ShopSlice";
 import { AiOutlineDown } from "react-icons/ai";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Categories = () => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(true);
@@ -13,6 +14,8 @@ const Categories = () => {
   );
 
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   // for auto open category dropdown
   useEffect(() => {
@@ -33,7 +36,7 @@ const Categories = () => {
   return (
     <div className="w-full border">
       <p className="bg-darkBlue text-white p-4 text-left font-semibold md:text-lg">
-        <span>Categories</span>
+        <span>{t("Categories")}</span>
         <AiOutlineDown
           size={20}
           className="float-right lg:hidden block cursor-pointer"
@@ -48,7 +51,7 @@ const Categories = () => {
               activeCategory === "view_all" && "underline text-darkBlue"
             } underline-offset-2 cursor-pointer text-left capitalize md:text-base text-sm`}
           >
-            View All
+            {t("View All")}
           </p>
           <p
             className={`${
@@ -59,7 +62,7 @@ const Categories = () => {
               dispatch(handleChangeActiveCategory("subscriptions"))
             }
           >
-            Subscriptions ({subscriptions?.length ?? "0"})
+            {t("Subscriptions")} ({subscriptions?.length ?? "0"})
           </p>
           <p
             onClick={() => dispatch(handleChangeActiveCategory("magazines"))}
@@ -68,7 +71,7 @@ const Categories = () => {
               "underline text-darkBlue underline-offset-2"
             } text-black text-left capitalize cursor-pointer`}
           >
-            Magazines ({magazines?.length ?? "0"}){" "}
+            {t("Magazines")} ({magazines?.length ?? "0"}){" "}
           </p>
           <ul className="list-disc font-semibold pl-6 space-y-2">
             <li
@@ -80,7 +83,7 @@ const Categories = () => {
                 "text-darkBlue underline underline-offset-2"
               } cursor-pointer`}
             >
-              Artisans & Bois (
+              {t("artisans_and_bois")} (
               {magazines.length > 0 &&
                 magazines.filter((magazine) =>
                   magazine?.magazineTitle.includes("artisans_and_bois")
@@ -94,7 +97,7 @@ const Categories = () => {
               } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("boismag"))}
             >
-              BOISmag (
+              {t("boismag")} (
               {magazines.length > 0 &&
                 magazines.filter((magazine) =>
                   magazine?.magazineTitle.includes("boismag")
@@ -108,7 +111,7 @@ const Categories = () => {
               } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("agenceur"))}
             >
-              L’agenceur magazine(
+              {t("agenceur")} (
               {magazines.length > 0 &&
                 magazines.filter((magazine) =>
                   magazine?.magazineTitle.includes("agenceur")
@@ -122,7 +125,7 @@ const Categories = () => {
               } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("toiture"))}
             >
-              Toiture magazine (
+              {t("toiture")} (
               {magazines.length > 0 &&
                 magazines.filter((magazine) =>
                   magazine?.magazineTitle.includes("toiture")

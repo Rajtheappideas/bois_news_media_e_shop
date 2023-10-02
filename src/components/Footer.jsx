@@ -4,6 +4,7 @@ import { PostUrl } from "../BaseUrl";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { handleChangeActiveCategory } from "../redux/ShopSlice";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const Footer = () => {
   const inputRef = useRef(null);
 
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,7 +29,7 @@ const Footer = () => {
         email
       )
     )
-      return toast.error("Enter valid email");
+      return toast.error(t("enter valid email"));
     setLoading(true);
     try {
       await PostUrl("newsletter", {
@@ -36,7 +39,7 @@ const Footer = () => {
         },
       });
 
-      toast.success("Subscribed successfully.");
+      toast.success(t("subscribed successfully"));
       setEmail("");
       setLoading(false);
     } catch (error) {
@@ -51,11 +54,11 @@ const Footer = () => {
       <div className="w-full bg-darkBlue text-white py-6">
         <div className="Container w-full flex flex-col lg:flex-row items-center justify-between md:gap-5 gap-2">
           <div className="space-y-2">
-            <p className="font-semibold xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl">
-              SUBSCRIBE TO OUR NEWSLETTER
+            <p className="font-semibold uppercase xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl">
+              {t("SUBSCRIBE TO OUR NEWSLETTER")}
             </p>
             <p className="font-medium md:text-lg text-sm">
-              Sign up to receive email updates about courses
+              {t("Sign up to receive email updates about courses")}
             </p>
           </div>
           <form className="flex items-center lg:w-fit gap-2 w-full justify-center">
@@ -72,7 +75,7 @@ const Footer = () => {
               onClick={(e) => handleSubscribeNewsLetter(e)}
               disabled={loading}
             >
-              {loading ? "subscribing..." : "subscribe"}
+              {loading ? t("subscribing").concat("...") : t("subscribe")}
             </button>
           </form>
         </div>
@@ -91,13 +94,13 @@ const Footer = () => {
         {/* shop */}
         <div className="w-full">
           <p className="font-semibold text-lg mb-4 relative uppercase">
-            Shop
+            {t("shop")}
             <span className="bg-darkBlue w-14 absolute -bottom-1 left-0 h-0.5 rounded-lg" />
           </p>
           <ul className="font-medium ">
             <Link to="/" onClick={() => scrollToTop()}>
-              <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Home
+              <li className="hover:border-l-4  hover:font-semibold capitalize border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
+                {t("home")}
               </li>
             </Link>
             <Link
@@ -107,8 +110,8 @@ const Footer = () => {
                 dispatch(handleChangeActiveCategory("subscriptions"));
               }}
             >
-              <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Subscribe
+              <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue capitalize transition-all duration-100 ease-linear hover:pl-3">
+                {t("subscribe")}
               </li>
             </Link>
             <Link
@@ -118,8 +121,8 @@ const Footer = () => {
                 dispatch(handleChangeActiveCategory("view_all"));
               }}
             >
-              <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Shop
+              <li className="hover:border-l-4 hover:font-semibold border-darkBlue capitalize transition-all duration-100 ease-linear hover:pl-3">
+                {t("shop")}
               </li>
             </Link>
             <Link
@@ -129,13 +132,13 @@ const Footer = () => {
                 dispatch(handleChangeActiveCategory("magazines"));
               }}
             >
-              <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Our Magazines
+              <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue capitalize transition-all duration-100 ease-linear hover:pl-3">
+                {t("our_magazines")}
               </li>
             </Link>
             <Link to="/contact-us" onClick={() => scrollToTop()}>
-              <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Contact
+              <li className="hover:border-l-4 hover:font-semibold border-darkBlue capitalize transition-all duration-100 ease-linear hover:pl-3">
+                {t("contact")}
               </li>
             </Link>
           </ul>
@@ -143,7 +146,7 @@ const Footer = () => {
         {/* WOOD NETWORK NEWS MEDIA */}
         <div className="w-full">
           <p className="font-semibold text-lg mb-4 relative uppercase">
-            WOOD NETWORK NEWS MEDIA
+            {t("WOOD NETWORK NEWS MEDIA")}
             <span className="bg-darkBlue w-14 absolute -bottom-1 left-0 h-0.5 rounded-lg" />
           </p>
           <ul className="font-medium ">
@@ -153,7 +156,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Wood News Media
+                {t("bois_news_media")}
               </li>
             </Link>
             <Link
@@ -162,7 +165,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Wood Mag
+                {t("boismag")}
               </li>
             </Link>
             <Link
@@ -171,7 +174,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Craftsmen & Wood
+                {t("artisans_and_bois")}
               </li>
             </Link>
             <Link
@@ -180,7 +183,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4 my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                The magazine designer
+                {t("agenceur")}
               </li>
             </Link>
             <Link
@@ -189,7 +192,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                Magazine Roofing
+                {t("toiture")}
               </li>
             </Link>
             <Link
@@ -198,7 +201,7 @@ const Footer = () => {
               onClick={() => scrollToTop()}
             >
               <li className="hover:border-l-4  my-2 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                WoodPartners
+                {t("WoodPartners")}
               </li>
             </Link>
           </ul>
@@ -206,7 +209,8 @@ const Footer = () => {
       </div>
       {/* copy right */}
       <div className="text-sm text-black text-center bg-lightGray p-2 font-semibold">
-        Copyright © {new Date().getFullYear()} BOISNEWSMEDIA
+        Copyright © {new Date().getFullYear()}{" "}
+        <span className="uppercase">{t("bois_news_media")}</span>
       </div>
     </footer>
   );

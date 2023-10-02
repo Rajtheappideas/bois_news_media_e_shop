@@ -4,17 +4,20 @@ import ShippingAddress from "./ShippingAddress";
 import { useSelector } from "react-redux";
 import EditShippingAddress from "./EditShippingAddress";
 import EditBillingAddress from "./EditBillingAddress";
+import { useTranslation } from "react-i18next";
 
 const Address = () => {
   const [activeAddress, setActiveAddress] = useState("");
   const [activeEditAddress, setActiveEditAddress] = useState("");
+
+  const { t } = useTranslation();
 
   const { addresses, loading } = useSelector((s) => s.root.auth);
 
   return (
     <>
       {loading ? (
-        <div className="loading">Loading....</div>
+        <div className="loading">{t("Loading").concat("...")}</div>
       ) : (
         <>
           {activeAddress === "billing" && (
@@ -35,7 +38,7 @@ const Address = () => {
               {addresses !== null &&
               Object.values(addresses?.billingAddress).length > 0 ? (
                 <div className="space-y-2 w-full">
-                  <p className="heading">Billing address</p>
+                  <p className="heading">{t("Billing address")}</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
                     <p>
                       {addresses?.billingAddress?.zipCode}, <br />
@@ -48,29 +51,29 @@ const Address = () => {
                       onClick={() => setActiveEditAddress("billing")}
                       className="capitalize gray_button md:w-48 w-full"
                     >
-                      modify
+                      {t("modify")}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="w-full space-y-3">
-                  <p className="heading">Billing Address</p>
+                  <p className="heading">{t("Billing address")}</p>
                   <div className="flex gap-3 md:h-60 h-40 w-full items-center justify-center flex-col border border-gray-300">
                     <button
                       className="w-1/2 uppercase gray_button"
                       onClick={() => setActiveAddress("billing")}
                     >
-                      add
+                      {t("add")}
                     </button>
 
-                    <p>You have not yet defined this type of address.</p>
+                    <p>{t("You have not yet defined this type of address")}.</p>
                   </div>
                 </div>
               )}
               {addresses !== null &&
               Object.values(addresses?.shippingAddress).length > 0 ? (
                 <div className="space-y-2 w-full">
-                  <p className="heading">Shipping address</p>
+                  <p className="heading">{t("Shipping address")}</p>
                   <div className="w-full md:p-4 p-2  border border-gray-300 space-y-2">
                     <p>
                       {addresses?.shippingAddress?.zipCode}, <br />
@@ -83,22 +86,22 @@ const Address = () => {
                       onClick={() => setActiveEditAddress("shipping")}
                       className="capitalize gray_button md:w-48 w-full"
                     >
-                      modify
+                      {t("modify")}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="w-full space-y-3">
-                  <p className="heading">Shipping Address</p>
+                  <p className="heading">{t("Shipping address")}</p>
                   <div className="flex gap-3 w-full md:h-60 h-40 items-center justify-center flex-col border border-gray-300">
                     <button
                       className="w-1/2 uppercase gray_button"
                       onClick={() => setActiveAddress("shipping")}
                     >
-                      add
+                      {t("add")}
                     </button>
 
-                    <p>You have not yet defined this type of address.</p>
+                    <p>{t("You have not yet defined this type of address")}.</p>
                   </div>
                 </div>
               )}

@@ -7,11 +7,14 @@ import {
   handleRemoveProductFromCart,
 } from "../../redux/CartSlice";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
   const [quantity, setQuantity] = useState(null);
 
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const handleOnchageQuantity = (e) => {
     toast.remove();
@@ -22,19 +25,10 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       );
       setProductsToUpdate(removeFromProdcutsToUpdate);
       return toast.error(
-        "Quantity should not less than 1 and value should be valid"
+        t("quantity should not less than 1 and value should be valid")
       );
-    } 
-//     else if (!/^(?=.*[1-9])\d{1,3}(?:\.\d\d?)?$/.test(e.target.value)) {
-//       setQuantity(product?.quantity);
-//       const removeFromProdcutsToUpdate = productsToUpdate.filter(
-//         (p) => p?._id !== product?._id
-//       );
-//       setProductsToUpdate(removeFromProdcutsToUpdate);
-//       return toast.error(
-//         "Quantity should not be more than 3 digits and quantity should valid value"
-//       );
-//     }
+    }
+
     const alreadyInArr = productsToUpdate.find((p) => p?._id === product?._id);
     if (alreadyInArr) {
       setProductsToUpdate(
@@ -57,9 +51,6 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
     dispatch(handleCalculateTotal());
   };
 
-  //   console.log(product);
-  //   useEffect(() => {}, []);
-
   return (
     <tr className="border-b border-gray-300 w-full text-left select-none">
       <td className="pl-2">
@@ -81,13 +72,13 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
           <p className="md:text-base text-sm font-semibold">{product?.title}</p>
           <p className="space-x-2">
             <span>
-              <b>Type of support :</b>
+              <b>{t("Type of support")} :</b>
             </span>
             <span>{product?.selectedTypeOfSupport}</span>
           </p>
           <p className="space-x-2">
             <span>
-              <b>Shipping area :</b>
+              <b>{t("Shipping area")} :</b>
             </span>
             <span>{product?.selectedShippingZone}</span>
           </p>

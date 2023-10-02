@@ -19,7 +19,7 @@ import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-import { signupSchema } from "../../schemas/schema";
+import Schema from "../../schemas/Schema";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ const Signup = () => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+  const { signupSchema } = Schema();
 
   const {
     register,
@@ -72,14 +73,14 @@ const Signup = () => {
     };
     if (!isPossiblePhoneNumber(phone) || !isValidPhoneNumber(phone)) {
       toast.remove();
-      toast.error(t("Phone is invalid"));
+      toast.error(t("phone is invalid"));
       return true;
     } else if (
       (getValues("mobile") !== "" && !isPossiblePhoneNumber(phone)) ||
       !isValidPhoneNumber(phone)
     ) {
       toast.remove();
-      toast.error(t("Phone is invalid"));
+      toast.error(t("phone is invalid"));
       return true;
     }
 
@@ -100,7 +101,7 @@ const Signup = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("Sign up Successfully."), { duration: 2000 });
+          toast.success(t("sign up successfully"), { duration: 2000 });
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignup(false));
         }
@@ -141,7 +142,7 @@ const Signup = () => {
   }, []);
 
   return (
-    <div className="absolute z-10 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
+    <div className="fixed z-10 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={signupRef}
@@ -149,7 +150,7 @@ const Signup = () => {
       >
         <div className="w-full flex items-center justify-between">
           <p className="font-semibold text-left md:text-lg">
-            Create your account
+            {t("Create your account")}
           </p>
           <AiOutlineClose
             size={20}
@@ -163,24 +164,24 @@ const Signup = () => {
         <div className="flex items-center gap-2">
           <div className="w-1/2">
             <label htmlFor="fname" className="Label">
-              First name
+              {t("first name")}
             </label>
             <input
               type="text"
               className="input_field"
-              placeholder="first name"
+              placeholder={t("first name")}
               {...register("fname")}
             />
             <span className="error">{errors?.fname?.message}</span>
           </div>
           <div className="w-1/2">
             <label htmlFor="lname" className="Label">
-              Last name
+              {t("last name")}
             </label>
             <input
               type="text"
               className="input_field"
-              placeholder="last name"
+              placeholder={t("last name")}
               {...register("lname")}
             />
             <span className="error">{errors?.lname?.message}</span>
@@ -189,7 +190,7 @@ const Signup = () => {
         {/* email */}
         <div>
           <label htmlFor="email" className="Label">
-            E-mail
+            {t("E-mail")}
           </label>
           <input
             type="email"
@@ -202,7 +203,7 @@ const Signup = () => {
         {/* phone */}
         <div>
           <label htmlFor="phone" className="Label">
-            phone
+            {t("phone")}
           </label>
           <Controller
             name="phone"
@@ -243,7 +244,7 @@ const Signup = () => {
         {/* mobile */}
         <div>
           <label htmlFor="mobile" className="Label">
-            mobile
+            {t("mobile")}
           </label>
           <Controller
             name="mobile"
@@ -284,7 +285,7 @@ const Signup = () => {
         {/* company name */}
         <div>
           <label htmlFor="company" className="Label">
-            company name
+            {t("company name")}
           </label>
           <input
             type="text"
@@ -298,7 +299,7 @@ const Signup = () => {
         {/* civility */}
         <div>
           <label htmlFor="civility" className="Label">
-            civility
+            {t("civility")}
           </label>
           <input
             type="text"
@@ -312,7 +313,7 @@ const Signup = () => {
         {/* province */}
         <div>
           <label htmlFor="province" className="Label">
-            province
+            {t("province")}
           </label>
           <input
             type="text"
@@ -326,7 +327,7 @@ const Signup = () => {
         {/* address */}
         <div>
           <label htmlFor="address" className="Label">
-            address
+            {t("address")}
           </label>
           <input
             type="text"
@@ -340,7 +341,7 @@ const Signup = () => {
         <div className="flex items-center gap-2">
           <div className="w-1/2">
             <label htmlFor="country" className="Label">
-              country
+              {t("country")}
             </label>
             <input
               type="text"
@@ -366,7 +367,7 @@ const Signup = () => {
         {/* postal code */}
         <div>
           <label htmlFor="postalCode" className="Label">
-            postal code
+            {t("postal code")}
           </label>
           <input
             type="number"
@@ -379,7 +380,7 @@ const Signup = () => {
         {/* password */}
         <div>
           <label htmlFor="password" className="Label">
-            Password
+            {t("password")}
           </label>
           <input
             type="password"
@@ -391,11 +392,11 @@ const Signup = () => {
         </div>
         {/* btn */}
         <button type="submit" disabled={loading} className="gray_button w-full">
-          {loading ? "Registering..." : "Register"}
+          {loading ? t("Registering").concat("...") : t("register")}
         </button>
         {/* sign in link */}
         <p className="text-center">
-          Already have an account?{" "}
+          {t("Already have an account")}?{" "}
           <span
             onClick={() => {
               dispatch(handleChangeShowSignin(true));
@@ -403,7 +404,7 @@ const Signup = () => {
             }}
             className="text-darkBlue font-semibold cursor-pointer"
           >
-            Sign in
+            {t("login")}
           </span>
         </p>
       </form>

@@ -6,6 +6,7 @@ import {
 } from "../redux/globalStates";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SearchPopup = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,12 +17,14 @@ const SearchPopup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
+
   const modalRef = useRef(null);
 
   const handleSearchMagazines = (e) => {
     e.preventDefault();
     toast.remove();
-    if (!searchTerm) return toast.error("Enter a word");
+    if (!searchTerm) return toast.error(t("Enter a word"));
     const filteredProducts = allMagazinesAndSubscriptions.filter((entry) =>
       Object.values(entry).some((val) => {
         if (typeof val === "string") {
@@ -30,13 +33,15 @@ const SearchPopup = () => {
       })
     );
     toast.remove();
-    if (!filteredProducts.length > 0) return toast.error("Magazine not found");
+    if (!filteredProducts.length > 0)
+      return toast.error(t("Magazine not found"));
     toast.loading("Searching...");
     setTimeout(() => {
       toast.remove();
       dispatch(handleChangeSearchMagazines(filteredProducts));
       handleClickOutside();
       navigate("/search", { state: { searchTerm } });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2000);
   };
 
@@ -95,7 +100,7 @@ const SearchPopup = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button className="blue_button md:h-12 h-10 md:w-40 w-full">
-          Search
+          {t("Search")}
         </button>
       </form>
     </>

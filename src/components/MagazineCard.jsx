@@ -7,13 +7,18 @@ import {
 import BaseUrl from "../BaseUrl";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const MagazineCard = ({ data, from }) => {
   const { selectedView } = useSelector((state) => state.root.shop);
 
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   const handleDispatchAction = () => {
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
@@ -59,7 +64,7 @@ const MagazineCard = ({ data, from }) => {
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
-              From € {data?.digitalPrice}
+              {t("From")} € {data?.digitalPrice}
             </p>
           </div>
         </div>
@@ -81,7 +86,7 @@ const MagazineCard = ({ data, from }) => {
 
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-              From € {data?.digitalPrice}
+              {t("From")} € {data?.digitalPrice}
             </p>
           )}
         </div>

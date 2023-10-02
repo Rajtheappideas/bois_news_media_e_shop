@@ -9,6 +9,7 @@ import { handleChangePassword } from "../../redux/AuthSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Schema from "../../schemas/Schema";
 
 const ChangePassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -23,23 +24,7 @@ const ChangePassword = () => {
 
   const { AbortControllerRef } = useAbortApiCall();
 
-  const changepasswordSchema = yup.object({
-    oldPassword: yup.string().required(t("old password is required!!!")).trim(),
-    newPassword: yup
-      .string()
-      .required(t("new password is required!!!"))
-      .matches(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
-        t(
-          "Minimum 6 characters, at least one special character, at least one digit"
-        )
-      )
-      .trim(),
-    confirmPassword: yup
-      .string()
-      .required(t("confirm password is required!!!"))
-      .oneOf([yup.ref("newPassword"), null], t("Password not match!!!")),
-  });
+  const { changePasswordSchema } = Schema();
 
   const {
     register,
@@ -47,7 +32,7 @@ const ChangePassword = () => {
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(changepasswordSchema),
+    resolver: yupResolver(changePasswordSchema),
   });
 
   const onSubmit = (data) => {
@@ -74,11 +59,11 @@ const ChangePassword = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full border border-gray-300 md:p-4 p-2 md:space-y-5 space-y-3"
     >
-      <p className="heading">Change Password</p>
+      <p className="heading">{t("Change Password")}</p>
       {/* curr password */}
       <div className="space-y-2 relative">
         <label htmlFor="" className="Label">
-          Currnet password
+          {t("Currnet password")}
         </label>
         <input
           type={showOldPassword ? "text" : "password"}
@@ -104,7 +89,7 @@ const ChangePassword = () => {
       {/* new password */}
       <div className="space-y-2 relative">
         <label htmlFor="" className="Label">
-          New password
+          {t("New password")}
         </label>
         <input
           type={showNewPassword ? "text" : "password"}
@@ -130,7 +115,7 @@ const ChangePassword = () => {
       {/* confirm password */}
       <div className="space-y-2">
         <label htmlFor="" className="Label">
-          confirm password
+          {t("confirm password")}
         </label>
         <input
           type="password"
@@ -144,7 +129,7 @@ const ChangePassword = () => {
       </div>
       {/* btn */}
       <button disabled={loading} className="md:w-60 w-1/2 gray_button md:h-12">
-        {loading ? "Saving..." : "Save"}
+        {loading ? t("Saving").concat("...") : t("Save")}
       </button>
     </form>
   );

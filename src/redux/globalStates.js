@@ -9,7 +9,7 @@ const initialState = {
   showForgotPassword: false,
   showOtpField: false,
   showResetPassword: false,
-  language: JSON.parse(window.localStorage.getItem("lang")) ?? "en",
+  userLanguage: JSON.parse(window.localStorage.getItem("lang")) ?? "en",
   showSearchModal: false,
   searchMagazines: [],
 };

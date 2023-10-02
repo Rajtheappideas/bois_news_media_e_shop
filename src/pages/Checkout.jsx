@@ -7,7 +7,8 @@ import Success from "../components/Success";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { handleChangeShowSignin } from "../redux/globalStates";
-import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 const Checkout = () => {
   const [activeComponent, setActiveComponent] = useState("checkout_form");
@@ -17,6 +18,8 @@ const Checkout = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user === null) {
@@ -30,11 +33,14 @@ const Checkout = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{t("Checkout")} | E-shop</title>
+      </Helmet>
       {activeComponent === "success" && (
         <Success
-          title="Thank you !"
-          description="Your order has been received."
-          btnText="continue shopping"
+          title={t("Thank you !")}
+          description={t("Your order has been received.")}
+          btnText={t("continue shopping")}
           link="/shop"
         />
       )}

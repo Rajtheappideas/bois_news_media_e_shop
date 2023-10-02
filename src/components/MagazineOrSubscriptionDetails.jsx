@@ -7,6 +7,7 @@ import BaseUrl from "../BaseUrl";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { handleAddProductToCart } from "../redux/CartSlice";
+import { useTranslation } from "react-i18next";
 
 const MagazineOrSubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
@@ -16,6 +17,8 @@ const MagazineOrSubscriptionDetails = () => {
   const [quantity, setQuantity] = useState(1);
 
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
     useSelector((state) => state.root.shop);
@@ -87,9 +90,9 @@ const MagazineOrSubscriptionDetails = () => {
     if (e.target.value < 1) {
       setQuantity(1);
       return toast.error(
-        "Quantity should not less than 1 and value should be valid"
+        "quantity should not less than 1 and value should be valid"
       );
-    } 
+    }
     // else if (!/^(?=.*[1-9])\d{1,3}(?:\.\d\d?)?$/.test(e.target.value)) {
     //   return toast.error(
     //     "Quantity should not be more than 3 digits and quantity should valid value"
@@ -107,11 +110,11 @@ const MagazineOrSubscriptionDetails = () => {
         !singleMagazineOrSubscription?.subscriptionId &&
         quantity === "")
     ) {
-      return toast.error("Please fill all the fields.");
+      return toast.error(t("please fill all the fields"));
     }
-    if (quantity.length > 3) {
-      return toast.error("Quantity should not be more than 3 digits");
-    }
+    // if (quantity.length > 3) {
+    //   return toast.error("quantity should not be more than 3 digits");
+    // }
     dispatch(
       handleAddProductToCart({
         selectedShippingZone,
@@ -164,49 +167,59 @@ const MagazineOrSubscriptionDetails = () => {
             {singleMagazineOrSubscription?.title}
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            From €&nbsp;
+            {t("From")} €&nbsp;
             {Intl.NumberFormat("en-US", {
               minimumFractionDigits: 2,
             }).format(singleMagazineOrSubscription?.digitalPrice)}
           </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm md:whitespace-nowrap">Type of support</p>
+            <p className="md:w-3/12 md:text-base text-sm md:whitespace-nowrap">
+              {t("Type of support")}
+            </p>
             <select
               disabled={isAlreadyInCart}
               name="type_of_support"
               onChange={(e) => setSelectedTypeOfSupport(e.target.value)}
               className="border p-2 w-full outline-none font-light"
-              value={selectedTypeOfSupport}
+              value={
+                findIncart !== undefined && findIncart
+                  ? findIncart?.selectedTypeOfSupport
+                  : selectedTypeOfSupport
+              }
             >
               <option label="Choose an option"></option>
-              <option value="paperAndDigital">Paper and Digital</option>
-              <option value="digital">Digital</option>
+              <option value="paperAndDigital">{t("Paper and Digital")}</option>
+              <option value="digital">{("Digital")}</option>
             </select>
           </div>
           {/* shipping area */}
           <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm">Shipping area</p>
+            <p className="md:w-3/12 md:text-base text-sm">{t("Shipping area")}</p>
             <select
               onChange={(e) => setSelectedShippingZone(e.target.value)}
               disabled={isAlreadyInCart}
               name="shipping_area"
               className="border p-2 w-full font-light outline-none"
-              value={selectedShippingZone}
+              value={
+                findIncart !== undefined && findIncart
+                  ? findIncart?.selectedShippingZone
+                  : selectedShippingZone
+              }
             >
               <option label="Select your shipping zone"></option>
               <option value="EEC_Switzerland_Overseas">
                 EEC / Switzerland / Dom-tom
               </option>
-              <option value="MetropolitanFrance">Metropolitan France</option>
-              <option value="RestOfTheWorld"> Rest of the world</option>
+              <option value="MetropolitanFrance">{t("Metropolitan France")}</option>
+              <option value="RestOfTheWorld">{t("Rest of the world")}</option>
             </select>
           </div>
           {/* qty */}
           {!singleMagazineOrSubscription?.subscriptionId &&
             selectedTypeOfSupport === "paperAndDigital" && (
               <div className="w-full flex items-center gap-3 font-semibold">
-                <p className="md:w-3/12 md:text-base text-sm">Quantity</p>
+                <p className="md:w-3/12 md:text-base text-sm">{t("Quantity")}</p>
                 <input
                   type="number"
                   disabled={isAlreadyInCart}
@@ -221,7 +234,7 @@ const MagazineOrSubscriptionDetails = () => {
           {/* price */}
           {selectedShippingZone && selectedTypeOfSupport && (
             <p className="font-semibold md:text-xl text-lg space-x-2">
-              <span>Price:</span>
+              <span>{t("Price")}:</span>
               <span className="text-darkBlue">
                 €&nbsp;
                 {Intl.NumberFormat("en-US", {
@@ -240,7 +253,7 @@ const MagazineOrSubscriptionDetails = () => {
             }}
             disabled={isAlreadyInCart}
           >
-            {isAlreadyInCart ? "Already in cart" : "+ Add to cart"}
+            {isAlreadyInCart ? t("Already in cart") : t("+ Add to cart")}
           </button>
         </div>
       </div>
@@ -254,7 +267,7 @@ const MagazineOrSubscriptionDetails = () => {
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("description")}
         >
-          Description
+          {t("Description")}
         </p>
         <p
           className={`${
@@ -264,7 +277,7 @@ const MagazineOrSubscriptionDetails = () => {
           } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
         >
-          Further information
+          {t("Further information")}
         </p>
       </div>
       {/* description */}
@@ -278,14 +291,14 @@ const MagazineOrSubscriptionDetails = () => {
         <div className="md:space-y-4 space-y-2">
           <p>
             <span>
-              <b>Type of support:</b>
+              <b>{t("Type of support")}:</b>
             </span>{" "}
             &nbsp;
-            <span>Digital (pdf), Paper and digital (pdf)</span>
+            <span>{(t("Digital (pdf), Paper and digital (pdf)"))}</span>
           </p>
           <p>
             <span>
-              <b>Shipping area:</b>
+              <b>{t("Shipping area")}:</b>
             </span>{" "}
             &nbsp;
             <span>

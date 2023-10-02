@@ -2,24 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import success from "../assests/animations/success.json";
-import { useEffect } from "react";
-import { toast } from "react-hot-toast";
-import { useTranslation } from "react-i18next";
 
 const Success = ({ title, description, btnText, link }) => {
-  const navigate = useNavigate();
-
-  const { t } = useTranslation();
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigate("/sign-in");
-  //     toast.success(t("You can signin now with your new password."), {
-  //       duration: 4000,
-  //     });
-  //   }, 5000);
-  // }, []);
-
   return (
     <div>
       {/* bg img + heading */}

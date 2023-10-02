@@ -1,21 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import BaseUrl from "../../BaseUrl";
+import { useTranslation } from "react-i18next";
 
 const Download = () => {
   const { magazines, loading } = useSelector((state) => state.root.shop);
 
+  const { t } = useTranslation();
+
   return (
     <>
       {loading ? (
-        <div className="loading">Loading...</div>
+        <div className="loading">{t("Loading").concat("...")}</div>
       ) : (
         <div className="border border-gray-300 w-full overflow-x-scroll scrollbar ">
           <table className="w-full overflow-x-scroll">
             <thead className="w-full border-b border-gray-300">
-              <th className="md:p-4 p-2 text-left">Product</th>
-              <th className="md:p-4 p-2 text-left">Purchase Date</th>
-              <th className="md:p-4 p-2 text-center">Action</th>
+              <th className="md:p-4 p-2 text-left">{t("Product")}</th>
+              <th className="md:p-4 p-2 text-left">{t("Purchase Date")}</th>
+              <th className="md:p-4 p-2 text-center">{t("Action")}</th>
             </thead>
             <tbody>
               {magazines.length > 0 ? (
@@ -42,34 +45,15 @@ const Download = () => {
                         download
                       >
                         <button className="uppercase gray_button">
-                          download
+                          {t("download")}
                         </button>
                       </a>
                     </td>
                   </tr>
                 ))
               ) : (
-                <tr>No Downloads here.</tr>
+                <tr>{t("No Downloads here")}.</tr>
               )}
-              <tr>
-                <td className="md:p-4 p-3 font-medium text-left whitespace-nowrap flex md:flex-row flex-col items-center justify-start gap-3">
-                  <img
-                    src={require("../../assests/images/Product image-2.png")}
-                    alt=""
-                    className="w-fit md:h-48 h-32 object-contain object-center"
-                  />
-                  <p>
-                    <b>BOISmag n°213</b>
-                  </p>
-                </td>
-                <td className="md:p-4 p-3 font-medium text-left whitespace-nowrap">
-                  August 23, 2023
-                </td>
-
-                <td className="md:p-4 p-3 font-medium text-center">
-                  <button className="uppercase gray_button">download</button>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>

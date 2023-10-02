@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-// import { handleForgotPassword, handleVerifyOtp } from "../../redux/AuthSlice";
 import { useTranslation } from "react-i18next";
 import {
   handleChangeShowOtpField,
@@ -57,7 +56,7 @@ const OTPVerify = () => {
     e.preventDefault();
     if (Object.values(numberField).includes("")) {
       toast.remove();
-      toast.error(t("Please fill all the fields!!"));
+      toast.error(t("please fill all the fields"));
       for (const key in numberField) {
         if (numberField.hasOwnProperty(key)) {
           const element = numberField[key];
@@ -80,7 +79,7 @@ const OTPVerify = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("OTP verified successfully."), { duration: 2000 });
+          toast.success(t("OTP verified successfully"), { duration: 2000 });
           dispatch(handleChangeShowResetPassword(true));
           dispatch(handleChangeShowOtpField(false));
           resetValues();
@@ -104,7 +103,7 @@ const OTPVerify = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("Otp Sent to your email."), { duration: 4000 });
+          toast.success(t("OTP Sent to your email"), { duration: 4000 });
           setResendOtpLoading(false);
         } else if (res?.payload?.status === "fail") {
           setResendOtpLoading(false);
@@ -158,7 +157,7 @@ const OTPVerify = () => {
   }
 
   return (
-    <div className="absolute z-10 inset-0 bg-black bg-opacity-50">
+    <div className="fixed z-10 inset-0 bg-black bg-opacity-50">
       {/* title */}
       {/* {error !== null && <span className="error">{error?.message}</span>} */}
       <div
@@ -166,11 +165,11 @@ const OTPVerify = () => {
         className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
       >
         <div className="space-y-2 text-center">
-          <p className="font-semibold text-darkBlue text-center md:text-lg text-base">
-            {t("Verification")}
+          <p className="font-semibold text-darkBlue text-center md:text-lg text-base capitalize">
+            {t("verification")}
           </p>
           <p className="text-sm text-darkGray leading-normal font-medium">
-            {t("Check your email for the OTP")}
+            {t("check your email for the OTP")}
           </p>
         </div>
         {/* form  */}
@@ -316,7 +315,7 @@ const OTPVerify = () => {
               className="text-red-500 font-semibold cursor-pointer "
             >
               {resendOtpLoading
-                ? t("Sending").concat("...")
+                ? t("sending").concat("...")
                 : t("Resend the code")}
             </span>{" "}
           </p>

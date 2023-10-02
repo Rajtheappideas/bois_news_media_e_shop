@@ -1,11 +1,14 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const PaymentMethod = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full md:space-y-5 space-y-3">
       <p className="bg-darkBlue text-white text-left p-4 md:text-lg font-semibold">
-        Payment method
+        {t("Payment method")}
       </p>
       <ul className="md:space-y-4 space-y-2">
         <li className="flex items-center gap-3">
@@ -17,7 +20,7 @@ const PaymentMethod = () => {
             defaultChecked
           />
           <label htmlFor="credit_card" className="Label">
-            <span>Payment by credit card</span>
+            <span>{t("Payment by credit card")}</span>
           </label>
         </li>
         <li className="flex items-center gap-3">
@@ -41,7 +44,7 @@ const PaymentMethod = () => {
             defaultChecked
           />
           <label htmlFor="bank_transfer" className="Label">
-            <span>Bank transfer</span>
+            <span>{t("Bank transfer")}</span>
           </label>
         </li>
         <li className="flex items-center gap-3">
@@ -53,7 +56,7 @@ const PaymentMethod = () => {
             defaultChecked
           />
           <label htmlFor="pay_by_check" className="Label">
-            <span>Payment by check</span>
+            <span>{t("Payment by check")}</span>
           </label>
         </li>
         <li className="flex items-center gap-3">
@@ -65,7 +68,7 @@ const PaymentMethod = () => {
             defaultChecked
           />
           <label htmlFor="pay_by_admin" className="Label">
-            <span>Payment by administrative mandate</span>
+            <span>{t("Payment by administrative mandate")}</span>
           </label>
         </li>
       </ul>
@@ -78,8 +81,10 @@ const PaymentMethod = () => {
           className="w-6 h-6 rounded-lg"
         />
         <label htmlFor="terms">
-          I have read and accept the{" "}
-          <Link to="/terms" className="text-darkBlue font-semibold">terms & conditions.</Link>
+          {t("I have read and accept the")}{" "}
+          <Link to="/terms" className="text-darkBlue font-semibold">
+            {t("terms & conditions")}.
+          </Link>
         </label>
       </div>
     </div>

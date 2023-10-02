@@ -10,6 +10,7 @@ import {
   handleCalculateTotal,
   handleUpdateProductToCart,
 } from "../redux/CartSlice";
+import { useTranslation } from "react-i18next";
 
 const Cart = () => {
   const [showAddressFields, setshowAddressFields] = useState(false);
@@ -19,7 +20,10 @@ const Cart = () => {
   const { cart, subTotal, total } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleUpdateProduct = () => {
     if (productsToUpdate.length === 0) return;
@@ -42,7 +46,9 @@ const Cart = () => {
 
   return (
     <>
-      <Helmet title="Cart | E-shop" />
+      <Helmet>
+        <title>{t("Cart")} | E-shop</title>
+      </Helmet>
       <div className="Container md:space-y-7 space-y-3 md:py-10 py-5 transition-all duration-100 ease-linear">
         {/* <HeadNavigationLink /> */}
         {cart !== undefined && cart.length > 0 ? (
@@ -55,11 +61,13 @@ const Cart = () => {
                     <tr>
                       <th className="md:p-4 p-2 text-center"></th>
                       <th className="md:p-4 p-2 lg:text-left text-center">
-                        Product
+                        {t("Product")}
                       </th>
-                      <th className="md:p-4 p-2 text-center">Price</th>
-                      <th className="md:p-4 p-2 text-center">Quantity</th>
-                      <th className="md:p-4 p-2 text-right">Subtotal</th>
+                      <th className="md:p-4 p-2 text-center">{t("Price")}</th>
+                      <th className="md:p-4 p-2 text-center">
+                        {t("Quantity")}
+                      </th>
+                      <th className="md:p-4 p-2 text-right">{t("Subtotal")}</th>
                     </tr>
                   </thead>
                   <tbody className="w-full">
@@ -78,24 +86,24 @@ const Cart = () => {
               </div>
 
               <div className="w-full flex md:flex-row flex-col items-center justify-between md:gap-2 gap-5 lg:px-4 px-2 py-3">
-                <div className="flex items-center md:flex-nowrap flex-wrap gap-2">
+                <div className="flex items-center md:flex-nowrap flex-wrap gap-2 md:w-1/2">
                   <input
                     type="text"
                     className="border border-gray-300 rounded-lg p-3 input_field"
                     placeholder="Promo Code"
                   />
-                  <button className="uppercase gray_button w-full md:h-11">
-                    Apply Promo code
+                  <button className="uppercase gray_button w-auto md:whitespace-nowrap">
+                    {t("Apply Promo code")}
                   </button>
                 </div>
                 <div className="w-full md:w-auto">
                   <button
                     onClick={() => handleUpdateProduct()}
-                    className={`uppercase gray_button md:w-40 w-full ${
+                    className={`uppercase gray_button w-auto ${
                       productsToUpdate.length === 0 && "cursor-not-allowed"
                     } `}
                   >
-                    update cart
+                    {t("update cart")}
                   </button>
                 </div>
               </div>
@@ -106,8 +114,8 @@ const Cart = () => {
               <div className="w-full flex items-start justify-between p-4">
                 {/* sub total + shipping */}
                 <div className="font-semibold md:text-base text-sm text-left space-y-2">
-                  <p>Sub total</p>
-                  <p>Shipping</p>
+                  <p>{t("Sub total")}</p>
+                  <p>{t("Shipping")}</p>
                 </div>
                 <div className="font-medium md:text-base text-sm text-right space-y-2">
                   <p>
@@ -121,7 +129,7 @@ const Cart = () => {
                       className="inline-block w-auto cursor-pointer"
                       onClick={() => setshowAddressFields(!showAddressFields)}
                     >
-                      Select address
+                      {t("Select address")}
                     </p>
                     {/* address */}
                     {/* <div className="space-y-2 text-black">
@@ -159,7 +167,9 @@ const Cart = () => {
                         placeholder="Postal code"
                         className="input_field w-full"
                       />
-                      <button className="w-full gray_button">update</button>
+                      <button className="w-full gray_button">
+                        {t("update")}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -167,7 +177,7 @@ const Cart = () => {
               <hr />
               <div className="w-full flex items-center justify-between p-4">
                 <p className="font-semibold md:text-base text-sm text-left">
-                  Total
+                  {t("Total")}
                 </p>
                 <p className="font-medium md:text-base text-sm text-right text-black">
                   <b>
@@ -184,13 +194,13 @@ const Cart = () => {
             <div className="text-right">
               <Link to="/checkout">
                 <button className="gray_button uppercase md:w-52">
-                  place order
+                  {t("place order")}
                 </button>
               </Link>
             </div>
           </>
         ) : (
-          <div className="loading my-10">Your cart is empty.</div>
+          <div className="loading my-10">{t("Your cart is empty")}.</div>
         )}
       </div>
     </>

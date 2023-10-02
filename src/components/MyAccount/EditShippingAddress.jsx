@@ -4,17 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import {
-  isPossiblePhoneNumber,
-  isValidPhoneNumber,
-} from "react-phone-number-input";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
-import { AddressSchema } from "../../schemas/schema";
+import Schema from "../../schemas/Schema";
 
 const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -27,6 +20,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+  const { AddressSchema } = Schema();
 
   const {
     register,
@@ -87,7 +81,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
     >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>Shipping Address</span>
+        <span>{t("Shipping address")}</span>
         <AiOutlineClose
           onClick={() => setActiveEditAddress("")}
           role="button"
@@ -96,31 +90,31 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       </p>
       {/* name */}
       {/* <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="first_name" className="Label">
-            First name
-          </label>
-          <input
-            type="text"
-            placeholder="john"
-            className="w-full input_field"
-          />
-        </div>
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="last_name" className="Label">
-            Last name
-          </label>
-          <input
-            type="text"
-            placeholder="adam"
-            className="w-full input_field"
-          />
-        </div>
-      </div> */}
+    <div className="md:w-1/2 w-full">
+      <label htmlFor="first_name" className="Label">
+        First name
+      </label>
+      <input
+        type="text"
+        placeholder="john"
+        className="w-full input_field"
+      />
+    </div>
+    <div className="md:w-1/2 w-full">
+      <label htmlFor="last_name" className="Label">
+        Last name
+      </label>
+      <input
+        type="text"
+        placeholder="adam"
+        className="w-full input_field"
+      />
+    </div>
+  </div> */}
       {/* address 1*/}
       <div className="w-full">
         <label htmlFor="address_1" className="Label">
-          address 1
+          {t("address")} 1
         </label>
         <input
           type="text"
@@ -133,7 +127,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* address 2*/}
       <div className="w-full">
         <label htmlFor="address_2" className="Label">
-          address 2
+          {t("address")} 2
         </label>
         <input
           type="text"
@@ -147,7 +141,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* address 3*/}
       <div className="w-full">
         <label htmlFor="address_3" className="Label">
-          address 3
+          {t("address")} 3
         </label>
         <input
           type="text"
@@ -160,7 +154,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
-          city
+          {t("city")}
         </label>
         <input
           type="text"
@@ -173,7 +167,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* postal code */}
       <div className="w-full">
         <label htmlFor="postal_code" className="Label">
-          postal code
+          {t("postal code")}
         </label>
         <input
           type="text"
@@ -186,7 +180,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* province */}
       <div className="w-full">
         <label htmlFor="province" className="Label">
-          province
+          {t("province")}
         </label>
         <input
           type="text"
@@ -199,7 +193,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       {/* country */}
       <div className="w-full">
         <label htmlFor="country" className="Label">
-          country
+          {t("country")}
         </label>
         <input
           type="text"
@@ -214,7 +208,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
         disabled={addressLoading}
         className="gray_button capitalize md:w-60 w-full md:h-12 h-10"
       >
-        {addressLoading ? "Saving..." : "Save address"}
+        {addressLoading ? t("Saving").concat("...") : t("Save address")}
       </button>
     </form>
   );

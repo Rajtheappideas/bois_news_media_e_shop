@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
-import { AddressSchema } from "../../schemas/schema";
+import Schema from "../../schemas/Schema";
 
 const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -21,6 +21,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+  const { AddressSchema } = Schema();
 
   const {
     register,
@@ -81,7 +82,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
     >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>Billing Address</span>
+        <span>{t("Billing address")}</span>
         <AiOutlineClose
           onClick={() => setActiveEditAddress("")}
           role="button"
@@ -125,7 +126,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* address 1*/}
       <div className="w-full">
         <label htmlFor="address_1" className="Label">
-          address 1
+          {t("address")} 1
         </label>
         <input
           type="text"
@@ -138,7 +139,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* address 2*/}
       <div className="w-full">
         <label htmlFor="address_2" className="Label">
-          address 2
+          {t("address")} 2
         </label>
         <input
           type="text"
@@ -152,7 +153,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* address 3*/}
       <div className="w-full">
         <label htmlFor="address_3" className="Label">
-          address 3
+          {t("address")} 3
         </label>
         <input
           type="text"
@@ -165,7 +166,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
-          city
+          {t("city")}
         </label>
         <input
           type="text"
@@ -178,7 +179,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* postal code */}
       <div className="w-full">
         <label htmlFor="postal_code" className="Label">
-          postal code
+          {t("postal code")}
         </label>
         <input
           type="text"
@@ -191,7 +192,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* province */}
       <div className="w-full">
         <label htmlFor="province" className="Label">
-          province
+          {t("province")}
         </label>
         <input
           type="text"
@@ -204,7 +205,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
       {/* country */}
       <div className="w-full">
         <label htmlFor="country" className="Label">
-          country
+          {t("country")}
         </label>
         <input
           type="text"
@@ -219,7 +220,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
         disabled={addressLoading}
         className="gray_button capitalize md:w-60 w-full md:h-12 h-10"
       >
-        {addressLoading ? "Saving..." : "Save address"}
+        {addressLoading ? t("Saving").concat("...") : t("Save address")}
       </button>
     </form>
   );

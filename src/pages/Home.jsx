@@ -5,21 +5,25 @@ import { Helmet } from "react-helmet";
 import SeeOtherIsse from "../components/Home/SeeOtherIsse";
 import SubScribe from "../components/Home/Subscribe";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const { latestMagazines, magazineLoading } = useSelector(
     (state) => state.root.shop
   );
+
+  const { t } = useTranslation();
+
   return (
     <>
       <Helmet>
-        <title>Home | E-shop</title>
+        <title>{t("home")} | E-shop</title>
       </Helmet>
       <div className="md:space-y-20 space-y-3">
         <HeroSection />
         <SubScribe />
         {magazineLoading ? (
-          <div className="loading">Loading...</div>
+          <div className="loading">{t("Loading").concat("...")}</div>
         ) : (
           <div>
             {latestMagazines !== null &&
@@ -65,9 +69,9 @@ const Home = () => {
                   titleImg={require("../assests/images/toitureTitle.png")}
                 />
               )}
+            <SeeOtherIsse />
           </div>
         )}
-        <SeeOtherIsse />
       </div>
     </>
   );

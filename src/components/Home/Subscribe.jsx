@@ -6,6 +6,7 @@ import {
   handleChangeSingleMagazineOrSubscription,
 } from "../../redux/ShopSlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SubScribe = () => {
   const { subscriptions, subscriptionLoading } = useSelector(
@@ -13,7 +14,9 @@ const SubScribe = () => {
   );
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleOnClick = (id) => {
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
@@ -31,10 +34,12 @@ const SubScribe = () => {
 
   return (
     <div className="Container md:space-y-5 space-y-2">
-      <p className="heading">SUBSCRIBE</p>
+      <p className="heading uppercase">{t("SUBSCRIBE")}</p>
       <div className="grid lg:grid-cols-2 place-items-start items-start lg:gap-5 gap-3">
         {subscriptionLoading ? (
-          <div className="loading col-span-full">Loading...</div>
+          <div className="loading col-span-full">
+            {t("Loading").concat("...")}
+          </div>
         ) : subscriptions.length > 0 ? (
           subscriptions.map((subscription) => (
             <div
@@ -60,14 +65,14 @@ const SubScribe = () => {
                     onClick={() => handleOnClick(subscription?._id)}
                     className="gray_button uppercase md:w-48 w-full"
                   >
-                    i SubScribe
+                    {t("i SubScribe")}
                   </button>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="loading">No Subscription here.</div>
+          <div className="loading">{t("No Subscription here")}.</div>
         )}
       </div>
     </div>

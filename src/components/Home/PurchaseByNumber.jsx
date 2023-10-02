@@ -7,6 +7,7 @@ import {
 } from "../../redux/ShopSlice";
 import BaseUrl from "../../BaseUrl";
 import MagazineCard from "../MagazineCard";
+import { useTranslation } from "react-i18next";
 
 const PurchaseByNumber = ({
   bgColor,
@@ -18,6 +19,8 @@ const PurchaseByNumber = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleOnClick = () => {
     dispatch(handleChangeActiveCategory(category));
@@ -34,7 +37,9 @@ const PurchaseByNumber = ({
       className="w-full md:p-10 p-5 text-white md:space-y-5 space-y-3"
     >
       <div className="md:space-y-5 space-y-3 Container">
-        <p className="heading text-center">PURCHASE BY NUMBER</p>
+        <p className="heading text-center uppercase">
+          {t("PURCHASE BY NUMBER")}
+        </p>
         <img
           src={titleImg}
           alt="bois_magazine"
@@ -53,7 +58,7 @@ const PurchaseByNumber = ({
         <div className="text-center">
           <Link to="/shop" onClick={() => handleOnClick()}>
             <button className="bg-white active:scale-90 transition-all duration-100 hover:bg-black hover:text-white text-black text-center rounded-lg lg:w-1/4 md:w-1/3 font-medium p-2">
-              Discover previous issues
+              {t("Discover previous issues")}
             </button>
           </Link>
         </div>

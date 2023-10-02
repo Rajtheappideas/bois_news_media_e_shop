@@ -12,7 +12,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { handleEditProfile } from "../../redux/AuthSlice";
-import { profileSchema } from "../../schemas/schema";
+import Schema from "../../schemas/Schema";
 
 const EditProfile = ({ setshowEditProfile }) => {
   const { user, token, loading } = useSelector((state) => state.root.auth);
@@ -21,6 +21,7 @@ const EditProfile = ({ setshowEditProfile }) => {
   const dispatch = useDispatch();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+  const { profileSchema } = Schema();
 
   const {
     register,

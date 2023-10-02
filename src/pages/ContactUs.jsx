@@ -17,6 +17,7 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PostUrl } from "../BaseUrl";
+import Schema from "../schemas/Schema";
 
 const ContactUs = () => {
   const [loading, setLoading] = useState(false);
@@ -28,27 +29,7 @@ const ContactUs = () => {
 
   const { t } = useTranslation();
 
-  const contactSchema = yup.object().shape({
-    email: yup.string().required("email is required").email(),
-    name: yup
-      .string()
-      .trim("The contact name cannot include leading and trailing spaces")
-      .required("name is required")
-      .min(3, "too short")
-      .max(30, "too long")
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
-        "only contain Latin letters."
-      ),
-
-    comments: yup
-      .string()
-      .required("Comment is required")
-      .matches(/^[A-Za-z\s\-]+$/g, "That doesn't look Comment")
-      .trim("The contact name cannot include leading and trailing spaces"),
-    phone: yup.string().required(t("phone is required")),
-    captcha: yup.string().required("Check the captcha."),
-  });
+  const { contactUsSchema } = Schema();
 
   const {
     register,
@@ -61,7 +42,7 @@ const ContactUs = () => {
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(contactSchema),
+    resolver: yupResolver(contactUsSchema),
   });
 
   const onSubmit = async (data) => {
@@ -69,14 +50,14 @@ const ContactUs = () => {
 
     if (!isPossiblePhoneNumber(phone) || !isValidPhoneNumber(phone)) {
       toast.remove();
-      toast.error(t("Phone is invalid"));
+      toast.error(t("phone is invalid"));
       return true;
     } else if (
       (getValues("mobile") !== "" && !isPossiblePhoneNumber(phone)) ||
       !isValidPhoneNumber(phone)
     ) {
       toast.remove();
-      toast.error(t("Phone is invalid"));
+      toast.error(t("phone is invalid"));
       return true;
     }
     setLoading(true);
@@ -106,7 +87,9 @@ const ContactUs = () => {
 
   return (
     <>
-      <Helmet title="Contact us | E-shop" />
+      <Helmet>
+        <title>{t("Contact us")} | E-shop</title>
+      </Helmet>
       <div className="relative md:h-80 h-60">
         <img
           src={require("../assests/images/contact-us.png")}
@@ -115,7 +98,7 @@ const ContactUs = () => {
           loading="lazy"
         />
         <h1 className="font-bold text-white uppercase md:text-4xl text-2xl text-center absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
-          Contact Us
+          {t("Contact us")}
         </h1>
       </div>
       <section className="Container mx-auto flex md:flex-row flex-col items-start justify-center gap-5 py-5">
@@ -175,7 +158,7 @@ const ContactUs = () => {
           <hr />
           {/* name */}
           <div className="w-full">
-            <label className="Label">Name*</label>
+            <label className="Label">{t("Name")}*</label>
             <input
               type="text"
               className="gray_input_field"
@@ -188,7 +171,7 @@ const ContactUs = () => {
           {/* email , phone */}
           <div className="flex items-start w-full lg:flex-row flex-col gap-3">
             <div className="lg:w-1/2 w-full">
-              <label className="Label">{t("Email address")}*</label>
+              <label className="Label">{t("Email")}*</label>
               <input
                 type="email"
                 className="gray_input_field"
@@ -199,7 +182,7 @@ const ContactUs = () => {
               <span className="error">{errors?.email?.message}</span>
             </div>
             <div className="lg:w-1/2 w-full">
-              <label className="Label">{t("Phone")}*</label>
+              <label className="Label">{t("phone")}*</label>
 
               <Controller
                 name="phone"

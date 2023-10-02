@@ -1,16 +1,19 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const CheckoutForm = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full md:space-y-5 space-y-3">
       <p className="bg-darkBlue text-white text-left p-4 md:text-lg font-semibold">
-        Billing Information
+        {t("Billing Information")}
       </p>
       {/* name */}
       <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
         <div className="md:w-1/2 w-full">
           <label htmlFor="first_name" className="Label">
-            First name
+            {t("First name")}
           </label>
           <input
             type="text"
@@ -20,7 +23,7 @@ const CheckoutForm = () => {
         </div>
         <div className="md:w-1/2 w-full">
           <label htmlFor="last_name" className="Label">
-            Last name
+            {t("Last name")}
           </label>
           <input
             type="text"
@@ -32,7 +35,7 @@ const CheckoutForm = () => {
       {/* company name */}
       <div className="w-full">
         <label htmlFor="company_name" className="Label">
-          Company name (optional)
+          {t("Company name")} (optional)
         </label>
         <input
           type="text"
@@ -43,7 +46,7 @@ const CheckoutForm = () => {
       {/* field of activity */}
       <div className="w-full">
         <label htmlFor="field_of_activity" className="Label">
-          Field of activity (optional)
+          {t("Field of activity")} (optional)
         </label>
         <input
           type="text"
@@ -54,7 +57,7 @@ const CheckoutForm = () => {
       {/* country */}
       <div className="w-full">
         <label htmlFor="country" className="Label">
-          country
+          {t("country")}
         </label>
         <input
           type="text"
@@ -65,7 +68,7 @@ const CheckoutForm = () => {
       {/* street */}
       <div className="w-full">
         <label htmlFor="street_address" className="Label">
-          street address
+          {t("street address")}
         </label>
         <input
           type="text"
@@ -76,7 +79,7 @@ const CheckoutForm = () => {
       {/* state */}
       <div className="w-full">
         <label htmlFor="state" className="Label">
-          state
+          {t("state")}
         </label>
         <input
           type="text"
@@ -87,7 +90,7 @@ const CheckoutForm = () => {
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
-          city
+          {t("city")}
         </label>
         <input
           type="text"
@@ -98,7 +101,7 @@ const CheckoutForm = () => {
       {/* postal code */}
       <div className="w-full">
         <label htmlFor="postal_code" className="Label">
-          postal code
+          {t("postal code")}
         </label>
         <input
           type="text"
@@ -110,7 +113,7 @@ const CheckoutForm = () => {
       <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
         <div className="md:w-1/2 w-full">
           <label htmlFor="phone" className="Label">
-            phone
+            {t("phone")}
           </label>
           <input
             type="number"
@@ -120,7 +123,7 @@ const CheckoutForm = () => {
         </div>
         <div className="md:w-1/2 w-full">
           <label htmlFor="email" className="Label">
-            email
+            {t("email")}
           </label>
           <input
             type="email"
@@ -132,7 +135,7 @@ const CheckoutForm = () => {
       {/* vat number */}
       <div className="w-full">
         <label htmlFor="vat_number" className="Label">
-          VAT number (optional)
+          {t("VAT number")} (optional)
         </label>
         <input
           type="number"
@@ -143,7 +146,7 @@ const CheckoutForm = () => {
       {/* puchrse order */}
       <div className="w-full">
         <label htmlFor="purchase_order" className="Label">
-          purchase order (optional)
+          {t("purchase order")} (optional)
         </label>
         <input
           type="text"

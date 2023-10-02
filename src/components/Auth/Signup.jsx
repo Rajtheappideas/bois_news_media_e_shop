@@ -18,7 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-import Schema from "../../schemas/Schema";
+import schemas from "../../schemas/schemas";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Signup = () => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { signupSchema } = Schema();
+  const { signupSchema } = schemas();
 
   const {
     register,

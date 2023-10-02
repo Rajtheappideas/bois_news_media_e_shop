@@ -8,7 +8,7 @@ import { handleChangePassword } from "../../redux/AuthSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Schema from "../../schemas/Schema";
+import schemas from "../../schemas/schemas";
 
 const ChangePassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -23,7 +23,7 @@ const ChangePassword = () => {
 
   const { AbortControllerRef } = useAbortApiCall();
 
-  const { changePasswordSchema } = Schema();
+  const { changePasswordSchema } = schemas();
 
   const {
     register,

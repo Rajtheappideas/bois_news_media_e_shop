@@ -16,7 +16,7 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PostUrl } from "../BaseUrl";
-import Schema from "../schemas/Schema";
+import schemas from "../schemas/schemas";
 
 const ContactUs = () => {
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const ContactUs = () => {
 
   const { t } = useTranslation();
 
-  const { contactUsSchema } = Schema();
+  const { contactUsSchema } = schemas();
 
   const {
     register,

@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 
-const Schema = () => {
+const schemas = () => {
   const { t } = useTranslation();
   const signupSchema = yup.object({
     fname: yup
@@ -262,4 +262,4 @@ const Schema = () => {
   };
 };
 
-export default Schema;
+export default schemas;

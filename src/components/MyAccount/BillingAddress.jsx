@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import Schema from "../../schemas/Schema";
+import schemas from "../../schemas/schemas";
 import { useTranslation } from "react-i18next";
 
 const BillingAddress = ({ setActiveAddress }) => {
@@ -19,7 +19,7 @@ const BillingAddress = ({ setActiveAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = Schema();
+  const { AddressSchema } = schemas();
 
   const {
     register,

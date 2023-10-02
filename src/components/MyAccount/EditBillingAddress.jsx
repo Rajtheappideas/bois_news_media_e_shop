@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
-import schemas from "../../schemas/schemas";
+import ValidationSchema from "../../validations/ValidationSchema";
 
 const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -21,7 +21,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = schemas();
+  const { AddressSchema } = ValidationSchema();
 
   const {
     register,

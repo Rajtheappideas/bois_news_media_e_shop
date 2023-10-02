@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { handleResetPassword } from "../../redux/AuthSlice";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import schemas from "../../schemas/schemas";
+import ValidationSchema from "../../validations/ValidationSchema";
 
 const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +24,7 @@ const ResetPassword = () => {
     (state) => state.root.auth
   );
 
-  const { ResetPasswordSchema } = schemas();
+  const { ResetPasswordSchema } = ValidationSchema();
 
   const dispatch = useDispatch();
 

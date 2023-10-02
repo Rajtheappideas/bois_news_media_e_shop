@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
-import schemas from "../../schemas/schemas";
+import ValidationSchema from "../../validations/ValidationSchema";
 
 const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { addresses, token, addressLoading } = useSelector(
@@ -20,7 +20,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = schemas();
+  const { AddressSchema } = ValidationSchema();
 
   const {
     register,

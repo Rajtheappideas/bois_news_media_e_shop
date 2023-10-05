@@ -8,9 +8,16 @@ import { handleChangeUserAddress } from "../../redux/AuthSlice";
 import toast from "react-hot-toast";
 import ValidationSchema from "../../validations/ValidationSchema";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { Country, State } from "country-state-city";
 
 const ShippingAddress = ({ setActiveAddress }) => {
-  const { user, token, addressLoading } = useSelector(
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [showStateField, setShowStateField] = useState(true);
+
+  const { user, token, addressLoading, addresses } = useSelector(
     (state) => state.root.auth
   );
 
@@ -19,12 +26,14 @@ const ShippingAddress = ({ setActiveAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = ValidationSchema();
+  const { AddressSchema } = ValidationSchema(showStateField);
 
   const {
     register,
     handleSubmit,
     getValues,
+    resetField,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -69,10 +78,30 @@ const ShippingAddress = ({ setActiveAddress }) => {
   };
 
   useEffect(() => {
+    setCountries(Country.getAllCountries());
     return () => {
       abortApiCall();
     };
   }, []);
+
+  useEffect(() => {
+    let findCountry = "";
+    findCountry = Country.getAllCountries().find(
+      (c) => c.name === getValues("country")
+    );
+    if (getValues("country") === "") setShowStateField(true);
+    else if (
+      State.getStatesOfCountry(findCountry?.isoCode).length > 0 &&
+      getValues("country") !== ""
+    ) {
+      resetField("province", "");
+      setSelectedCountry(findCountry?.name);
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
+    }
+  }, [watch("country")]);
 
   return (
     <form
@@ -80,7 +109,7 @@ const ShippingAddress = ({ setActiveAddress }) => {
       className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
     >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>{t("Shipping address")}</span>
+        <span>{t("Billing address")}</span>
         <AiOutlineClose
           onClick={() => setActiveAddress("")}
           role="button"
@@ -109,6 +138,17 @@ const ShippingAddress = ({ setActiveAddress }) => {
           className="w-full input_field"
         />
       </div>
+    </div> */}
+      {/* company name */}
+      {/* <div className="w-full">
+      <label htmlFor="company_name" className="Label">
+        Company name (optional)
+      </label>
+      <input
+        type="text"
+        placeholder="Type here..."
+        className="w-full input_field"
+      />
     </div> */}
       {/* address 1*/}
       <div className="w-full">
@@ -150,6 +190,56 @@ const ShippingAddress = ({ setActiveAddress }) => {
         />
         <span className="error">{errors?.address3?.message}</span>
       </div>
+      {/* country */}
+      <div className="w-full">
+        <label htmlFor="country" className="Label">
+          {t("country")}
+        </label>
+        <select name="country" {...register("country")} className="input_field">
+          <option label="Select country"></option>
+          {countries.length > 0 &&
+            countries.map((country, i) => (
+              <option value={country?.name} key={i}>
+                {country?.name}
+              </option>
+            ))}
+        </select>
+        {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("country")}
+        /> */}
+        <span className="error">{errors?.country?.message}</span>
+      </div>
+      {/* province */}
+      {showStateField && (
+        <div className="w-full">
+          <label htmlFor="province" className="Label">
+            {t("state")}
+          </label>
+          <select
+            name="state"
+            {...register("province")}
+            className="input_field"
+          >
+            <option label="Select country"></option>
+            {states.length > 0 &&
+              states.map((state, i) => (
+                <option value={state?.name} key={i}>
+                  {state?.name}
+                </option>
+              ))}
+          </select>
+          {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("province")}
+        /> */}
+          <span className="error">{errors?.province?.message}</span>
+        </div>
+      )}
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
@@ -175,32 +265,6 @@ const ShippingAddress = ({ setActiveAddress }) => {
           {...register("zipCode")}
         />
         <span className="error">{errors?.zipCode?.message}</span>
-      </div>
-      {/* province */}
-      <div className="w-full">
-        <label htmlFor="province" className="Label">
-          {t("province")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("province")}
-        />
-        <span className="error">{errors?.province?.message}</span>
-      </div>
-      {/* country */}
-      <div className="w-full">
-        <label htmlFor="country" className="Label">
-          {t("country")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("country")}
-        />
-        <span className="error">{errors?.country?.message}</span>
       </div>
       {/* btn */}
       <button

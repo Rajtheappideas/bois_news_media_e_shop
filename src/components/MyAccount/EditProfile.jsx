@@ -13,9 +13,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { handleEditProfile } from "../../redux/AuthSlice";
 import ValidationSchema from "../../validations/ValidationSchema";
+import { useState } from "react";
+import { Country, State } from "country-state-city";
 
 const EditProfile = ({ setshowEditProfile }) => {
-  const { user, token, loading } = useSelector((state) => state.root.auth);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [showStateField, setShowStateField] = useState(true);
+
+  const { user, token, editProfileLoading, addresses } = useSelector(
+    (state) => state.root.auth
+  );
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -29,6 +38,8 @@ const EditProfile = ({ setshowEditProfile }) => {
     getValues,
     setValue,
     control,
+    resetField,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -47,7 +58,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       province: user?.shippingAddress?.province,
       province: user?.shippingAddress?.province,
     },
-  });
+});
 
   const onSubmit = (data) => {
     const {
@@ -108,19 +119,47 @@ const EditProfile = ({ setshowEditProfile }) => {
     }
   };
 
-  console.log(errors);
+  useEffect(() => {
+    setCountries(Country.getAllCountries());
+    return () => {
+      abortApiCall();
+    };
+  }, []);
+
+  useEffect(() => {
+    let findCountry = "";
+    if (selectedCountry === "") {
+      findCountry = Country.getAllCountries().find(
+        (c) => c.name === addresses?.shippingAddress?.country
+      );
+      setSelectedCountry(findCountry?.name);
+    }
+    findCountry = Country.getAllCountries().find(
+      (c) => c.name === getValues("country")
+    );
+    if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+      resetField("province", "");
+      setSelectedCountry(findCountry?.name);
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
+    }
+  }, [watch("country")]);
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="md:space-y-3 space-y-2 md:p-5 p-2 w-full border border-gray-300"
     >
-      <p className="heading text-lg md:text-left text-center">Edit Profile</p>
+      <p className="heading text-lg md:text-left text-center">
+        {t("Edit Profile")}
+      </p>
       {/* name */}
       <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
         <div className="md:w-1/2 w-full">
           <label htmlFor="first_name" className="Label">
-            First name
+            {t("First name")}
           </label>
           <input
             type="text"
@@ -132,7 +171,7 @@ const EditProfile = ({ setshowEditProfile }) => {
         </div>
         <div className="md:w-1/2 w-full">
           <label htmlFor="last_name" className="Label">
-            Last name
+            {t("Last name")}
           </label>
           <input
             type="text"
@@ -146,7 +185,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       {/* email */}
       <div className="w-full">
         <label htmlFor="email" className="Label">
-          email
+          {t("email")}
         </label>
         <input
           type="email"
@@ -159,7 +198,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       {/* phone */}
       <div className="w-full">
         <label htmlFor="phone" className="Label">
-          phone
+          {t("phone")}
         </label>
         <Controller
           name="phone"
@@ -201,7 +240,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       {/* mobile */}
       <div className="w-full">
         <label htmlFor="mobile" className="Label">
-          mobile
+          {t("mobile")}
         </label>
         <Controller
           name="mobile"
@@ -240,10 +279,10 @@ const EditProfile = ({ setshowEditProfile }) => {
         />
         <span className="error">{errors?.phone?.message}</span>
       </div>
-      {/* civility */}
+      {/* company */}
       <div className="w-full">
         <label htmlFor="company" className="Label">
-          company
+          {t("company")}
         </label>
         <input
           type="text"
@@ -253,36 +292,69 @@ const EditProfile = ({ setshowEditProfile }) => {
         />
         <span className="error">{errors?.company?.message}</span>
       </div>
-      {/* civility */}
+      {/* country */}
       <div className="w-full">
-        <label htmlFor="civility" className="Label">
-          Civility
+        <label htmlFor="country" className="Label">
+          {t("country")}
         </label>
-        <input
+        {/* <input
           type="text"
-          placeholder="Type here..."
+          placeholder="country"
           className="w-full input_field"
-          {...register("civility")}
-        />
-        <span className="error">{errors?.civility?.message}</span>
+          {...register("country")}
+        /> */}
+        <select name="country" {...register("country")} className="input_field">
+          <option label="Select country"></option>
+          {countries.length > 0 &&
+            countries.map((country, i) => (
+              <option
+                value={country?.name}
+                selected={user?.shippingAddress?.country === country?.name}
+                key={i}
+              >
+                {country?.name}
+              </option>
+            ))}
+        </select>
+        <span className="error">{errors?.country?.message}</span>
       </div>
+
       {/* province */}
-      <div className="w-full">
-        <label htmlFor="province" className="Label">
-          province
-        </label>
-        <input
+      {showStateField && (
+        <div className="w-full">
+          <label htmlFor="province" className="Label">
+            {t("state")}
+          </label>
+          {/* <input
           type="text"
           placeholder="Type here..."
           className="w-full input_field"
           {...register("province")}
-        />
-        <span className="error">{errors?.province?.message}</span>
-      </div>
+        /> */}
+          <select
+            name="state"
+            {...register("province")}
+            className="input_field"
+          >
+            <option label="Select country"></option>
+            {states.length > 0 &&
+              states.map((state, i) => (
+                <option
+                  value={state?.name}
+                  selected={user?.shippingAddress?.province === state?.name}
+                  key={i}
+                >
+                  {state?.name}
+                </option>
+              ))}
+          </select>
+          <span className="error">{errors?.province?.message}</span>
+        </div>
+      )}
       {/* address */}
       <div className="w-full">
         <label htmlFor="street_address" className="Label">
-          address
+          {t("address")}
         </label>
         <input
           type="text"
@@ -292,23 +364,23 @@ const EditProfile = ({ setshowEditProfile }) => {
         />
         <span className="error">{errors?.address?.message}</span>
       </div>
-      {/* coutry + city */}
+      {/* civility + city */}
       <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
-        <div className="md:w-1/2 w-full">
-          <label htmlFor="country" className="Label">
-            country
+        <div className="w-full">
+          <label htmlFor="civility" className="Label">
+            {t("civility")}
           </label>
           <input
             type="text"
-            placeholder="country"
+            placeholder="Type here..."
             className="w-full input_field"
-            {...register("country")}
+            {...register("civility")}
           />
-          <span className="error">{errors?.country?.message}</span>
+          <span className="error">{errors?.civility?.message}</span>
         </div>
         <div className="md:w-1/2 w-full">
           <label htmlFor="city" className="Label">
-            city
+            {t("city")}
           </label>
           <input
             type="text"
@@ -322,7 +394,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       {/* postal code */}
       <div className="w-full">
         <label htmlFor="postal_code" className="Label">
-          postal code
+          {t("postal code")}
         </label>
         <input
           type="number"
@@ -336,18 +408,18 @@ const EditProfile = ({ setshowEditProfile }) => {
       <div className="flex items-center gap-3">
         <button
           className="gray_button md:h-12 md:w-40 w-1/2"
-          disabled={loading}
+          disabled={editProfileLoading}
           type="submit"
         >
-          {loading ? "Saving..." : "Save"}
+          {editProfileLoading ? t("Saving").concat("...") : t("Save")}
         </button>
         <button
           type="button"
           onClick={() => setshowEditProfile(false)}
-          disabled={loading}
+          disabled={editProfileLoading}
           className="light_gray_button md:h-12 md:w-40 w-1/2"
         >
-          Cancel
+          {t("Cancel")}
         </button>
       </div>
     </form>

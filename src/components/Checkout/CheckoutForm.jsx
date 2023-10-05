@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const CheckoutForm = () => {
+  const [isDiffShippingAddress, setIsDiffShippingAddress] = useState(false);
+
   const { t } = useTranslation();
 
   return (

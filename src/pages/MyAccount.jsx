@@ -30,7 +30,7 @@ const MyAccount = () => {
       navigate("/");
     }
     if (user !== null) {
-      dispatch(handleGetUserAddress({ token, signal: AbortControllerRef }));
+      // dispatch(handleGetUserAddress({ token }));
     }
     return () => {
       abortApiCall();

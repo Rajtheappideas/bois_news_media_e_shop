@@ -26,6 +26,7 @@ import {
   handleGetSubscriptions,
 } from "./redux/ShopSlice";
 import ScrollToTop from "./components/ScrollToTop";
+import { handleGetTaxAndShipping } from "./redux/CartSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -57,6 +58,7 @@ function App() {
     dispatch(handleGetMagazines());
     dispatch(handleGetLastestMagazines());
     dispatch(handleGetSubscriptions());
+    dispatch(handleGetTaxAndShipping());
   }, []);
 
   return (

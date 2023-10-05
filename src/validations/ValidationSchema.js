@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 
-const ValidationSchema = () => {
+const ValidationSchema = (required) => {
   const { t } = useTranslation();
   const signupSchema = yup.object({
     fname: yup
@@ -41,31 +41,17 @@ const ValidationSchema = () => {
       .trim()
       .max(60, t("max character limit reached"))
       .min(2, t("minimum two character required"))
-      .typeError(t("only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      ),
+      .typeError(t("only characters allowed")),
     zipCode: yup
       .string()
       .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     country: yup
       .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
+
       .required(t("country is required"))
       .trim(""),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .required(t("country is required"))
-      .trim(""),
+    city: yup.string().required(t("country is required")).trim(""),
     phone: yup.string().required("phone is required"),
     mobile: yup.string(),
     email: yup.string().email().required("Email is required").trim(),
@@ -79,13 +65,7 @@ const ValidationSchema = () => {
         )
       )
       .trim(),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        "only contain latin letters"
-      )
-      .trim(""),
+    province: yup.string().trim(""),
   });
 
   const profileSchema = yup.object({
@@ -126,40 +106,16 @@ const ValidationSchema = () => {
       .trim()
       .max(60, t("max character limit reached"))
       .min(2, t("minimum two character required"))
-      .typeError(t("only characters allowed"))
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      ),
+      .typeError(t("only characters allowed")),
     zipCode: yup
       .string()
       .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .required(t("country is required"))
-      .trim(""),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .required(t("country is required"))
-      .trim(""),
+    country: yup.string().required(t("country is required")).trim(""),
+    city: yup.string().required(t("country is required")).trim(""),
     phone: yup.string().required(t("phone is required")),
     mobile: yup.string(),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .trim(""),
+    province: yup.string().trim(""),
   });
 
   const AddressSchema = yup.object({
@@ -173,26 +129,11 @@ const ValidationSchema = () => {
       .string()
       .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
-    country: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .required(t("country is required")),
-    city: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      )
-      .required(t("country is required")),
-    province: yup
-      .string()
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        t("only contain latin letters")
-      ),
+    country: yup.string().required(t("country is required")),
+    city: yup.string().required(t("city is required")),
+    province: required
+      ? yup.string()
+      : yup.string().required(t("province is required")),
   });
 
   const ResetPasswordSchema = yup.object({
@@ -243,11 +184,7 @@ const ValidationSchema = () => {
         t("only contain Latin letters")
       ),
 
-    comments: yup
-      .string()
-      .required(t("comment is required"))
-      .matches(/^[A-Za-z\s\-]+$/g)
-      .trim(""),
+    comments: yup.string().required(t("comment is required")).trim(""),
     phone: yup.string().required(t(t("phone is required"))),
     captcha: yup.string().required(t("check the captcha.")),
   });

@@ -8,31 +8,201 @@ import SingleProduct from "../components/Cart/SingleProduct";
 import {
   handleCalculateSubTotal,
   handleCalculateTotal,
+  handleChangeShipping,
+  handleChangeTax,
+  handleGetCart,
+  handleUpdateCart,
   handleUpdateProductToCart,
 } from "../redux/CartSlice";
 import { useTranslation } from "react-i18next";
+import { Country, State, City } from "country-state-city";
+import useAbortApiCall from "../hooks/useAbortApiCall";
+import Loader from "../components/Loader";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ValidationSchema from "../validations/ValidationSchema";
+import toast from "react-hot-toast";
+import { handleChangeUserAddress } from "../redux/AuthSlice";
 
 const Cart = () => {
   const [showAddressFields, setshowAddressFields] = useState(false);
   const [productsToUpdate, setProductsToUpdate] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [showStateField, setShowStateField] = useState(true);
 
-  const { user } = useSelector((state) => state.root.auth);
-  const { cart, subTotal, total } = useSelector((state) => state.root.cart);
+  const { user, token, addresses, addressLoading } = useSelector(
+    (state) => state.root.auth
+  );
+  const {
+    cart,
+    subTotal,
+    getCartLoading,
+    total,
+    updateOrAddLoading,
+    taxPricing,
+    shippingPricing,
+    eec_switzerland_overseas_territories,
+  } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+  const { AddressSchema } = ValidationSchema(showStateField);
+
   const { t } = useTranslation();
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    watch,
+    resetField,
+    formState: { errors, isDirty },
+  } = useForm({
+    shouldFocusError: true,
+    resolver: yupResolver(AddressSchema),
+    defaultValues: {
+      address1: addresses?.shippingAddress?.address1,
+      zipCode: addresses?.shippingAddress?.zipCode,
+      province: addresses?.shippingAddress?.province,
+      country: addresses?.shippingAddress?.country,
+      city: addresses?.shippingAddress?.city,
+    },
+  });
+
+  const handleChangeAddress = (data) => {
+    const { city, zipCode, province, country } = data;
+
+    if (!isDirty) return;
+    const response = dispatch(
+      handleChangeUserAddress({
+        addressType: "shipping",
+        address1: addresses?.shippingAddress?.address1,
+        address2: addresses?.shippingAddress?.address2,
+        address3: addresses?.shippingAddress?.address3,
+        city,
+        province,
+        country,
+        zipCode,
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.success(t("address edited successfully."), { duration: 2000 });
+          setshowAddressFields(false);
+          dispatch(handleCalculateTotal());
+        }
+      });
+    }
+  };
 
   const handleUpdateProduct = () => {
     if (productsToUpdate.length === 0) return;
-    dispatch(handleUpdateProductToCart(productsToUpdate));
-    dispatch(handleCalculateSubTotal());
-    dispatch(handleCalculateTotal());
-    setProductsToUpdate([]);
+    const response = dispatch(
+      handleUpdateCart({
+        products: productsToUpdate,
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          dispatch(handleUpdateProductToCart(productsToUpdate));
+          dispatch(handleCalculateSubTotal());
+          dispatch(handleCalculateTotal());
+          setProductsToUpdate([]);
+        }
+      });
+    }
   };
 
+  function calculateShipping() {
+    const convertToLowerCase = eec_switzerland_overseas_territories.map(
+      (country) => country.toLocaleLowerCase()
+    );
+    if (
+      convertToLowerCase.includes(
+        addresses?.shippingAddress?.country.toLocaleLowerCase()
+      )
+    ) {
+      dispatch(
+        handleChangeShipping(
+          parseFloat(shippingPricing?.EEC_Switzerland_Overseas)
+        )
+      );
+      return parseFloat(shippingPricing?.EEC_Switzerland_Overseas);
+    } else if (
+      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+    ) {
+      dispatch(
+        handleChangeShipping(parseFloat(shippingPricing?.MetropolitanFrance))
+      );
+      return parseFloat(shippingPricing?.MetropolitanFrance);
+    } else {
+      dispatch(
+        handleChangeShipping(parseFloat(shippingPricing?.RestOfTheWorld))
+      );
+      return parseFloat(shippingPricing?.RestOfTheWorld);
+    }
+  }
+
+  function calculateTax() {
+    const convertToLowerCase = eec_switzerland_overseas_territories.map(
+      (country) => country.toLocaleLowerCase()
+    );
+    if (
+      convertToLowerCase.includes(
+        addresses?.shippingAddress?.country.toLocaleLowerCase()
+      )
+    ) {
+      dispatch(
+        handleChangeTax(
+          (parseFloat(subTotal) *
+            parseFloat(taxPricing?.EEC_Switzerland_Overseas)) /
+            100
+        )
+      );
+      return (
+        (parseFloat(subTotal) *
+          parseFloat(taxPricing?.EEC_Switzerland_Overseas)) /
+        100
+      );
+    } else if (
+      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+    ) {
+      dispatch(
+        handleChangeTax(
+          (parseFloat(subTotal) * parseFloat(taxPricing?.MetropolitanFrance)) /
+            100
+        )
+      );
+
+      return (
+        (parseFloat(subTotal) * parseFloat(taxPricing?.MetropolitanFrance)) /
+        100
+      );
+    } else {
+      dispatch(
+        handleChangeTax(
+          (parseFloat(subTotal) * parseFloat(taxPricing?.RestOfTheWorld)) / 100
+        )
+      );
+
+      return (
+        (parseFloat(subTotal) * parseFloat(taxPricing?.RestOfTheWorld)) / 100
+      );
+    }
+  }
+
+  // for get cart or show login screen
   useEffect(() => {
     if (user === null) {
       dispatch(handleChangeShowSignin(true));
@@ -41,8 +211,43 @@ const Cart = () => {
     if (user !== null) {
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
+      dispatch(handleGetCart({ token }));
+      setCountries(Country.getAllCountries());
+      setSelectedCountry(addresses?.shippingAddress?.country);
     }
+
+    return () => abortApiCall();
   }, []);
+
+  // for calculate total & subtotal
+  useEffect(() => {
+    if (user !== null && cart?.length > 0 && !getCartLoading) {
+      dispatch(handleCalculateSubTotal());
+      dispatch(handleCalculateTotal());
+    }
+  }, [getCartLoading]);
+
+  // for change state while country change
+  useEffect(() => {
+    let findCountry = "";
+    if (selectedCountry === "") {
+      findCountry = Country.getAllCountries().find(
+        (c) => c.name === addresses?.shippingAddress?.country
+      );
+      setSelectedCountry(findCountry?.name);
+    }
+    findCountry = Country.getAllCountries().find(
+      (c) => c.name === getValues("country")
+    );
+    if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+      resetField("province", "");
+      setSelectedCountry(findCountry?.name);
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
+    }
+  }, [watch("country")]);
 
   return (
     <>
@@ -51,7 +256,11 @@ const Cart = () => {
       </Helmet>
       <div className="Container md:space-y-7 space-y-3 md:py-10 py-5 transition-all duration-100 ease-linear">
         {/* <HeadNavigationLink /> */}
-        {cart !== undefined && cart.length > 0 ? (
+        {getCartLoading ? (
+          <div className="loading my-10">{t("Loading").concat("...")}</div>
+        ) : updateOrAddLoading ? (
+          <Loader />
+        ) : cart !== undefined && cart.length > 0 ? (
           <>
             {/* cart box */}
             <div className="outline-none space-y-3 border ">
@@ -102,8 +311,9 @@ const Cart = () => {
                     className={`uppercase gray_button w-auto ${
                       productsToUpdate.length === 0 && "cursor-not-allowed"
                     } `}
+                    disabled={updateOrAddLoading || getCartLoading}
                   >
-                    {t("update cart")}
+                    {updateOrAddLoading ? t("Updating...") : t("update cart")}
                   </button>
                 </div>
               </div>
@@ -115,6 +325,7 @@ const Cart = () => {
                 {/* sub total + shipping */}
                 <div className="font-semibold md:text-base text-sm text-left space-y-2">
                   <p>{t("Sub total")}</p>
+                  <p>{t("Tax")}</p>
                   <p>{t("Shipping")}</p>
                 </div>
                 <div className="font-medium md:text-base text-sm text-right space-y-2">
@@ -124,53 +335,108 @@ const Cart = () => {
                       minimumFractionDigits: 2,
                     }).format(parseFloat(subTotal))}
                   </p>
+                  <p>
+                    <b>{calculateTax()}</b>
+                  </p>
+                  {/* address */}
                   <div className="text-darkGray font-semibold space-y-3">
-                    <p
+                    {/* <p
                       className="inline-block w-auto cursor-pointer"
                       onClick={() => setshowAddressFields(!showAddressFields)}
                     >
                       {t("Select address")}
-                    </p>
+                    </p> */}
                     {/* address */}
-                    {/* <div className="space-y-2 text-black">
-                <p>
-                  <b>Free</b>
-                </p>
-                <p>Delivery to 99990, Finland.</p>
-                <p className="text-darkGray">Change address</p>
-              </div> */}
+                    <div className="space-y-2 text-black">
+                      <p>
+                        <b>{calculateShipping()}</b>
+                      </p>
+                      <p>
+                        {t("Delivery to")} {addresses?.shippingAddress?.zipCode}{" "}
+                        {addresses?.shippingAddress?.city}, <br />{" "}
+                        {addresses?.shippingAddress?.province}, <br />{" "}
+                        {addresses?.shippingAddress?.country}.
+                      </p>
+                      <p
+                        className="text-darkGray cursor-pointer inline-block"
+                        onClick={() => setshowAddressFields(!showAddressFields)}
+                      >
+                        {t("Change address")}
+                      </p>
+                    </div>
                     {/* address fields */}
-                    <div
+                    <form
+                      onSubmit={handleSubmit(handleChangeAddress)}
                       className={`${
                         showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
                       } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
                     >
-                      <select name="country" className="input_field w-full">
-                        <option label="Country"></option>
-                        <option value="option1">option1</option>
-                        <option value="option2">option2</option>
-                        <option value="option3">option3</option>
+                      <select
+                        name="country"
+                        {...register("country")}
+                        className="input_field w-full"
+                      >
+                        {countries.length > 0 &&
+                          countries.map((country, i) => (
+                            <option
+                              key={i}
+                              defaultValue={
+                                addresses?.shippingAddress?.country ===
+                                country?.name
+                              }
+                              value={country?.name}
+                            >
+                              {country?.name}
+                            </option>
+                          ))}
                       </select>
-                      <select name="state" className="input_field w-full">
-                        <option label="State"></option>
-                        <option value="option1">option1</option>
-                        <option value="option2">option2</option>
-                        <option value="option3">option3</option>
-                      </select>
+                      <span className="error">{errors?.country?.message}</span>
+                      {showStateField && (
+                        <>
+                          <select
+                            name="state"
+                            {...register("province")}
+                            className="input_field w-full"
+                          >
+                            {states.length > 0 &&
+                              states.map((state, i) => (
+                                <option
+                                  key={i}
+                                  value={state?.name}
+                                  defaultValue={
+                                    addresses?.shippingAddress?.province ===
+                                    state?.name
+                                  }
+                                >
+                                  {state?.name}
+                                </option>
+                              ))}
+                          </select>
+                          <span className="error">
+                            {errors?.province?.message}
+                          </span>
+                        </>
+                      )}
                       <input
                         type="text"
                         placeholder="City"
                         className="input_field w-full"
+                        {...register("city")}
                       />
+                      <span className="error">{errors?.city?.message}</span>
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Postal code"
                         className="input_field w-full"
+                        {...register("zipCode")}
                       />
+                      <span className="error">{errors?.zipCode?.message}</span>
                       <button className="w-full gray_button">
-                        {t("update")}
+                        {addressLoading
+                          ? t("Updating").concat("...")
+                          : t("update")}
                       </button>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -183,10 +449,10 @@ const Cart = () => {
                   <b>
                     € &nbsp;
                     {Intl.NumberFormat("en-US", {
-                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 3,
                     }).format(parseFloat(total))}
                   </b>
-                  (including € 2.78 VAT)
+                  &nbsp; (including tax + shipping)
                 </p>
               </div>
             </div>
@@ -200,7 +466,12 @@ const Cart = () => {
             </div>
           </>
         ) : (
-          <div className="loading my-10">{t("Your cart is empty")}.</div>
+          <div className="loading my-10 flex items-center flex-col gap-2">
+            <p>{t("Your cart is empty")}.</p>
+            <Link to="/shop" className="blue_button w-40 font-light capitalize">
+              {t("continue shopping")}
+            </Link>
+          </div>
         )}
       </div>
     </>

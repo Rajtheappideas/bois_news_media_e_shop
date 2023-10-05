@@ -64,7 +64,7 @@ const MagazineCard = ({ data, from }) => {
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
-              {t("From")} € {data?.digitalPrice}
+              {t("From")} € {data?.price}
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ const MagazineCard = ({ data, from }) => {
 
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-              {t("From")} € {data?.digitalPrice}
+              {t("From")} € {data?.price}
             </p>
           )}
         </div>

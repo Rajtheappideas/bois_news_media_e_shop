@@ -6,14 +6,17 @@ import SimilarProducts from "./SimilarProducts";
 import BaseUrl from "../BaseUrl";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { handleAddProductToCart } from "../redux/CartSlice";
+import {
+  handleAddMagazineToCart,
+  handleAddSubscriptionToCart,
+} from "../redux/CartSlice";
 import { useTranslation } from "react-i18next";
+import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const MagazineOrSubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
   const [similarMagazines, setSimilarMagazines] = useState([]);
   const [selectedTypeOfSupport, setSelectedTypeOfSupport] = useState("");
-  const [selectedShippingZone, setSelectedShippingZone] = useState("");
   const [quantity, setQuantity] = useState(1);
 
   const dispatch = useDispatch();
@@ -23,14 +26,17 @@ const MagazineOrSubscriptionDetails = () => {
   const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
     useSelector((state) => state.root.shop);
 
-  const { cart } = useSelector((state) => state.root.cart);
+  const { cart, updateOrAddLoading } = useSelector((state) => state.root.cart);
+  const { token } = useSelector((state) => state.root.auth);
+
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
   let isAlreadyInCart = false;
 
   const findIncart =
     cart !== undefined &&
     cart?.length > 0 &&
-    cart?.find((p) => p._id === singleMagazineOrSubscription?._id);
+    cart?.find((p) => p?.itemId?._id === singleMagazineOrSubscription?._id);
 
   if (findIncart) {
     isAlreadyInCart = true;
@@ -38,50 +44,17 @@ const MagazineOrSubscriptionDetails = () => {
     isAlreadyInCart = false;
   }
 
-  function priceForMagazineAndSubscription(from) {
+  function priceForMagazineAndSubscription() {
     if (!selectedTypeOfSupport) return;
     if (selectedTypeOfSupport === "digital") {
-      return parseFloat(singleMagazineOrSubscription?.digitalPrice);
-    } else if (selectedShippingZone === "EEC_Switzerland_Overseas") {
-      if (from === "base_price") {
-        return singleMagazineOrSubscription?.paperPrice
-          ?.EEC_Switzerland_Overseas;
-      }
+      return parseFloat(singleMagazineOrSubscription?.price);
+    } else {
       if (singleMagazineOrSubscription?.magazineId) {
         return (
-          parseFloat(
-            singleMagazineOrSubscription?.paperPrice?.EEC_Switzerland_Overseas
-          ) * parseFloat(quantity)
+          parseFloat(singleMagazineOrSubscription?.price) * parseFloat(quantity)
         );
       }
-      return singleMagazineOrSubscription?.paperPrice?.EEC_Switzerland_Overseas;
-    } else if (selectedShippingZone === "RestOfTheWorld") {
-      if (singleMagazineOrSubscription?.magazineId) {
-        return (
-          parseFloat(singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld) *
-          parseFloat(quantity)
-        );
-      }
-      if (from === "base_price") {
-        return parseFloat(
-          singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld
-        );
-      }
-      return singleMagazineOrSubscription?.paperPrice?.RestOfTheWorld;
-    } else if (selectedShippingZone === "MetropolitanFrance") {
-      if (singleMagazineOrSubscription?.magazineId) {
-        return (
-          parseFloat(
-            singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance
-          ) * parseFloat(quantity)
-        );
-      }
-      if (from === "base_price") {
-        return parseFloat(
-          singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance
-        );
-      }
-      return singleMagazineOrSubscription?.paperPrice?.MetropolitanFrance;
+      return parseFloat(singleMagazineOrSubscription?.price);
     }
   }
 
@@ -105,33 +78,56 @@ const MagazineOrSubscriptionDetails = () => {
   const handleProductAddToCartFunction = () => {
     toast.remove();
     if (
-      selectedShippingZone === "" ||
       selectedTypeOfSupport === "" ||
-      (selectedTypeOfSupport === "paperAndDigital" &&
+      (selectedTypeOfSupport === "paper" &&
         !singleMagazineOrSubscription?.subscriptionId &&
         quantity === "")
     ) {
       return toast.error(t("please fill all the fields"));
     }
-    // if (quantity.length > 3) {
-    //   return toast.error("quantity should not be more than 3 digits");
-    // }
-    dispatch(
-      handleAddProductToCart({
-        selectedShippingZone,
-        selectedTypeOfSupport,
-        quantity,
-        _id: singleMagazineOrSubscription?._id,
-        isSubscription: singleMagazineOrSubscription?.subscriptionId
-          ? true
-          : false,
-        price: priceForMagazineAndSubscription("base_price"),
-        title: singleMagazineOrSubscription?.title,
-      })
-    );
-    setSelectedShippingZone("");
-    setSelectedTypeOfSupport("");
-    setQuantity(1);
+
+    // for magazine add to cart
+    if (singleMagazineOrSubscription?.magazineId) {
+      const response = dispatch(
+        handleAddMagazineToCart({
+          support: selectedTypeOfSupport,
+          quantity,
+          id: singleMagazineOrSubscription?._id,
+          token,
+          signal: AbortControllerRef,
+        })
+      );
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.status === "success") {
+            toast.success(
+              `${singleMagazineOrSubscription?.title} Added to cart.`
+            );
+          }
+        });
+      }
+    }
+
+    // for subscription add to cart
+    if (singleMagazineOrSubscription?.subscriptionId) {
+      const response = dispatch(
+        handleAddSubscriptionToCart({
+          support: selectedTypeOfSupport,
+          id: singleMagazineOrSubscription?._id,
+          token,
+          signal: AbortControllerRef,
+        })
+      );
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.status === "success") {
+            toast.success(
+              `${singleMagazineOrSubscription?.title} Added to cart.`
+            );
+          }
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -144,9 +140,12 @@ const MagazineOrSubscriptionDetails = () => {
 
   useEffect(() => {
     priceForMagazineAndSubscription();
-  }, [selectedShippingZone]);
+  }, [quantity]);
 
-  console.log(quantity);
+  useEffect(() => {
+    return () => abortApiCall();
+  }, []);
+
   return (
     <div className="w-full lg:space-y-7 md:space-y-5 space-y-3">
       {/* back btn */}
@@ -169,10 +168,10 @@ const MagazineOrSubscriptionDetails = () => {
             {singleMagazineOrSubscription?.title}
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            {t("From")} €&nbsp;
+            {t("Price")} €&nbsp;
             {Intl.NumberFormat("en-US", {
               minimumFractionDigits: 2,
-            }).format(singleMagazineOrSubscription?.digitalPrice)}
+            }).format(singleMagazineOrSubscription?.price)}
           </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
@@ -186,17 +185,17 @@ const MagazineOrSubscriptionDetails = () => {
               className="border p-2 w-full outline-none font-light"
               value={
                 findIncart !== undefined && findIncart
-                  ? findIncart?.selectedTypeOfSupport
+                  ? findIncart?.support
                   : selectedTypeOfSupport
               }
             >
               <option label="Choose an option"></option>
-              <option value="paperAndDigital">{t("Paper and Digital")}</option>
+              <option value="paper">{t("Paper and Digital")}</option>
               <option value="digital">{"Digital"}</option>
             </select>
           </div>
           {/* shipping area */}
-          <div className="w-full flex items-center gap-3 font-semibold">
+          {/* <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm">
               {t("Shipping area")}
             </p>
@@ -220,27 +219,28 @@ const MagazineOrSubscriptionDetails = () => {
               </option>
               <option value="RestOfTheWorld">{t("Rest of the world")}</option>
             </select>
-          </div>
+          </div> */}
           {/* qty */}
-          {!singleMagazineOrSubscription?.subscriptionId &&
-            selectedTypeOfSupport === "paperAndDigital" && (
-              <div className="w-full flex items-center gap-3 font-semibold">
-                <p className="md:w-3/12 md:text-base text-sm">
-                  {t("Quantity")}
-                </p>
-                <input
-                  type="number"
-                  disabled={isAlreadyInCart}
-                  placeholder="1"
-                  className="w-full p-2 border outline-none"
-                  value={quantity}
-                  min={1}
-                  onChange={(e) => handleOnchageQuantity(e)}
-                />
-              </div>
-            )}
+          {!singleMagazineOrSubscription?.subscriptionId && (
+            <div className="w-full flex items-center gap-3 font-semibold">
+              <p className="md:w-3/12 md:text-base text-sm">{t("Quantity")}</p>
+              <input
+                type="number"
+                disabled={isAlreadyInCart || updateOrAddLoading}
+                placeholder="1"
+                className="w-full p-2 border outline-none"
+                value={
+                  findIncart !== undefined && findIncart
+                    ? findIncart?.quantity
+                    : quantity
+                }
+                min={1}
+                onChange={(e) => handleOnchageQuantity(e)}
+              />
+            </div>
+          )}
           {/* price */}
-          {selectedShippingZone && selectedTypeOfSupport && (
+          {selectedTypeOfSupport && (
             <p className="font-semibold md:text-xl text-lg space-x-2">
               <span>{t("Price")}:</span>
               <span className="text-darkBlue">
@@ -259,9 +259,13 @@ const MagazineOrSubscriptionDetails = () => {
             onClick={() => {
               handleProductAddToCartFunction();
             }}
-            disabled={isAlreadyInCart}
+            disabled={isAlreadyInCart || updateOrAddLoading}
           >
-            {isAlreadyInCart ? t("Already in cart") : t("+ Add to cart")}
+            {updateOrAddLoading
+              ? t("Adding").concat("...")
+              : isAlreadyInCart
+              ? t("Already in cart")
+              : t("+ Add to cart")}
           </button>
         </div>
       </div>

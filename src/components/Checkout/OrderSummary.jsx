@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 const OrderSummary = ({ setActiveComponent, activeComponent }) => {
-  const { cart, total } = useSelector((state) => state.root.cart);
+  const { cart, total, tax, shipping } = useSelector(
+    (state) => state.root.cart
+  );
 
   const { t } = useTranslation();
 
@@ -34,7 +36,7 @@ const OrderSummary = ({ setActiveComponent, activeComponent }) => {
             >
               <div className="w-2/3">
                 <p>
-                  <b>{product?.title}</b>
+                  <b>{product?.itemId?.title}</b>
                 </p>
                 <p className="md:text-base text-sm break-words">
                   {t("Quantity")} : {product?.quantity}
@@ -45,15 +47,41 @@ const OrderSummary = ({ setActiveComponent, activeComponent }) => {
                 {Intl.NumberFormat("en-US", {
                   minimumFractionDigits: 2,
                 }).format(
-                  parseFloat(product?.price) * parseFloat(product?.quantity)
+                  parseFloat(product?.itemId?.price) *
+                    parseFloat(product?.quantity)
                 )}
               </p>
             </div>
           ))}
       </div>
       <hr />
-      {/* total */}
+      {/* total + tax+ shipping */}
       <div className="p-2 space-y-2">
+        {/* tax */}
+        <div className="flex items-center justify-between">
+          <p className="w-1/2">
+            <b>{t("Tax")}</b>
+          </p>
+          <p className="break-words w-1/2 text-right">
+            € &nbsp;
+            {Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(parseFloat(tax))}
+          </p>
+        </div>
+        {/* shipping */}
+        <div className="flex items-center justify-between">
+          <p className="w-1/2">
+            <b>{t("Shipping")}</b>
+          </p>
+          <p className="break-words w-1/2 text-right">
+            € &nbsp;
+            {Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(parseFloat(shipping))}
+          </p>
+        </div>
+        {/* total */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
             <b>{t("Total")}</b>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
@@ -8,9 +8,15 @@ import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import ValidationSchema from "../../validations/ValidationSchema";
 import { useTranslation } from "react-i18next";
+import { Country, State } from "country-state-city";
 
 const BillingAddress = ({ setActiveAddress }) => {
-  const { user, token, addressLoading } = useSelector(
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [showStateField, setShowStateField] = useState(true);
+
+  const { user, token, addressLoading, addresses } = useSelector(
     (state) => state.root.auth
   );
 
@@ -19,12 +25,14 @@ const BillingAddress = ({ setActiveAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = ValidationSchema();
+  const { AddressSchema } = ValidationSchema(showStateField);
 
   const {
     register,
     handleSubmit,
     getValues,
+    resetField,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -70,11 +78,30 @@ const BillingAddress = ({ setActiveAddress }) => {
   };
 
   useEffect(() => {
+    setCountries(Country.getAllCountries());
     return () => {
       abortApiCall();
     };
   }, []);
 
+  useEffect(() => {
+    let findCountry = "";
+    findCountry = Country.getAllCountries().find(
+      (c) => c.name === getValues("country")
+    );
+    if (getValues("country") === "") setShowStateField(true);
+    else if (
+      State.getStatesOfCountry(findCountry?.isoCode).length > 0 &&
+      getValues("country") !== ""
+    ) {
+      resetField("province", "");
+      setSelectedCountry(findCountry?.name);
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
+    }
+  }, [watch("country")]);
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -162,6 +189,56 @@ const BillingAddress = ({ setActiveAddress }) => {
         />
         <span className="error">{errors?.address3?.message}</span>
       </div>
+      {/* country */}
+      <div className="w-full">
+        <label htmlFor="country" className="Label">
+          {t("country")}
+        </label>
+        <select name="country" {...register("country")} className="input_field">
+          <option label="Select country"></option>
+          {countries.length > 0 &&
+            countries.map((country, i) => (
+              <option value={country?.name} key={i}>
+                {country?.name}
+              </option>
+            ))}
+        </select>
+        {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("country")}
+        /> */}
+        <span className="error">{errors?.country?.message}</span>
+      </div>
+      {/* province */}
+      {showStateField && (
+        <div className="w-full">
+          <label htmlFor="province" className="Label">
+            {t("state")}
+          </label>
+          <select
+            name="state"
+            {...register("province")}
+            className="input_field"
+          >
+            <option label="Select country"></option>
+            {states.length > 0 &&
+              states.map((state, i) => (
+                <option value={state?.name} key={i}>
+                  {state?.name}
+                </option>
+              ))}
+          </select>
+          {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("province")}
+        /> */}
+          <span className="error">{errors?.province?.message}</span>
+        </div>
+      )}
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
@@ -188,38 +265,12 @@ const BillingAddress = ({ setActiveAddress }) => {
         />
         <span className="error">{errors?.zipCode?.message}</span>
       </div>
-      {/* province */}
-      <div className="w-full">
-        <label htmlFor="province" className="Label">
-          {t("province")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("province")}
-        />
-        <span className="error">{errors?.province?.message}</span>
-      </div>
-      {/* country */}
-      <div className="w-full">
-        <label htmlFor="country" className="Label">
-          {t("country")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("country")}
-        />
-        <span className="error">{errors?.country?.message}</span>
-      </div>
       {/* btn */}
       <button
         disabled={addressLoading}
         className="gray_button capitalize md:w-60 w-full md:h-12 h-10"
       >
-        {addressLoading ? t("Saving").concat('...') : t("Save address")}
+        {addressLoading ? t("Saving").concat("...") : t("Save address")}
       </button>
     </form>
   );

@@ -6,7 +6,7 @@ import {
   handleChangeShowSignup,
   handleSuccess,
 } from "../../redux/globalStates";
-import { handleRegisterUser } from "../../redux/AuthSlice";
+import { handleGetUserAddress, handleRegisterUser } from "../../redux/AuthSlice";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -19,8 +19,13 @@ import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import ValidationSchema from "../../validations/ValidationSchema";
+import { Country, State } from "country-state-city";
+import { useState } from "react";
 
 const Signup = () => {
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+
   const dispatch = useDispatch();
 
   const { showSignup } = useSelector((state) => state.root.globalStates);
@@ -103,6 +108,7 @@ const Signup = () => {
           toast.success(t("sign up successfully"), { duration: 2000 });
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignup(false));
+          dispatch(handleGetUserAddress({ token: res?.payload?.token }));
         }
       });
     }
@@ -136,10 +142,18 @@ const Signup = () => {
   useEffect(() => {
     return () => {
       abortApiCall();
-      window.document.body.style.overflow = "unset";
     };
   }, []);
 
+  useEffect(() => {
+    setCountries(Country.getAllCountries());
+    const selectedCountry = countries.find(
+      (c) => c.name === getValues("country")
+    );
+    if (selectedCountry) {
+      setStates(State.getStatesOfCountry(selectedCountry?.isoCode));
+    }
+  });
   return (
     <div className="fixed z-10 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
       <form
@@ -309,17 +323,71 @@ const Signup = () => {
 
           <span className="error">{errors?.civility?.message}</span>
         </div>
+        {/* country */}
+        <div className="flex items-center gap-2">
+          <div className="w-1/2">
+            <label htmlFor="country" className="Label">
+              {t("country")}
+            </label>
+            <select
+              name="country"
+              {...register("country")}
+              className="input_field"
+            >
+              <option label="Select country"></option>
+              {countries.length > 0 &&
+                countries.map((country, i) => (
+                  <option value={country?.name} key={i}>
+                    {country?.name}
+                  </option>
+                ))}
+            </select>
+            {/* <input
+              type="text"
+              {...register("country")}
+              className="input_field"
+              placeholder="country"
+            /> */}
+            <span className="error">{errors?.country?.message}</span>
+          </div>
+
+          <div className="w-1/2">
+            <label htmlFor="city" className="Label">
+              city
+            </label>
+            <input
+              type="text"
+              {...register("city")}
+              className="input_field"
+              placeholder="city"
+            />
+            <span className="error">{errors?.city?.message}</span>
+          </div>
+        </div>
         {/* province */}
         <div>
           <label htmlFor="province" className="Label">
             {t("province")}
           </label>
-          <input
-            type="text"
-            name="province"
+          {/* <input
+              type="text"
+              name="province"
+              {...register("province")}
+              className="input_field"
+            /> */}
+          <select
+            name="state"
             {...register("province")}
             className="input_field"
-          />
+          >
+            <option label="Select country"></option>
+            {states.length > 0 &&
+              states.map((state, i) => (
+                <option value={state?.name} key={i}>
+                  {state?.name}
+                </option>
+              ))}
+          </select>
 
           <span className="error">{errors?.province?.message}</span>
         </div>
@@ -336,33 +404,7 @@ const Signup = () => {
           />
           <span className="error">{errors?.address?.message}</span>
         </div>
-        {/* country */}
-        <div className="flex items-center gap-2">
-          <div className="w-1/2">
-            <label htmlFor="country" className="Label">
-              {t("country")}
-            </label>
-            <input
-              type="text"
-              {...register("country")}
-              className="input_field"
-              placeholder="country"
-            />
-            <span className="error">{errors?.country?.message}</span>
-          </div>
-          <div className="w-1/2">
-            <label htmlFor="city" className="Label">
-              city
-            </label>
-            <input
-              type="text"
-              {...register("city")}
-              className="input_field"
-              placeholder="city"
-            />
-            <span className="error">{errors?.city?.message}</span>
-          </div>
-        </div>
+
         {/* postal code */}
         <div>
           <label htmlFor="postalCode" className="Label">

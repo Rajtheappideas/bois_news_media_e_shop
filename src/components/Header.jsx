@@ -144,6 +144,7 @@ const Header = () => {
       {/* fist div */}
       <div className="bg-darkBlue w-full text-white md:py-4 py-2">
         <div className="Container w-full flex items-center justify-between md:text-base text-sm">
+          {/* left side */}
           <div className=" uppercase relative select-none ">
             <p
               className="cursor-pointer uppercase"
@@ -179,7 +180,7 @@ const Header = () => {
               </p>
             </div>
           </div>
-          {user === null ? (
+          {user === undefined || user === null ? (
             <div className="flex items-center gap-x-3">
               <span
                 className="uppercase cursor-pointer"

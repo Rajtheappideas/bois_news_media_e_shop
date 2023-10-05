@@ -97,7 +97,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               <img
                 src={BaseUrl.concat(magazine?.image)}
                 alt={magazine?.title}
-                className={`w-full hover:scale-105 transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] md:min-h-[25rem] sm:min-h-[20rem] min-h-[15rem] object-contain object-center`}
+                className={`w-fit hover:scale-105 transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] md:min-h-[25rem] sm:min-h-[20rem] min-h-[15rem] object-contain object-center`}
                 loading="lazy"
               />
               <p className="font-semibold md:text-lg text-center">
@@ -105,7 +105,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                {t("From")} € {magazine?.digitalPrice}
+                {t("From")} € {magazine?.price}
               </p>
             </div>
           </SwiperSlide>

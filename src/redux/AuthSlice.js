@@ -189,11 +189,9 @@ export const handleEditProfile = createAsyncThunk(
 
 export const handleGetUserAddress = createAsyncThunk(
   "auth/handleGetUserAddress",
-  async ({ token, signal }, { rejectWithValue }) => {
+  async ({ token }, { rejectWithValue }) => {
     try {
-      signal.current = new AbortController();
       const response = await GetUrl("address", {
-        signal: signal.current.signal,
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -265,6 +263,7 @@ const initialState = {
   email: null,
   addresses: null,
   addressLoading: false,
+  editProfileLoading: false,
 };
 
 const AuthSlice = createSlice({
@@ -411,18 +410,18 @@ const AuthSlice = createSlice({
     });
     // edit profile
     builder.addCase(handleEditProfile.pending, (state, {}) => {
-      state.loading = true;
+      state.editProfileLoading = true;
       state.success = false;
       state.error = null;
     });
     builder.addCase(handleEditProfile.fulfilled, (state, { payload }) => {
-      state.loading = false;
+      state.editProfileLoading = false;
       state.success = true;
       state.user = payload?.subscriber;
       state.error = null;
     });
     builder.addCase(handleEditProfile.rejected, (state, { payload }) => {
-      state.loading = false;
+      state.editProfileLoading = false;
       state.success = false;
       state.error = payload ?? null;
     });

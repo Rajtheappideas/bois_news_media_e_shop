@@ -13,8 +13,9 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { handleLoginUser } from "../../redux/AuthSlice";
+import { handleGetUserAddress, handleLoginUser } from "../../redux/AuthSlice";
 import toast from "react-hot-toast";
+import { handleGetCart } from "../../redux/CartSlice";
 
 const Signin = () => {
   const [showPassword, setshowPassword] = useState(false);
@@ -57,6 +58,12 @@ const Signin = () => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           toast.success(t("sign in successfully"));
+          dispatch(handleGetCart({ token: res?.payload?.token }));
+          dispatch(
+            handleGetUserAddress({
+              token: res?.payload?.token,
+            })
+          );
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignin(false));
         }
@@ -76,6 +83,7 @@ const Signin = () => {
       ) {
         dispatch(handleChangeShowSignin(false));
         window.document.body.style.overflow = "unset";
+        abortApiCall()
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -141,12 +149,12 @@ const Signin = () => {
             {showPassword ? (
               <BsEyeFill
                 size={24}
-                className="absolute md:top-[60%] top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+                className="absolute top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
               />
             ) : (
               <BsEyeSlashFill
                 size={24}
-                className="absolute md:top-[60%] top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+                className="absolute top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
               />
             )}
           </button>

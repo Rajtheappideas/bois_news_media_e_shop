@@ -9,8 +9,15 @@ import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
 import ValidationSchema from "../../validations/ValidationSchema";
+import { useState } from "react";
+import { Country, State } from "country-state-city";
 
 const EditBillingAddress = ({ setActiveEditAddress }) => {
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [showStateField, setShowStateField] = useState(true);
+
   const { addresses, token, addressLoading } = useSelector(
     (state) => state.root.auth
   );
@@ -21,12 +28,14 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
   const { t } = useTranslation();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { AddressSchema } = ValidationSchema();
+  const { AddressSchema } = ValidationSchema(showStateField);
 
   const {
     register,
     handleSubmit,
     getValues,
+    resetField,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -71,10 +80,32 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
   };
 
   useEffect(() => {
+    setCountries(Country.getAllCountries());
     return () => {
       abortApiCall();
     };
   }, []);
+
+  useEffect(() => {
+    let findCountry = "";
+    if (selectedCountry === "") {
+      findCountry = Country.getAllCountries().find(
+        (c) => c.name === addresses?.shippingAddress?.country
+      );
+      setSelectedCountry(findCountry?.name);
+    }
+    findCountry = Country.getAllCountries().find(
+      (c) => c.name === getValues("country")
+    );
+    if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+      resetField("province", "");
+      setSelectedCountry(findCountry?.name);
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
+    }
+  }, [watch("country")]);
 
   return (
     <form
@@ -163,6 +194,65 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
         />
         <span className="error">{errors?.address3?.message}</span>
       </div>
+      {/* country */}
+      <div className="w-full">
+        <label htmlFor="country" className="Label">
+          {t("country")}
+        </label>
+        <select name="country" {...register("country")} className="input_field">
+          <option label="Select country"></option>
+          {countries.length > 0 &&
+            countries.map((country, i) => (
+              <option
+                value={country?.name}
+                selected={billingAddress?.country === country?.name}
+                key={i}
+              >
+                {country?.name}
+              </option>
+            ))}
+        </select>
+        {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("country")}
+        /> */}
+        <span className="error">{errors?.country?.message}</span>
+      </div>
+      {/* province */}
+      {showStateField && (
+        <div className="w-full">
+          <label htmlFor="province" className="Label">
+            {t("province")}
+          </label>
+          <select
+            name="state"
+            {...register("province")}
+            className="input_field"
+          >
+            <option label="Select country"></option>
+            {states.length > 0 &&
+              states.map((state, i) => (
+                <option
+                  value={state?.name}
+                  selected={billingAddress?.province === state?.name}
+                  key={i}
+                >
+                  {state?.name}
+                </option>
+              ))}
+          </select>
+          {/* <input
+          type="text"
+          placeholder="Type here..."
+          className="w-full input_field"
+          {...register("province")} 
+        />
+          */}
+          <span className="error">{errors?.province?.message}</span>
+        </div>
+      )}
       {/* city */}
       <div className="w-full">
         <label htmlFor="city" className="Label">
@@ -189,32 +279,7 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
         />
         <span className="error">{errors?.zipCode?.message}</span>
       </div>
-      {/* province */}
-      <div className="w-full">
-        <label htmlFor="province" className="Label">
-          {t("province")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("province")}
-        />
-        <span className="error">{errors?.province?.message}</span>
-      </div>
-      {/* country */}
-      <div className="w-full">
-        <label htmlFor="country" className="Label">
-          {t("country")}
-        </label>
-        <input
-          type="text"
-          placeholder="Type here..."
-          className="w-full input_field"
-          {...register("country")}
-        />
-        <span className="error">{errors?.country?.message}</span>
-      </div>
+
       {/* btn */}
       <button
         disabled={addressLoading}

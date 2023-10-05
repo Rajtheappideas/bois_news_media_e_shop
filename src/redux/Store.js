@@ -9,14 +9,13 @@ import CartSlice from "./CartSlice";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["globalStates", "shop", "auth"],
-  // TODO: // add cart to blacklist
+  blacklist: ["globalStates", "shop", "auth", "cart"],
 };
 
 const authPersistConfig = {
   key: "auth",
   storage,
-  blacklist: ["loading"],
+  blacklist: ["loading", "addressLoading", "editProfileLoading"],
 };
 
 const rootReducer = combineReducers({

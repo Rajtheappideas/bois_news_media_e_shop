@@ -113,7 +113,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       </td>
       {/* input field */}
 
-      {product?.itemType === "Magazine" ? (
+      {product?.itemType === "Magazine" && product?.support==="paper" ? (
         <td className="text-center p-4">
           <input
             type="number"

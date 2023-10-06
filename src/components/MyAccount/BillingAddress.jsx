@@ -13,7 +13,6 @@ import { Country, State } from "country-state-city";
 const BillingAddress = ({ setActiveAddress }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("");
   const [showStateField, setShowStateField] = useState(true);
 
   const { user, token, addressLoading, addresses } = useSelector(
@@ -33,6 +32,7 @@ const BillingAddress = ({ setActiveAddress }) => {
     getValues,
     resetField,
     watch,
+    setValue,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -90,18 +90,19 @@ const BillingAddress = ({ setActiveAddress }) => {
       (c) => c.name === getValues("country")
     );
     if (getValues("country") === "") setShowStateField(true);
-    else if (
-      State.getStatesOfCountry(findCountry?.isoCode).length > 0 &&
-      getValues("country") !== ""
-    ) {
-      resetField("province", "");
-      setSelectedCountry(findCountry?.name);
+    else if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+      if (getValues().province === "") {
+        setValue("province", State.getStatesOfCountry(findCountry?.isoCode)[0]?.name);
+      }
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);
     } else {
+      setValue("province", "");
       setShowStateField(false);
+      setStates([]);
     }
   }, [watch("country")]);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -222,7 +223,6 @@ const BillingAddress = ({ setActiveAddress }) => {
             {...register("province")}
             className="input_field"
           >
-            <option label="Select country"></option>
             {states.length > 0 &&
               states.map((state, i) => (
                 <option value={state?.name} key={i}>

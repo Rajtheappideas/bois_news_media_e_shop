@@ -67,11 +67,6 @@ const MagazineOrSubscriptionDetails = () => {
         "quantity should not less than 1 and value should be valid"
       );
     }
-    // else if (!/^(?=.*[1-9])\d{1,3}(?:\.\d\d?)?$/.test(e.target.value)) {
-    //   return toast.error(
-    //     "Quantity should not be more than 3 digits and quantity should valid value"
-    //   );
-    // }
     setQuantity(e.target.value.replace(/\b0+/g, ""));
   };
 
@@ -91,7 +86,7 @@ const MagazineOrSubscriptionDetails = () => {
       const response = dispatch(
         handleAddMagazineToCart({
           support: selectedTypeOfSupport,
-          quantity,
+          quantity: parseInt(quantity),
           id: singleMagazineOrSubscription?._id,
           token,
           signal: AbortControllerRef,

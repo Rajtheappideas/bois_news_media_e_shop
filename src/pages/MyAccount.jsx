@@ -12,6 +12,7 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import { handleGetUserAddress } from "../redux/AuthSlice";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import { handleGetOrders } from "../redux/CartSlice";
 
 const MyAccount = () => {
   const [activeComponent, setActiveComponent] = useState("profile");
@@ -30,7 +31,7 @@ const MyAccount = () => {
       navigate("/");
     }
     if (user !== null) {
-      // dispatch(handleGetUserAddress({ token }));
+      dispatch(handleGetOrders({ token }));
     }
     return () => {
       abortApiCall();

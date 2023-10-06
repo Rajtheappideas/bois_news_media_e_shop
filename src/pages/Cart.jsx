@@ -8,6 +8,7 @@ import SingleProduct from "../components/Cart/SingleProduct";
 import {
   handleCalculateSubTotal,
   handleCalculateTotal,
+  handleChangeDiscount,
   handleChangeShipping,
   handleChangeTax,
   handleGetCart,
@@ -135,22 +136,20 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeShipping(
-          parseFloat(shippingPricing?.EEC_Switzerland_Overseas)
+          parseInt(shippingPricing?.EEC_Switzerland_Overseas)
         )
       );
-      return parseFloat(shippingPricing?.EEC_Switzerland_Overseas);
+      return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
     } else if (
       addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
     ) {
       dispatch(
-        handleChangeShipping(parseFloat(shippingPricing?.MetropolitanFrance))
+        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
       );
-      return parseFloat(shippingPricing?.MetropolitanFrance);
+      return parseInt(shippingPricing?.MetropolitanFrance);
     } else {
-      dispatch(
-        handleChangeShipping(parseFloat(shippingPricing?.RestOfTheWorld))
-      );
-      return parseFloat(shippingPricing?.RestOfTheWorld);
+      dispatch(handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld)));
+      return parseInt(shippingPricing?.RestOfTheWorld);
     }
   }
 
@@ -165,14 +164,13 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseFloat(subTotal) *
-            parseFloat(taxPricing?.EEC_Switzerland_Overseas)) /
+          (parseInt(subTotal) *
+            parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
             100
         )
       );
       return (
-        (parseFloat(subTotal) *
-          parseFloat(taxPricing?.EEC_Switzerland_Overseas)) /
+        (parseInt(subTotal) * parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
         100
       );
     } else if (
@@ -180,25 +178,45 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseFloat(subTotal) * parseFloat(taxPricing?.MetropolitanFrance)) /
-            100
+          (parseInt(subTotal) * parseInt(taxPricing?.MetropolitanFrance)) / 100
         )
       );
 
       return (
-        (parseFloat(subTotal) * parseFloat(taxPricing?.MetropolitanFrance)) /
-        100
+        (parseInt(subTotal) * parseInt(taxPricing?.MetropolitanFrance)) / 100
       );
     } else {
       dispatch(
         handleChangeTax(
-          (parseFloat(subTotal) * parseFloat(taxPricing?.RestOfTheWorld)) / 100
+          (parseInt(subTotal) * parseInt(taxPricing?.RestOfTheWorld)) / 100
         )
       );
 
-      return (
-        (parseFloat(subTotal) * parseFloat(taxPricing?.RestOfTheWorld)) / 100
-      );
+      return (parseInt(subTotal) * parseInt(taxPricing?.RestOfTheWorld)) / 100;
+    }
+  }
+
+  function calculateDiscount() {
+    const quantity = cart.reduce((acc, curr) => {
+      if (curr?.itemType === "Magazine") {
+        return parseInt(acc + curr?.quantity);
+      } else {
+        return 0;
+      }
+    }, 0);
+
+    if (quantity >= 4) {
+      dispatch(handleChangeDiscount(40));
+      return 40;
+    } else if (quantity === 3) {
+      dispatch(handleChangeDiscount(30));
+      return 30;
+    } else if (quantity === 2) {
+      dispatch(handleChangeDiscount(15));
+      return 15;
+    } else {
+      dispatch(handleChangeDiscount(0));
+      return 0;
     }
   }
 
@@ -209,9 +227,9 @@ const Cart = () => {
       navigate("/");
     }
     if (user !== null) {
+      dispatch(handleGetCart({ token }));
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
-      dispatch(handleGetCart({ token }));
       setCountries(Country.getAllCountries());
       setSelectedCountry(addresses?.shippingAddress?.country);
     }
@@ -225,7 +243,7 @@ const Cart = () => {
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
     }
-  }, [getCartLoading]);
+  }, [getCartLoading, updateOrAddLoading, addressLoading]);
 
   // for change state while country change
   useEffect(() => {
@@ -380,7 +398,7 @@ const Cart = () => {
                           countries.map((country, i) => (
                             <option
                               key={i}
-                              defaultValue={
+                              selected={
                                 addresses?.shippingAddress?.country ===
                                 country?.name
                               }
@@ -403,7 +421,7 @@ const Cart = () => {
                                 <option
                                   key={i}
                                   value={state?.name}
-                                  defaultValue={
+                                  selected={
                                     addresses?.shippingAddress?.province ===
                                     state?.name
                                   }
@@ -442,18 +460,29 @@ const Cart = () => {
               </div>
               <hr />
               <div className="w-full flex items-center justify-between p-4">
-                <p className="font-semibold md:text-base text-sm text-left">
-                  {t("Total")}
-                </p>
-                <p className="font-medium md:text-base text-sm text-right text-black">
-                  <b>
-                    € &nbsp;
-                    {Intl.NumberFormat("en-US", {
-                      maximumFractionDigits: 3,
-                    }).format(parseFloat(total))}
-                  </b>
-                  &nbsp; (including tax + shipping)
-                </p>
+                <div className="font-semibold md:text-base text-sm text-left">
+                  <p>{t("Discount")}</p>
+                  <p>{t("Total")}</p>
+                </div>
+                <div>
+                  <p className="font-medium md:text-base text-sm text-right text-black">
+                    <b>
+                      € &nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(calculateDiscount())}
+                    </b>
+                  </p>
+                  <p className="font-medium md:text-base text-sm text-right text-black">
+                    <b>
+                      € &nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(parseFloat(total))}
+                    </b>
+                    &nbsp; (including tax + shipping)
+                  </p>
+                </div>
               </div>
             </div>
             {/* btn */}

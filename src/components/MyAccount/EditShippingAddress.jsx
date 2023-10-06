@@ -34,7 +34,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
     handleSubmit,
     getValues,
     watch,
-    resetField,
+    setValue,
     formState: { errors, isDirty },
   } = useForm({
     shouldFocusError: true,
@@ -90,7 +90,7 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
     let findCountry = "";
     if (selectedCountry === "") {
       findCountry = Country.getAllCountries().find(
-        (c) => c.name === addresses?.shippingAddress?.country
+        (c) => c.name === shippingAddress?.country
       );
       setSelectedCountry(findCountry?.name);
     }
@@ -98,12 +98,18 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       (c) => c.name === getValues("country")
     );
     if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
-      resetField("province", "");
-      setSelectedCountry(findCountry?.name);
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);
+      if (getValues().province === "") {
+        setValue(
+          "province",
+          State.getStatesOfCountry(findCountry?.isoCode)[0]?.name
+        );
+      }
     } else {
+      setValue("province", "");
       setShowStateField(false);
+      setStates([]);
     }
   }, [watch("country")]);
 
@@ -189,12 +195,11 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
           {t("country")}
         </label>
         <select name="country" {...register("country")} className="input_field">
-          <option label="Select country"></option>
           {countries.length > 0 &&
             countries.map((country, i) => (
               <option
                 value={country?.name}
-                selected={shippingAddress?.country === country?.name}
+                selected={getValues()?.country === country?.name}
                 key={i}
               >
                 {country?.name}
@@ -220,12 +225,11 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
             {...register("province")}
             className="input_field"
           >
-            <option label="Select country"></option>
             {states.length > 0 &&
               states.map((state, i) => (
                 <option
                   value={state?.name}
-                  selected={shippingAddress?.province === state?.name}
+                  selected={getValues()?.province === state?.name}
                   key={i}
                 >
                   {state?.name}

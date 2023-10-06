@@ -9,6 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { handleChangeShowSignin } from "../redux/globalStates";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import {
+  handleCalculateSubTotal,
+  handleCalculateTotal,
+} from "../redux/CartSlice";
+import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const Checkout = () => {
   const [activeComponent, setActiveComponent] = useState("checkout_form");
@@ -18,6 +23,8 @@ const Checkout = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { abortApiCall } = useAbortApiCall();
 
   const { t } = useTranslation();
 
@@ -29,6 +36,12 @@ const Checkout = () => {
     if (cart && cart?.length === 0) {
       navigate("/shop");
     }
+    if (user !== null) {
+      dispatch(handleCalculateSubTotal());
+      dispatch(handleCalculateTotal());
+    }
+
+    return () => abortApiCall();
   }, []);
 
   return (
@@ -48,14 +61,24 @@ const Checkout = () => {
         {/* {activeComponent !== "success" && <HeadNavigationLink />} */}
         {activeComponent !== "success" && (
           <div className="w-full flex xl:flex-row flex-col items-start lg:gap-6 gap-3">
-            <div className="xl:w-9/12 w-full">
-              {activeComponent === "checkout_form" && <CheckoutForm />}
-              {activeComponent === "payment_method" && <PaymentMethod />}
-            </div>
-            <OrderSummary
+            {/* <div className="xl:w-9/12 w-full"> */}
+            {activeComponent === "checkout_form" && (
+              <CheckoutForm
+                setActiveComponent={setActiveComponent}
+                activeComponent={activeComponent}
+              />
+            )}
+            {activeComponent === "payment_method" && (
+              <PaymentMethod
+                setActiveComponent={setActiveComponent}
+                activeComponent={activeComponent}
+              />
+            )}
+            {/* </div> */}
+            {/* <OrderSummary
               setActiveComponent={setActiveComponent}
               activeComponent={activeComponent}
-            />
+            /> */}
           </div>
         )}
       </div>

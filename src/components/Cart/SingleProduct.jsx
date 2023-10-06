@@ -36,11 +36,13 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       );
     }
 
-    const alreadyInArr = productsToUpdate.find((p) => p?._id === product?._id);
+    const alreadyInArr = productsToUpdate.find(
+      (p) => p?.itemId === product?.itemId?._id
+    );
     if (alreadyInArr) {
       setProductsToUpdate(
         productsToUpdate.map((p) =>
-          product?._id === p?._id
+          product?.itemId?._id === p?.itemId
             ? { ...p, quantity: parseFloat(e.target.value) }
             : p
         )

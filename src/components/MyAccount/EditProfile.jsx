@@ -58,7 +58,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       province: user?.shippingAddress?.province,
       province: user?.shippingAddress?.province,
     },
-});
+  });
 
   const onSubmit = (data) => {
     const {
@@ -138,12 +138,15 @@ const EditProfile = ({ setshowEditProfile }) => {
       (c) => c.name === getValues("country")
     );
     if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
-      resetField("province", "");
-      setSelectedCountry(findCountry?.name);
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);
+      if (getValues().province === "") {
+        setValue("province", State.getStatesOfCountry(findCountry?.isoCode)[0]?.name);
+      }
     } else {
+      setValue("province", "");
       setShowStateField(false);
+      setStates([]);
     }
   }, [watch("country")]);
 
@@ -304,12 +307,11 @@ const EditProfile = ({ setshowEditProfile }) => {
           {...register("country")}
         /> */}
         <select name="country" {...register("country")} className="input_field">
-          <option label="Select country"></option>
           {countries.length > 0 &&
             countries.map((country, i) => (
               <option
                 value={country?.name}
-                selected={user?.shippingAddress?.country === country?.name}
+                selected={getValues()?.country === country?.name}
                 key={i}
               >
                 {country?.name}
@@ -336,12 +338,11 @@ const EditProfile = ({ setshowEditProfile }) => {
             {...register("province")}
             className="input_field"
           >
-            <option label="Select country"></option>
             {states.length > 0 &&
               states.map((state, i) => (
                 <option
                   value={state?.name}
-                  selected={user?.shippingAddress?.province === state?.name}
+                  selected={getValues()?.province === state?.name}
                   key={i}
                 >
                   {state?.name}

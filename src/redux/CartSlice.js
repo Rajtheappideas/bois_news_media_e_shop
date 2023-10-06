@@ -87,6 +87,49 @@ export const handleUpdateCart = createAsyncThunk(
   }
 );
 
+export const handleCheckout = createAsyncThunk(
+  "cart/handleCheckout",
+  async (
+    {
+      shippingAddress,
+      billingAddress,
+      phone,
+      email,
+      VAT,
+      purchaseOrder,
+      orderNotes,
+      token,
+      signal,
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl(`checkout`, {
+        data: {
+          shippingAddress,
+          billingAddress,
+          phone,
+          email,
+          VAT,
+          purchaseOrder,
+          orderNotes,
+        },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 export const handleRemoveFromCart = createAsyncThunk(
   "cart/handleRemoveFromCart",
   async ({ id, token, signal }, { rejectWithValue }) => {
@@ -122,20 +165,38 @@ export const handleGetTaxAndShipping = createAsyncThunk(
   }
 );
 
+export const handleGetOrders = createAsyncThunk(
+  "cart/handleGetOrders",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await GetUrl("order", {
+        headers: { Authorization: token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   getCartLoading: false,
+  updateOrAddLoading: false,
+  checkoutLoading: false,
   error: null,
   cart: [],
   total: 0,
   subTotal: 0,
   totalQuantity: 0,
   shippingAddress: null,
-  updateOrAddLoading: false,
   taxPricing: null,
   shippingPricing: null,
   eec_switzerland_overseas_territories: [
     "Germany",
+    "Switzerland",
     "Austria",
     "Belgium",
     "Bulgaria",
@@ -176,6 +237,9 @@ const initialState = {
   ],
   tax: 0,
   shipping: 0,
+  discount: 0,
+  orders: [],
+  singleOrder: null,
 };
 
 const CartSlice = createSlice({
@@ -183,22 +247,27 @@ const CartSlice = createSlice({
   initialState,
   reducers: {
     handleCalculateTotal: (state, { payload }) => {
-      const total = state.cart.reduce((acc, cur) => {
-        return acc + parseFloat(cur?.itemId?.price) * parseFloat(cur?.quantity);
+      const subtotal = state.cart.reduce((acc, cur) => {
+        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
       }, 0);
-      if (total !== NaN && typeof total === "number") {
+      if (subtotal !== NaN && typeof subtotal === "number") {
         state.total =
-          total + parseFloat(state.shipping) + parseFloat(state.tax);
+          parseInt(subtotal) +
+          parseInt(state.shipping) +
+          parseFloat(state.tax) -
+          parseInt(state.discount);
       }
     },
+
     handleCalculateSubTotal: (state, { payload }) => {
       const subTotal = state.cart.reduce((acc, cur) => {
-        return acc + parseFloat(cur?.itemId?.price) * parseFloat(cur?.quantity);
+        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
       }, 0);
       if (subTotal !== NaN && typeof subTotal === "number") {
         state.subTotal = subTotal;
       }
     },
+
     handleAddProductToCart: (
       state,
       {
@@ -233,6 +302,7 @@ const CartSlice = createSlice({
         toast.success(`${title} added to cart.`);
       }
     },
+
     handleUpdateProductToCart: (state, { payload }) => {
       const updatedArr = state.cart.map((product) => {
         const updated = payload.find(
@@ -246,6 +316,7 @@ const CartSlice = createSlice({
         return;
       }
     },
+
     handleRemoveProductFromCart: (state, { payload }) => {
       const updatedProduct = state.cart.filter(
         (product) => product?._id !== payload
@@ -257,11 +328,26 @@ const CartSlice = createSlice({
         toast.error("Product not found");
       }
     },
+
     handleChangeTax: (state, { payload }) => {
       state.tax = payload;
     },
+
     handleChangeShipping: (state, { payload }) => {
       state.shipping = payload;
+    },
+
+    handleChangeDiscount: (state, { payload }) => {
+      state.discount = payload;
+    },
+
+    handleFindSingleOrder: (state, { payload }) => {
+      const findOrder = state.orders.find((order) => order?._id === payload);
+      if (findOrder) {
+        state.singleOrder = findOrder;
+      } else {
+        state.singleOrder = null;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -278,7 +364,9 @@ const CartSlice = createSlice({
     builder.addCase(handleGetCart.rejected, (state, { payload }) => {
       state.getCartLoading = false;
       state.error = payload ?? null;
+      state.cart = [];
     });
+
     // add magazine to cart
     builder.addCase(handleAddMagazineToCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
@@ -293,6 +381,7 @@ const CartSlice = createSlice({
       state.updateOrAddLoading = false;
       state.error = payload ?? null;
     });
+
     // add subscriptioon to cart
     builder.addCase(handleAddSubscriptionToCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
@@ -313,6 +402,7 @@ const CartSlice = createSlice({
         state.error = payload ?? null;
       }
     );
+
     // remove from cart
     builder.addCase(handleRemoveFromCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
@@ -327,6 +417,7 @@ const CartSlice = createSlice({
       state.updateOrAddLoading = false;
       state.error = payload ?? null;
     });
+
     // update from cart
     builder.addCase(handleUpdateCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
@@ -341,6 +432,23 @@ const CartSlice = createSlice({
       state.updateOrAddLoading = false;
       state.error = payload ?? null;
     });
+
+    // checkout
+    builder.addCase(handleCheckout.pending, (state, {}) => {
+      state.checkoutLoading = true;
+      state.error = null;
+    });
+    builder.addCase(handleCheckout.fulfilled, (state, { payload }) => {
+      state.checkoutLoading = false;
+      state.orders = [...state.orders, payload?.order];
+      state.cart = [];
+      state.error = null;
+    });
+    builder.addCase(handleCheckout.rejected, (state, { payload }) => {
+      state.checkoutLoading = false;
+      state.error = payload ?? null;
+    });
+
     // get tax & shipping price
     builder.addCase(handleGetTaxAndShipping.pending, (state, {}) => {
       state.loading = true;
@@ -356,6 +464,22 @@ const CartSlice = createSlice({
       state.loading = false;
       state.error = payload ?? null;
     });
+
+    // get orders
+    builder.addCase(handleGetOrders.pending, (state, {}) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(handleGetOrders.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.orders = payload?.orders;
+      state.error = null;
+    });
+    builder.addCase(handleGetOrders.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload ?? null;
+      state.orders = [];
+    });
   },
 });
 
@@ -366,7 +490,9 @@ export const {
   handleRemoveProductFromCart,
   handleUpdateProductToCart,
   handleChangeShipping,
+  handleFindSingleOrder,
   handleChangeTax,
+  handleChangeDiscount,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

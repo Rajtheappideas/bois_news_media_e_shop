@@ -14,7 +14,6 @@ import { Country, State } from "country-state-city";
 const ShippingAddress = ({ setActiveAddress }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("");
   const [showStateField, setShowStateField] = useState(true);
 
   const { user, token, addressLoading, addresses } = useSelector(
@@ -32,7 +31,7 @@ const ShippingAddress = ({ setActiveAddress }) => {
     register,
     handleSubmit,
     getValues,
-    resetField,
+    setValue,
     watch,
     formState: { errors, isDirty },
   } = useForm({
@@ -90,16 +89,16 @@ const ShippingAddress = ({ setActiveAddress }) => {
       (c) => c.name === getValues("country")
     );
     if (getValues("country") === "") setShowStateField(true);
-    else if (
-      State.getStatesOfCountry(findCountry?.isoCode).length > 0 &&
-      getValues("country") !== ""
-    ) {
-      resetField("province", "");
-      setSelectedCountry(findCountry?.name);
+    else if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+      if (getValues().province === "") {
+        setValue("province", State.getStatesOfCountry(findCountry?.isoCode)[0]?.name);
+      }
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);
     } else {
+      setValue("province", "");
       setShowStateField(false);
+      setStates([]);
     }
   }, [watch("country")]);
 
@@ -109,7 +108,7 @@ const ShippingAddress = ({ setActiveAddress }) => {
       className="w-full md:space-y-5 space-y-3 border border-gray-300 md:p-4 p-2"
     >
       <p className="heading text-lg md:text-left text-center flex items-center justify-between md:p-4 p-2">
-        <span>{t("Billing address")}</span>
+        <span>{t("Shipping address")}</span>
         <AiOutlineClose
           onClick={() => setActiveAddress("")}
           role="button"
@@ -223,7 +222,6 @@ const ShippingAddress = ({ setActiveAddress }) => {
             {...register("province")}
             className="input_field"
           >
-            <option label="Select country"></option>
             {states.length > 0 &&
               states.map((state, i) => (
                 <option value={state?.name} key={i}>

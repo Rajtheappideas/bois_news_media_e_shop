@@ -26,7 +26,7 @@ import {
   handleGetSubscriptions,
 } from "./redux/ShopSlice";
 import ScrollToTop from "./components/ScrollToTop";
-import { handleGetTaxAndShipping } from "./redux/CartSlice";
+import { handleGetCart, handleGetTaxAndShipping } from "./redux/CartSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -46,6 +46,7 @@ function App() {
     showOtpField,
     showResetPassword,
   } = useSelector((state) => state.root.globalStates);
+  const { token, user } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
 
@@ -59,6 +60,10 @@ function App() {
     dispatch(handleGetLastestMagazines());
     dispatch(handleGetSubscriptions());
     dispatch(handleGetTaxAndShipping());
+
+    if (user !== null && user !== undefined) {
+      dispatch(handleGetCart({ token }));
+    }
   }, []);
 
   return (

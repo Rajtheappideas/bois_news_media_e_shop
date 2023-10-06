@@ -1,9 +1,15 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-const OrderSummary = ({ setActiveComponent, activeComponent }) => {
-  const { cart, total, tax, shipping } = useSelector(
+const OrderSummary = ({
+  setActiveComponent,
+  activeComponent,
+  onSubmit,
+  errors,
+}) => {
+  const { cart, total, tax, shipping, discount, checkoutLoading } = useSelector(
     (state) => state.root.cart
   );
 
@@ -16,6 +22,13 @@ const OrderSummary = ({ setActiveComponent, activeComponent }) => {
     } else if (activeComponent === "payment_method") {
       setActiveComponent("success");
     }
+  };
+
+  const handleSubmit = () => {
+    if (Object.values(errors).length > 0) {
+      return toast.error("Fill all required fields.");
+    }
+    return onSubmit();
   };
 
   return (
@@ -81,6 +94,18 @@ const OrderSummary = ({ setActiveComponent, activeComponent }) => {
             }).format(parseFloat(shipping))}
           </p>
         </div>
+        {/* discount */}
+        <div className="flex items-center justify-between">
+          <p className="w-1/2">
+            <b>{t("Discount")}</b>
+          </p>
+          <p className="break-words w-1/2 text-right">
+            € &nbsp;
+            {Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(parseFloat(discount))}
+          </p>
+        </div>
         {/* total */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
@@ -98,11 +123,14 @@ const OrderSummary = ({ setActiveComponent, activeComponent }) => {
         </div>
         <button
           onClick={() => {
-            handleComponent();
+            handleSubmit();
           }}
+          disabled={checkoutLoading}
           className="capitalize w-full gray_button md:h-12 font-semibold"
+          type="button"
         >
-          {activeComponent === "checkout_form" ? "continue" : "confirm order"}
+          {/* {activeComponent === "checkout_form" ? "continue" : "confirm order"} */}
+          {checkoutLoading ? t("Placing order...") : t("Confirm Order")}
         </button>
         {activeComponent === "payment_method" && (
           <button

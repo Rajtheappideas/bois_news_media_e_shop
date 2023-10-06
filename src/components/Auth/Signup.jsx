@@ -6,7 +6,10 @@ import {
   handleChangeShowSignup,
   handleSuccess,
 } from "../../redux/globalStates";
-import { handleGetUserAddress, handleRegisterUser } from "../../redux/AuthSlice";
+import {
+  handleGetUserAddress,
+  handleRegisterUser,
+} from "../../redux/AuthSlice";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -25,6 +28,7 @@ import { useState } from "react";
 const Signup = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
+  const [showStateField, setShowStateField] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -44,6 +48,8 @@ const Signup = () => {
     getValues,
     setValue,
     control,
+    watch,
+    resetField,
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
@@ -140,20 +146,31 @@ const Signup = () => {
   }
 
   useEffect(() => {
+    setCountries(Country.getAllCountries());
+
     return () => {
       abortApiCall();
     };
   }, []);
 
   useEffect(() => {
-    setCountries(Country.getAllCountries());
-    const selectedCountry = countries.find(
+    let findCountry = "";
+    findCountry = Country.getAllCountries().find(
       (c) => c.name === getValues("country")
     );
-    if (selectedCountry) {
-      setStates(State.getStatesOfCountry(selectedCountry?.isoCode));
+    if (getValues("country") === "") setShowStateField(true);
+    else if (
+      State.getStatesOfCountry(findCountry?.isoCode).length > 0 &&
+      getValues("country") !== ""
+    ) {
+      resetField("province", "");
+      setStates(State.getStatesOfCountry(findCountry?.isoCode));
+      !showStateField && setShowStateField(true);
+    } else {
+      setShowStateField(false);
     }
-  });
+  }, [watch("country")]);
+
   return (
     <div className="fixed z-10 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
       <form
@@ -365,32 +382,34 @@ const Signup = () => {
           </div>
         </div>
         {/* province */}
-        <div>
-          <label htmlFor="province" className="Label">
-            {t("province")}
-          </label>
-          {/* <input
+        {showStateField && (
+          <div>
+            <label htmlFor="province" className="Label">
+              {t("province")}
+            </label>
+            {/* <input
               type="text"
               name="province"
               {...register("province")}
               className="input_field"
             /> */}
-          <select
-            name="state"
-            {...register("province")}
-            className="input_field"
-          >
-            <option label="Select country"></option>
-            {states.length > 0 &&
-              states.map((state, i) => (
-                <option value={state?.name} key={i}>
-                  {state?.name}
-                </option>
-              ))}
-          </select>
+            <select
+              name="state"
+              {...register("province")}
+              className="input_field"
+            >
+              <option label="Select country"></option>
+              {states.length > 0 &&
+                states.map((state, i) => (
+                  <option value={state?.name} key={i}>
+                    {state?.name}
+                  </option>
+                ))}
+            </select>
 
-          <span className="error">{errors?.province?.message}</span>
-        </div>
+            <span className="error">{errors?.province?.message}</span>
+          </div>
+        )}
         {/* address */}
         <div>
           <label htmlFor="address" className="Label">

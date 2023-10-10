@@ -125,6 +125,30 @@ const Cart = () => {
     }
   };
 
+  function calculateDiscount() {
+    const quantity = cart.reduce((acc, curr) => {
+      if (curr?.itemType === "Magazine") {
+        return parseInt(acc + curr?.quantity);
+      } else {
+        return 0;
+      }
+    }, 0);
+
+    if (quantity >= 4) {
+      dispatch(handleChangeDiscount(40));
+      return 40;
+    } else if (quantity === 3) {
+      dispatch(handleChangeDiscount(30));
+      return 30;
+    } else if (quantity === 2) {
+      dispatch(handleChangeDiscount(15));
+      return 15;
+    } else {
+      dispatch(handleChangeDiscount(0));
+      return 0;
+    }
+  }
+
   function calculateShipping() {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
@@ -164,13 +188,14 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseInt(subTotal) *
+          (parseInt(parseInt(subTotal) - calculateDiscount()) *
             parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
             100
         )
       );
       return (
-        (parseInt(subTotal) * parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+        (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
         100
       );
     } else if (
@@ -178,45 +203,31 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseInt(subTotal) * parseInt(taxPricing?.MetropolitanFrance)) / 100
+          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+            parseInt(taxPricing?.MetropolitanFrance)) /
+            100
         )
       );
 
       return (
-        (parseInt(subTotal) * parseInt(taxPricing?.MetropolitanFrance)) / 100
+        (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          parseInt(taxPricing?.MetropolitanFrance)) /
+        100
       );
     } else {
       dispatch(
         handleChangeTax(
-          (parseInt(subTotal) * parseInt(taxPricing?.RestOfTheWorld)) / 100
+          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+            parseInt(taxPricing?.RestOfTheWorld)) /
+            100
         )
       );
 
-      return (parseInt(subTotal) * parseInt(taxPricing?.RestOfTheWorld)) / 100;
-    }
-  }
-
-  function calculateDiscount() {
-    const quantity = cart.reduce((acc, curr) => {
-      if (curr?.itemType === "Magazine") {
-        return parseInt(acc + curr?.quantity);
-      } else {
-        return 0;
-      }
-    }, 0);
-
-    if (quantity >= 4) {
-      dispatch(handleChangeDiscount(40));
-      return 40;
-    } else if (quantity === 3) {
-      dispatch(handleChangeDiscount(30));
-      return 30;
-    } else if (quantity === 2) {
-      dispatch(handleChangeDiscount(15));
-      return 15;
-    } else {
-      dispatch(handleChangeDiscount(0));
-      return 0;
+      return (
+        (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          parseInt(taxPricing?.RestOfTheWorld)) /
+        100
+      );
     }
   }
 
@@ -347,40 +358,37 @@ const Cart = () => {
                   <p>{t("Shipping")}</p>
                 </div>
                 <div className="font-medium md:text-base text-sm text-right space-y-2">
+                  {/* subtotal */}
                   <p>
-                    € &nbsp;
+                    €&nbsp;
                     {Intl.NumberFormat("en-US", {
                       minimumFractionDigits: 2,
                     }).format(parseFloat(subTotal))}
                   </p>
+                  {/* tax */}
                   <p>
-                    <b>{calculateTax()}</b>
+                    <b>€&nbsp;{calculateTax()}</b>
                   </p>
                   {/* address */}
                   <div className="text-darkGray font-semibold space-y-3">
-                    {/* <p
-                      className="inline-block w-auto cursor-pointer"
-                      onClick={() => setshowAddressFields(!showAddressFields)}
-                    >
-                      {t("Select address")}
-                    </p> */}
                     {/* address */}
                     <div className="space-y-2 text-black">
+                      {/* shipping */}
                       <p>
-                        <b>{calculateShipping()}</b>
+                        <b>€&nbsp;{calculateShipping()}</b>
                       </p>
                       <p>
                         {t("Delivery to")} {addresses?.shippingAddress?.zipCode}{" "}
                         {addresses?.shippingAddress?.city}, <br />{" "}
                         {addresses?.shippingAddress?.province}, <br />{" "}
-                        {addresses?.shippingAddress?.country}.
+                        {addresses?.shippingAddress?.country}
                       </p>
-                      <p
+                      {/* <p
                         className="text-darkGray cursor-pointer inline-block"
                         onClick={() => setshowAddressFields(!showAddressFields)}
                       >
                         {t("Change address")}
-                      </p>
+                      </p> */}
                     </div>
                     {/* address fields */}
                     <form

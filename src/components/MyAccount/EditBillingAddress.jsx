@@ -98,18 +98,28 @@ const EditBillingAddress = ({ setActiveEditAddress }) => {
     findCountry = Country.getAllCountries().find(
       (c) => c.name === getValues("country")
     );
+    const states = State.getStatesOfCountry(findCountry?.isoCode);
     if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);
       if (getValues().province === "") {
-        setValue("province", State.getStatesOfCountry(findCountry?.isoCode)[0]?.name);
+        setValue(
+          "province",
+          State.getStatesOfCountry(findCountry?.isoCode)[0]?.name
+        );
+      }
+      const findStateInStates = states.find((s) =>
+        s.name.includes(getValues().province)
+      );
+      if (!findStateInStates) {
+        setValue("province", states[0]?.name);
       }
     } else {
       setValue("province", "");
       setShowStateField(false);
       setStates([]);
     }
-  }, [watch("country")]);
+  }, [watch("country"), watch("province")]);
 
   return (
     <form

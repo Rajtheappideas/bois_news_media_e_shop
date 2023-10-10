@@ -181,6 +181,22 @@ export const handleGetOrders = createAsyncThunk(
   }
 );
 
+export const handleGetDownloads = createAsyncThunk(
+  "cart/handleGetDownloads",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await GetUrl("download", {
+        headers: { Authorization: token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   getCartLoading: false,
@@ -239,6 +255,7 @@ const initialState = {
   shipping: 0,
   discount: 0,
   orders: [],
+  downloads: [],
   singleOrder: null,
 };
 
@@ -479,6 +496,22 @@ const CartSlice = createSlice({
       state.loading = false;
       state.error = payload ?? null;
       state.orders = [];
+    });
+
+    // get downloads
+    builder.addCase(handleGetDownloads.pending, (state, {}) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(handleGetDownloads.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.downloads = payload?.magazines;
+      state.error = null;
+    });
+    builder.addCase(handleGetDownloads.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload ?? null;
+      state.downloads = [];
     });
   },
 });

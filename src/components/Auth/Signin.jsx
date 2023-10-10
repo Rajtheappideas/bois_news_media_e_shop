@@ -59,11 +59,6 @@ const Signin = () => {
         if (res?.payload?.status === "success") {
           toast.success(t("sign in successfully"));
           dispatch(handleGetCart({ token: res?.payload?.token }));
-          dispatch(
-            handleGetUserAddress({
-              token: res?.payload?.token,
-            })
-          );
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignin(false));
         }

@@ -27,6 +27,7 @@ import {
 } from "./redux/ShopSlice";
 import ScrollToTop from "./components/ScrollToTop";
 import { handleGetCart, handleGetTaxAndShipping } from "./redux/CartSlice";
+import { handleGetUserAddress } from "./redux/AuthSlice";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -63,6 +64,11 @@ function App() {
 
     if (user !== null && user !== undefined) {
       dispatch(handleGetCart({ token }));
+      dispatch(
+        handleGetUserAddress({
+          token,
+        })
+      );
     }
   }, []);
 

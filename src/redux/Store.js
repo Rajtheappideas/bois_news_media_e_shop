@@ -15,7 +15,7 @@ const rootPersistConfig = {
 const authPersistConfig = {
   key: "auth",
   storage,
-  blacklist: ["loading", "addressLoading", "editProfileLoading"],
+  blacklist: ["loading", "addressLoading", "editProfileLoading", "addresses"],
 };
 
 const rootReducer = combineReducers({

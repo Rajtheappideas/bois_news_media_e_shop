@@ -8,27 +8,32 @@ const OrderSummary = ({
   activeComponent,
   onSubmit,
   errors,
+  handleCreateOrder,
+  loading,
 }) => {
-  const { cart, total, tax, shipping, discount, checkoutLoading } = useSelector(
-    (state) => state.root.cart
-  );
+  const {
+    cart,
+    total,
+    tax,
+    shipping,
+    discount,
+    checkoutLoading,
+    promoCodeDiscount,
+    isPromoCodeApplied,
+    subTotal,
+  } = useSelector((state) => state.root.cart);
 
   const { t } = useTranslation();
 
-  const handleComponent = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (activeComponent === "checkout_form") {
-      setActiveComponent("payment_method");
-    } else if (activeComponent === "payment_method") {
-      setActiveComponent("success");
-    }
-  };
-
   const handleSubmit = () => {
-    if (Object.values(errors).length > 0) {
-      return toast.error("Fill all required fields.");
+    if (activeComponent === "checkout_form") {
+      if (Object.values(errors).length > 0) {
+        return toast.error("Fill all required fields.");
+      }
+      return onSubmit();
+    } else {
+      handleCreateOrder();
     }
-    return onSubmit();
   };
 
   return (
@@ -95,17 +100,46 @@ const OrderSummary = ({
           </p>
         </div>
         {/* discount */}
+        {discount !== 0 && (
+          <div className="flex items-center justify-between">
+            <p className="w-1/2">
+              <b>{t("Discount")}</b>
+            </p>
+            <p className="break-words w-1/2 text-right">
+              € &nbsp;
+              {Intl.NumberFormat("en-US", {
+                minimumFractionDigits: 2,
+              }).format(parseFloat(discount))}
+            </p>
+          </div>
+        )}
+        {/* promo code */}
+        {isPromoCodeApplied && (
+          <div className="flex items-center justify-between">
+            <p className="w-1/2">
+              <b>{t("PromoCode")}</b>
+            </p>
+            <p className="break-words w-1/2 text-right">
+              € &nbsp;
+              {Intl.NumberFormat("en-US", {
+                minimumFractionDigits: 2,
+              }).format(promoCodeDiscount)}
+            </p>
+          </div>
+        )}
+        {/* sub total */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
-            <b>{t("Discount")}</b>
+            <b>{t("Sub Total")}</b>
           </p>
           <p className="break-words w-1/2 text-right">
             € &nbsp;
             {Intl.NumberFormat("en-US", {
               minimumFractionDigits: 2,
-            }).format(parseFloat(discount))}
+            }).format(parseFloat(subTotal))}
           </p>
         </div>
+        <hr />
         {/* total */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
@@ -125,12 +159,18 @@ const OrderSummary = ({
           onClick={() => {
             handleSubmit();
           }}
-          disabled={checkoutLoading}
+          disabled={checkoutLoading || loading}
           className="capitalize w-full gray_button md:h-12 font-semibold"
           type="button"
         >
-          {/* {activeComponent === "checkout_form" ? "continue" : "confirm order"} */}
-          {checkoutLoading ? t("Placing order...") : t("Confirm Order")}
+          {activeComponent === "checkout_form"
+            ? checkoutLoading
+              ? "Submitting Details..."
+              : "continue"
+            : checkoutLoading || loading
+            ? "Processing..."
+            : "Checkout"}
+          {/* {checkoutLoading ? t("Placing order...") : t("Confirm Order")} */}
         </button>
         {activeComponent === "payment_method" && (
           <button

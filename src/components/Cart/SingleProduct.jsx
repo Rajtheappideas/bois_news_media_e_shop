@@ -16,6 +16,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
   const [quantity, setQuantity] = useState(null);
 
   const { token } = useSelector((s) => s.root.auth);
+  const { cart} = useSelector((s) => s.root.cart);
 
   const dispatch = useDispatch();
 
@@ -71,6 +72,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
           dispatch(handleRemoveProductFromCart(product?._id));
           dispatch(handleCalculateSubTotal());
           dispatch(handleCalculateTotal());
+          console.log(cart.length);
         }
       });
     }

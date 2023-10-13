@@ -87,49 +87,6 @@ export const handleUpdateCart = createAsyncThunk(
   }
 );
 
-export const handleCheckout = createAsyncThunk(
-  "cart/handleCheckout",
-  async (
-    {
-      shippingAddress,
-      billingAddress,
-      phone,
-      email,
-      VAT,
-      purchaseOrder,
-      orderNotes,
-      token,
-      signal,
-    },
-    { rejectWithValue }
-  ) => {
-    try {
-      signal.current = new AbortController();
-      const response = await PostUrl(`checkout`, {
-        data: {
-          shippingAddress,
-          billingAddress,
-          phone,
-          email,
-          VAT,
-          purchaseOrder,
-          orderNotes,
-        },
-        signal: signal.current.signal,
-        headers: {
-          Authorization: token,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      if (error?.response) {
-        toast.error(error?.response?.data?.message);
-        return rejectWithValue(error?.response?.data);
-      }
-    }
-  }
-);
-
 export const handleRemoveFromCart = createAsyncThunk(
   "cart/handleRemoveFromCart",
   async ({ id, token, signal }, { rejectWithValue }) => {
@@ -197,6 +154,97 @@ export const handleGetDownloads = createAsyncThunk(
   }
 );
 
+export const handleApplyPromoCode = createAsyncThunk(
+  "cart/handleApplyPromoCode",
+  async ({ code, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl(`promo`, {
+        data: { code },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
+export const handleCreatePaymentIntent = createAsyncThunk(
+  "cart/handleCreatePaymentIntent",
+  async (
+    {
+      shippingAddress,
+      billingAddress,
+      phone,
+      email,
+      VAT,
+      purchaseOrder,
+      orderNotes,
+      code,
+      token,
+      signal,
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl(`create-payment-intent`, {
+        data: {
+          shippingAddress,
+          billingAddress,
+          phone,
+          email,
+          VAT,
+          purchaseOrder,
+          orderNotes,
+          code,
+        },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
+export const handleCreateOrder = createAsyncThunk(
+  "cart/handleCreateOrder",
+  async ({ paymentIntentId, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl(`create-order`, {
+        data: {
+          paymentIntentId,
+        },
+        signal: signal.current.signal,
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   getCartLoading: false,
@@ -257,6 +305,10 @@ const initialState = {
   orders: [],
   downloads: [],
   singleOrder: null,
+  promoCode: null,
+  isPromoCodeApplied: false,
+  promoCodeLoading: false,
+  promoCodeDiscount: 0,
 };
 
 const CartSlice = createSlice({
@@ -268,11 +320,29 @@ const CartSlice = createSlice({
         return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
       }, 0);
       if (subtotal !== NaN && typeof subtotal === "number") {
-        state.total =
-          parseInt(subtotal) +
-          parseInt(state.shipping) +
-          parseFloat(state.tax) -
-          parseInt(state.discount);
+        if (state.promoCode !== null && state.isPromoCodeApplied) {
+          const total =
+            parseInt(subtotal) +
+            parseFloat(state.tax) -
+            parseInt(state.discount) -
+            parseFloat(
+              (parseInt(state.promoCode?.discountPercentage) *
+                parseInt(state.subTotal)) /
+                100
+            ).toFixed(2);
+
+          if (total <= 0) {
+            state.total = parseInt(state.shipping);
+          } else {
+            state.total = total;
+          }
+        } else {
+          state.total =
+            parseInt(subtotal) +
+            parseInt(state.shipping) +
+            parseFloat(state.tax) -
+            parseInt(state.discount);
+        }
       }
     },
 
@@ -356,6 +426,16 @@ const CartSlice = createSlice({
 
     handleChangeDiscount: (state, { payload }) => {
       state.discount = payload;
+    },
+
+    handleChangePromoCodeDiscount: (state, { payload }) => {
+      state.promoCodeDiscount = payload;
+    },
+
+    handleChangePromoCodeRemove: (state, { payload }) => {
+      state.promoCodeDiscount = 0;
+      state.promoCode = null;
+      state.isPromoCodeApplied = false;
     },
 
     handleFindSingleOrder: (state, { payload }) => {
@@ -450,18 +530,38 @@ const CartSlice = createSlice({
       state.error = payload ?? null;
     });
 
-    // checkout
-    builder.addCase(handleCheckout.pending, (state, {}) => {
+    // create paymnet intent
+    builder.addCase(handleCreatePaymentIntent.pending, (state, {}) => {
       state.checkoutLoading = true;
       state.error = null;
     });
-    builder.addCase(handleCheckout.fulfilled, (state, { payload }) => {
-      state.checkoutLoading = false;
-      state.orders = [...state.orders, payload?.order];
-      state.cart = [];
+    builder.addCase(
+      handleCreatePaymentIntent.fulfilled,
+      (state, { payload }) => {
+        state.checkoutLoading = false;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      handleCreatePaymentIntent.rejected,
+      (state, { payload }) => {
+        state.checkoutLoading = false;
+        state.error = payload ?? null;
+      }
+    );
+
+    // create order
+    builder.addCase(handleCreateOrder.pending, (state, {}) => {
+      state.checkoutLoading = true;
       state.error = null;
     });
-    builder.addCase(handleCheckout.rejected, (state, { payload }) => {
+    builder.addCase(handleCreateOrder.fulfilled, (state, { payload }) => {
+      state.checkoutLoading = false;
+      state.error = null;
+      state.orders = [...state.orders, payload?.order];
+      state.cart = [];
+    });
+    builder.addCase(handleCreateOrder.rejected, (state, { payload }) => {
       state.checkoutLoading = false;
       state.error = payload ?? null;
     });
@@ -513,6 +613,24 @@ const CartSlice = createSlice({
       state.error = payload ?? null;
       state.downloads = [];
     });
+
+    // handle apply promo code
+    builder.addCase(handleApplyPromoCode.pending, (state, {}) => {
+      state.promoCodeLoading = true;
+      state.error = null;
+    });
+    builder.addCase(handleApplyPromoCode.fulfilled, (state, { payload }) => {
+      state.promoCodeLoading = false;
+      state.promoCode = payload?.promoCode;
+      state.isPromoCodeApplied = true;
+      state.error = null;
+    });
+    builder.addCase(handleApplyPromoCode.rejected, (state, { payload }) => {
+      state.promoCodeLoading = false;
+      state.error = payload ?? null;
+      state.promoCode = null;
+      state.isPromoCodeApplied = false;
+    });
   },
 });
 
@@ -526,6 +644,8 @@ export const {
   handleFindSingleOrder,
   handleChangeTax,
   handleChangeDiscount,
+  handleChangePromoCodeDiscount,
+  handleChangePromoCodeRemove,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

@@ -6,9 +6,12 @@ import { handleChangeShowSignin } from "../redux/globalStates";
 import { Link, useNavigate } from "react-router-dom";
 import SingleProduct from "../components/Cart/SingleProduct";
 import {
+  handleApplyPromoCode,
   handleCalculateSubTotal,
   handleCalculateTotal,
   handleChangeDiscount,
+  handleChangePromoCodeDiscount,
+  handleChangePromoCodeRemove,
   handleChangeShipping,
   handleChangeTax,
   handleGetCart,
@@ -24,6 +27,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ValidationSchema from "../validations/ValidationSchema";
 import toast from "react-hot-toast";
 import { handleChangeUserAddress } from "../redux/AuthSlice";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Cart = () => {
   const [showAddressFields, setshowAddressFields] = useState(false);
@@ -32,6 +36,7 @@ const Cart = () => {
   const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [showStateField, setShowStateField] = useState(true);
+  const [promoCodeText, setPromoCodeText] = useState("");
 
   const { user, token, addresses, addressLoading } = useSelector(
     (state) => state.root.auth
@@ -45,6 +50,12 @@ const Cart = () => {
     taxPricing,
     shippingPricing,
     eec_switzerland_overseas_territories,
+    discount,
+    tax,
+    promoCodeLoading,
+    promoCode,
+    isPromoCodeApplied,
+    promoCodeDiscount,
   } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
@@ -117,23 +128,49 @@ const Cart = () => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           dispatch(handleUpdateProductToCart(productsToUpdate));
-          dispatch(handleCalculateSubTotal());
-          dispatch(handleCalculateTotal());
+          // calculatePromoCodeDiscount(promoCode);
+
           setProductsToUpdate([]);
         }
       });
     }
   };
 
+  const handleApplyPromocode = () => {
+    toast.remove();
+    if (!promoCodeText) return toast.error("Enter a promo code.");
+    const response = dispatch(
+      handleApplyPromoCode({
+        code: promoCodeText,
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.success(res?.payload?.message);
+          calculatePromoCodeDiscount(res?.payload?.promoCode);
+          calculateTax();
+        } else {
+          setPromoCodeText("");
+        }
+      });
+    }
+  };
+
+  const handleRemovePromoCode = () => {
+    dispatch(handleChangePromoCodeRemove());
+    setPromoCodeText("");
+    toast.success("Promo code removed");
+  };
+
   function calculateDiscount() {
     const quantity = cart.reduce((acc, curr) => {
       if (curr?.itemType === "Magazine") {
         return parseInt(acc + curr?.quantity);
-      } else {
-        return 0;
       }
     }, 0);
-
     if (quantity >= 4) {
       dispatch(handleChangeDiscount(40));
       return 40;
@@ -181,6 +218,11 @@ const Cart = () => {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
     );
+    if (subTotal === 0) return;
+    if (promoCode?.discountPercentage == 100) {
+      dispatch(handleChangeTax(0));
+      return 0;
+    }
     if (
       convertToLowerCase.includes(
         addresses?.shippingAddress?.country.toLocaleLowerCase()
@@ -188,13 +230,13 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
             100
         )
       );
       return (
-        (parseInt(parseInt(subTotal) - calculateDiscount()) *
+        (parseInt(parseInt(subTotal) - discount) *
           parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
         100
       );
@@ -203,7 +245,7 @@ const Cart = () => {
     ) {
       dispatch(
         handleChangeTax(
-          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
             100
         )
@@ -231,6 +273,20 @@ const Cart = () => {
     }
   }
 
+  function calculatePromoCodeDiscount(code) {
+    if (!code) return;
+    dispatch(
+      handleChangePromoCodeDiscount(
+        parseFloat(
+          (parseInt(code?.discountPercentage) * parseInt(subTotal)) / 100
+        ).toFixed(2)
+      )
+    );
+    return parseFloat(
+      (parseInt(code?.discountPercentage) * parseInt(subTotal)) / 100
+    ).toFixed(2);
+  }
+
   // for get cart or show login screen
   useEffect(() => {
     if (user === null) {
@@ -239,10 +295,9 @@ const Cart = () => {
     }
     if (user !== null) {
       dispatch(handleGetCart({ token }));
-      dispatch(handleCalculateSubTotal());
-      dispatch(handleCalculateTotal());
       setCountries(Country.getAllCountries());
       setSelectedCountry(addresses?.shippingAddress?.country);
+      setPromoCodeText(promoCode?.code);
     }
 
     return () => abortApiCall();
@@ -250,11 +305,28 @@ const Cart = () => {
 
   // for calculate total & subtotal
   useEffect(() => {
+    if (
+      isPromoCodeApplied &&
+      !updateOrAddLoading &&
+      !getCartLoading &&
+      !addressLoading
+    ) {
+      calculatePromoCodeDiscount(promoCode);
+      dispatch(handleCalculateTotal());
+    }
     if (user !== null && cart?.length > 0 && !getCartLoading) {
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
+      calculateDiscount();
     }
-  }, [getCartLoading, updateOrAddLoading, addressLoading]);
+  }, [
+    getCartLoading,
+    updateOrAddLoading,
+    addressLoading,
+    discount,
+    tax,
+    promoCodeDiscount,
+  ]);
 
   // for change state while country change
   useEffect(() => {
@@ -329,10 +401,41 @@ const Cart = () => {
                     type="text"
                     className="border border-gray-300 rounded-lg p-3 input_field"
                     placeholder="Promo Code"
+                    value={promoCodeText}
+                    onChange={(e) => {
+                      !isPromoCodeApplied && setPromoCodeText(e.target.value);
+                    }}
+                    disabled={isPromoCodeApplied || promoCodeLoading}
                   />
-                  <button className="uppercase gray_button w-full md:min-h-[3rem]">
-                    {t("Apply Promo code")}
+                  <button
+                    onClick={() => {
+                      handleApplyPromocode();
+                    }}
+                    disabled={
+                      updateOrAddLoading ||
+                      getCartLoading ||
+                      promoCodeLoading ||
+                      isPromoCodeApplied
+                    }
+                    className={` ${
+                      (isPromoCodeApplied || promoCodeLoading) &&
+                      "cursor-not-allowed"
+                    } uppercase gray_button w-full md:min-h-[3rem]`}
+                  >
+                    {isPromoCodeApplied
+                      ? "Applied"
+                      : promoCodeLoading
+                      ? t("Applying").concat("...")
+                      : t("Apply Promo code")}
                   </button>
+                  {isPromoCodeApplied && (
+                    <AiOutlineClose
+                      size={40}
+                      role="button"
+                      title="remove promo code"
+                      onClick={() => handleRemovePromoCode()}
+                    />
+                  )}
                 </div>
                 <div className="w-full md:w-auto">
                   <button
@@ -340,7 +443,9 @@ const Cart = () => {
                     className={`uppercase gray_button w-auto ${
                       productsToUpdate.length === 0 && "cursor-not-allowed"
                     } `}
-                    disabled={updateOrAddLoading || getCartLoading}
+                    disabled={
+                      updateOrAddLoading || getCartLoading || promoCodeLoading
+                    }
                   >
                     {updateOrAddLoading ? t("Updating...") : t("update cart")}
                   </button>
@@ -469,18 +574,32 @@ const Cart = () => {
               <hr />
               <div className="w-full flex items-center justify-between p-4">
                 <div className="font-semibold md:text-base text-sm text-left">
-                  <p>{t("Discount")}</p>
+                  {discount !== 0 && <p>{t("Discount")}</p>}
+                  {isPromoCodeApplied && <p>{t("Promo Code")}</p>}
                   <p>{t("Total")}</p>
                 </div>
                 <div>
-                  <p className="font-medium md:text-base text-sm text-right text-black">
-                    <b>
-                      € &nbsp;
-                      {Intl.NumberFormat("en-US", {
-                        maximumFractionDigits: 3,
-                      }).format(calculateDiscount())}
-                    </b>
-                  </p>
+                  {discount !== 0 && (
+                    <p className="font-medium md:text-base text-sm text-right text-black">
+                      <b>
+                        € -&nbsp;
+                        {Intl.NumberFormat("en-US", {
+                          maximumFractionDigits: 3,
+                        }).format(calculateDiscount())}
+                      </b>
+                    </p>
+                  )}
+                  {isPromoCodeApplied && (
+                    <p className="font-medium md:text-base text-sm text-right text-black">
+                      <b>
+                        € -&nbsp;
+                        {Intl.NumberFormat("en-US", {
+                          maximumFractionDigits: 3,
+                        }).format(promoCodeDiscount)}{" "}
+                        ({promoCode?.discountPercentage}%) off
+                      </b>
+                    </p>
+                  )}
                   <p className="font-medium md:text-base text-sm text-right text-black">
                     <b>
                       € &nbsp;

@@ -17,15 +17,21 @@ import {
   handleCalculateSubTotal,
   handleCalculateTotal,
   handleChangeDiscount,
+  handleChangePromoCodeRemove,
   handleChangeShipping,
   handleChangeTax,
   handleCheckout,
+  handleCreatePaymentIntent,
 } from "../../redux/CartSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { handleChangeUserAddress } from "../../redux/AuthSlice";
 
-const CheckoutForm = ({ setActiveComponent, activeComponent }) => {
+const CheckoutForm = ({
+  setActiveComponent,
+  activeComponent,
+  setClientSecret,
+}) => {
   const [showShippingAddressFields, setShowShippingAddressFields] =
     useState(false);
   const [countries, setCountries] = useState([]);
@@ -48,6 +54,7 @@ const CheckoutForm = ({ setActiveComponent, activeComponent }) => {
     eec_switzerland_overseas_territories,
     subTotal,
     cart,
+    promoCode,
   } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
@@ -147,7 +154,7 @@ const CheckoutForm = ({ setActiveComponent, activeComponent }) => {
       companyName: billingCompanyName,
     };
     const response = dispatch(
-      handleCheckout({
+      handleCreatePaymentIntent({
         shippingAddress: showShippingAddressFields
           ? shippingAddress
           : billingAddress,
@@ -157,6 +164,7 @@ const CheckoutForm = ({ setActiveComponent, activeComponent }) => {
         VAT,
         purchaseOrder,
         orderNotes,
+        code: promoCode !== null ? promoCode?.code : "",
         token,
         signal: AbortControllerRef,
       })
@@ -164,14 +172,10 @@ const CheckoutForm = ({ setActiveComponent, activeComponent }) => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("order created successfully."), { duration: 2000 });
           setActiveComponent("success");
           window.scrollTo({ top: 0, behavior: "smooth" });
-          dispatch(handleCalculateSubTotal());
-          dispatch(handleChangeTax(0));
-          dispatch(handleChangeShipping(0));
-          dispatch(handleChangeDiscount(0));
-          dispatch(handleCalculateTotal());
+          setActiveComponent("payment_method");
+          setClientSecret(res?.payload?.clientSecret);
         }
       });
     }

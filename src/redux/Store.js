@@ -9,7 +9,7 @@ import CartSlice from "./CartSlice";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["globalStates", "shop", "auth", "cart"],
+  blacklist: ["globalStates", "shop", "cart"],
 };
 
 const authPersistConfig = {

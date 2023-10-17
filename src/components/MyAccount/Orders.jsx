@@ -54,7 +54,7 @@ const Orders = () => {
                       {displayOrders.map((order) => (
                         <tr key={order?._id}>
                           <td className="md:p-4 p-3 font-medium text-center whitespace-nowrap">
-                            #{order?.orderId}
+                            {order?.orderId}
                           </td>
                           <td className="md:p-4 p-3 font-medium text-center whitespace-nowrap">
                             {moment(order?.date).format("lll")}

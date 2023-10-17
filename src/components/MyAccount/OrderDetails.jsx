@@ -30,7 +30,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
         {/* order no, status, date */}
         <div className="w-full flex items-center md:justify-around flex-wrap gap-3 md:px-0 px-3">
           <div>
-            {t("Order No")} : <b>#{singleOrder?.orderId}</b>
+            {t("Order No")} : <b>{singleOrder?.orderId}</b>
           </div>
           <div>
             {t("Order Date")} : <b>{moment(singleOrder?.date).format("lll")}</b>

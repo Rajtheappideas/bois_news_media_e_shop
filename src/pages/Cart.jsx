@@ -170,6 +170,7 @@ const Cart = () => {
       if (curr?.itemType === "Magazine") {
         return parseInt(acc + curr?.quantity);
       }
+      return acc;
     }, 0);
     if (quantity >= 4) {
       dispatch(handleChangeDiscount(40));
@@ -268,7 +269,7 @@ const Cart = () => {
         );
 
         return (
-          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
           100
         );
@@ -290,14 +291,14 @@ const Cart = () => {
       if (!promoCodeDiscount) {
         dispatch(
           handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+            (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
               100
           )
         );
 
         return (
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
           100
         );
@@ -357,7 +358,6 @@ const Cart = () => {
       !addressLoading
     ) {
       calculatePromoCodeDiscount(promoCode);
-      dispatch(handleCalculateTotal());
     }
     if (user !== null && cart?.length > 0 && !getCartLoading) {
       dispatch(handleCalculateSubTotal());

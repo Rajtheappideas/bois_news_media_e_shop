@@ -286,11 +286,9 @@ const CheckoutForm = ({
     const quantity = cart.reduce((acc, curr) => {
       if (curr?.itemType === "Magazine") {
         return parseInt(acc + curr?.quantity);
-      } else {
-        return 0;
       }
+      return acc;
     }, 0);
-
     if (quantity >= 4) {
       dispatch(handleChangeDiscount(40));
       return 40;
@@ -310,52 +308,27 @@ const CheckoutForm = ({
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
     );
-    if (showShippingAddressFields) {
-      if (
-        convertToLowerCase.includes(
-          getValues().shippingcountry.toLocaleLowerCase()
+    if (
+      convertToLowerCase.includes(
+        addresses?.shippingAddress?.country.toLocaleLowerCase()
+      )
+    ) {
+      dispatch(
+        handleChangeShipping(
+          parseInt(shippingPricing?.EEC_Switzerland_Overseas)
         )
-      ) {
-        dispatch(
-          handleChangeShipping(
-            parseInt(shippingPricing?.EEC_Switzerland_Overseas)
-          )
-        );
-        return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
-      } else if (getValues().shippingcountry.toLocaleLowerCase() === "france") {
-        dispatch(
-          handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
-        );
-        return parseInt(shippingPricing?.MetropolitanFrance);
-      } else {
-        dispatch(
-          handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld))
-        );
-        return parseInt(shippingPricing?.RestOfTheWorld);
-      }
+      );
+      return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
+    } else if (
+      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+    ) {
+      dispatch(
+        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
+      );
+      return parseInt(shippingPricing?.MetropolitanFrance);
     } else {
-      if (
-        convertToLowerCase.includes(
-          getValues().billingcountry.toLocaleLowerCase()
-        )
-      ) {
-        dispatch(
-          handleChangeShipping(
-            parseInt(shippingPricing?.EEC_Switzerland_Overseas)
-          )
-        );
-        return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
-      } else if (getValues().billingcountry.toLocaleLowerCase() === "france") {
-        dispatch(
-          handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
-        );
-        return parseInt(shippingPricing?.MetropolitanFrance);
-      } else {
-        dispatch(
-          handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld))
-        );
-        return parseInt(shippingPricing?.RestOfTheWorld);
-      }
+      dispatch(handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld)));
+      return parseInt(shippingPricing?.RestOfTheWorld);
     }
   }
 
@@ -413,7 +386,7 @@ const CheckoutForm = ({
         );
 
         return (
-          (parseInt(parseInt(subTotal) - calculateDiscount()) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
           100
         );
@@ -435,14 +408,14 @@ const CheckoutForm = ({
       if (!promoCodeDiscount) {
         dispatch(
           handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+            (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
               100
           )
         );
 
         return (
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+          (parseInt(parseInt(subTotal) - discount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
           100
         );

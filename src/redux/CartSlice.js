@@ -323,6 +323,7 @@ const CartSlice = createSlice({
         if (state.promoCode !== null && state.isPromoCodeApplied) {
           const total =
             parseInt(subtotal) +
+            parseInt(state.shipping) +
             parseFloat(state.tax) -
             parseInt(state.discount) -
             parseFloat(

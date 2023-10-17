@@ -72,7 +72,6 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
           dispatch(handleRemoveProductFromCart(product?._id));
           dispatch(handleCalculateSubTotal());
           dispatch(handleCalculateTotal());
-          console.log(cart.length);
         }
       });
     }

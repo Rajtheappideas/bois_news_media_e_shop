@@ -80,7 +80,6 @@ const PaymentMethod = ({
     if (error) {
       toast.remove();
       toast.error(error?.message, { duration: 4000 });
-      console.log(error);
     }
 
     setLoading(false);

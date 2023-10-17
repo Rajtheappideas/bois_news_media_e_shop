@@ -157,26 +157,7 @@ const Shop = () => {
               <Categories />
             </div>
             <div className="lg:w-9/12 w-full space-y-3">
-              {/* for magazines only */}
-              <>
-                {/* {(activeCategory === "woodmag" ||
-              activeCategory === "the_magazine_designer" ||
-              activeCategory === "roofing_magazine" ||
-              activeCategory === "craftsmen_&_wood") && (
-              <div className="md:space-y-3 space-y-1">
-                <p className="md:text-2xl text-lg font-semibold">
-                  The magazine designer
-                </p>
-                <p className="md:text-base text-sm font-medium text-black leading-relaxed tracking-wide">
-                  Review for professionals covering the latest news on interior
-                  designer products and solutions, decoration, materials, light,
-                  furnishings, floor coverings, walls and ceilings...
-                  Readership: Interior designers, fitters, fitter carpenters ,
-                  decorators, designers, kitchen designers, decorative hardware…
-                </p>
-              </div>
-            )} */}
-              </>
+
               {/* filter */}
               <div className="w-full flex md:flex-row flex-col gap-2 justify-between items-center p-2 border text-black font-medium">
                 {/* btns  */}

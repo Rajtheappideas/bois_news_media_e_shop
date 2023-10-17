@@ -123,7 +123,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
         {/* payment method */}
         <div className="md:p-4 p-2 font-medium flex justify-between items-center">
           <p>{t("Payment method")}</p>
-          <p>Bank transfer</p>
+          <p>Card</p>
         </div>
         <hr />
         {/* total */}

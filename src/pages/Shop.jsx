@@ -63,6 +63,7 @@ const Shop = () => {
   }
 
   function handleChangeMagazinesAccordingToCategory() {
+    if (magazineLoading || subscriptionLoading) return;
     if (activeCategory === "view_all") {
       setShowMagazines(allMagazinesAndSubscriptions);
       handleFilter(allMagazinesAndSubscriptions);
@@ -141,6 +142,10 @@ const Shop = () => {
     setPageNumber(0);
   }, [activeCategory, activeFilter]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -214,8 +219,8 @@ const Shop = () => {
                       {t("Loading").concat("...")}
                     </div>
                   ) : showMagazines.length > 0 ? (
-                    displayMagazines?.map((magazine) => (
-                      <MagazineCard key={magazine?._id} data={magazine} />
+                    displayMagazines?.map((magazine, i) => (
+                      <MagazineCard key={i} data={magazine} />
                     ))
                   ) : (
                     <div className="loading col-span-full">

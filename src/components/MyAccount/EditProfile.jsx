@@ -377,7 +377,7 @@ const EditProfile = ({ setshowEditProfile }) => {
       </div>
       {/* civility + city */}
       <div className="w-full flex md:flex-row flex-col items-center md:gap-4 gap-2">
-        <div className="w-full">
+        <div className="md:w-1/2 w-full">
           <label htmlFor="civility" className="Label">
             {t("civility")}
           </label>

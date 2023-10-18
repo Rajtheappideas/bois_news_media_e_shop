@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-import { handleChangePassword } from "../../redux/AuthSlice";
+import { handleChangePassword, handleLogout } from "../../redux/AuthSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ValidationSchema from "../../validations/ValidationSchema";
+import { handleLogoutFromAllTabs } from "../../redux/globalStates";
 
 const ChangePassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -48,6 +49,12 @@ const ChangePassword = () => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           toast.success(t("Password change successfully."), { duration: 4000 });
+          toast.loading(t("Logout").concat("..."));
+          setTimeout(() => {
+            toast.remove();
+            dispatch(handleLogout());
+            dispatch(handleLogoutFromAllTabs());
+          }, 2000);
         }
       });
     }

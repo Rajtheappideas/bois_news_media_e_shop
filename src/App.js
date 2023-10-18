@@ -126,6 +126,7 @@ function App() {
               }
               caseSensitive
             />
+            {/* <Route path="/checkout/renew/:token" element={<Checkout />} caseSensitive /> */}
             <Route
               path="/my-account"
               element={

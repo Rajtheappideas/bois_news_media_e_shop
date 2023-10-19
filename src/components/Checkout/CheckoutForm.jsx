@@ -575,12 +575,6 @@ const CheckoutForm = ({
     calculateTax();
     calculateDiscount();
     dispatch(handleCalculateTotal());
-    console.log(
-      addresses.shippingAddress.country,
-      addresses.billingAddress.country,
-      getValues().shippingcountry,
-      getValues().billingcountry
-    );
   }, [
     watch("billingcountry"),
     watch("shippingcountry"),

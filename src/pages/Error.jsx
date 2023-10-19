@@ -67,12 +67,6 @@ const Error = () => {
             <p className="font-bold text-textBlack text-center md:text-lg">
               {message}
             </p>
-            <p className="font-normal text-textColor text-center md:text-lg w-9/12">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id
-              dolorem autem delectus eligendi, similique libero doloremque
-              dolorum ipsa consequuntur, quisquam rerum pariatur quaerat ut non
-              necessitatibus! Illo eos quisquam a!
-            </p>
             <Link to="/" className="w-1/2 mx-auto">
               <button type="button" className="gray_button capitalize w-full">
                 Go to home

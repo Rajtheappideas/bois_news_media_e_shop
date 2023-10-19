@@ -8,7 +8,7 @@ import axios from "axios";
 import { useState } from "react";
 
 const SuccessPage = () => {
-  const [message, setMessage] = useState(null);
+  const [subscriptionDetails, setSubscriptionDetails] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const query = useLocation().search;
@@ -25,7 +25,7 @@ const SuccessPage = () => {
           token,
         },
       });
-      setMessage(data?.message);
+      setSubscriptionDetails(data?.subscription);
       setLoading(false);
     } catch (error) {
       toast.error(error.message);
@@ -46,9 +46,11 @@ const SuccessPage = () => {
         <div className="loading py-14">Verifying....</div>
       ) : (
         <Success
-          title={message ?? "..."}
+          title={subscriptionDetails?.title ?? "..."}
+          price={subscriptionDetails?.price}
+          image={subscriptionDetails?.image}
           btnText="Go to my account"
-          description="Payment Successfull"
+          description="Subscription renewed successfully"
           link="/my-account"
         />
       )}

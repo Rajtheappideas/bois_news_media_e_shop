@@ -74,30 +74,30 @@ const ForgotPassword = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (showForgotPassword) {
-      window.document.body.style.overflow = "hidden";
-    }
-    const handleClickOutside = (event) => {
-      if (
-        forgotRef.current &&
-        !forgotRef.current.contains(event?.target) &&
-        showForgotPassword
-      ) {
-        dispatch(handleChangeShowForgotPassword(false));
-        window.document.body.style.overflow = "unset";
-      }
-    };
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [handleClickOutside, showForgotPassword]);
+  // useEffect(() => {
+  //   if (showForgotPassword) {
+  //     window.document.body.style.overflow = "hidden";
+  //   }
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       forgotRef.current &&
+  //       !forgotRef.current.contains(event?.target) &&
+  //       showForgotPassword
+  //     ) {
+  //       dispatch(handleChangeShowForgotPassword(false));
+  //       window.document.body.style.overflow = "unset";
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside, true);
+  //   };
+  // }, [handleClickOutside, showForgotPassword]);
 
-  function handleClickOutside() {
-    dispatch(handleChangeShowForgotPassword(false));
-    window.document.body.style.overflow = "unset";
-  }
+  // function handleClickOutside() {
+  //   dispatch(handleChangeShowForgotPassword(false));
+  //   window.document.body.style.overflow = "unset";
+  // }
 
   return (
     <div className="fixed z-10 inset-0 bg-black bg-opacity-50">

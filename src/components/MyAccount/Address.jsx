@@ -43,6 +43,20 @@ const Address = () => {
                     <p>
                       {addresses?.billingAddress?.zipCode}, <br />
                       {addresses?.billingAddress?.address1}, <br />
+                      {addresses?.billingAddress?.address2 &&
+                        addresses?.billingAddress?.address2}
+                      {addresses?.billingAddress?.address2 && (
+                        <>
+                          ,<br />
+                        </>
+                      )}
+                      {addresses?.billingAddress?.address3 &&
+                        addresses?.billingAddress?.address3}
+                      {addresses?.billingAddress?.address3 && (
+                        <>
+                          ,<br />
+                        </>
+                      )}
                       {addresses?.billingAddress?.city}, <br />
                       {addresses?.billingAddress?.province}, <br />
                       {addresses?.billingAddress?.country}, <br />
@@ -78,6 +92,20 @@ const Address = () => {
                     <p>
                       {addresses?.shippingAddress?.zipCode}, <br />
                       {addresses?.shippingAddress?.address1}, <br />
+                      {addresses?.shippingAddress?.address2 &&
+                        addresses?.shippingAddress?.address2}
+                      {addresses?.shippingAddress?.address2 && (
+                        <>
+                          ,<br />
+                        </>
+                      )}
+                      {addresses?.shippingAddress?.address3 &&
+                        addresses?.shippingAddress?.address3}
+                      {addresses?.shippingAddress?.address3 && (
+                        <>
+                          ,<br />
+                        </>
+                      )}
                       {addresses?.shippingAddress?.city}, <br />
                       {addresses?.shippingAddress?.province}, <br />
                       {addresses?.shippingAddress?.country}, <br />

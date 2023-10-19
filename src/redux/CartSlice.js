@@ -417,9 +417,7 @@ const CartSlice = createSlice({
       }
     },
 
-    handleChangeTax: (state, { payload }) => {
-      state.tax = payload;
-    },
+    handleChangeTax: (state, { payload }) => void (state.tax = payload),
 
     handleChangeShipping: (state, { payload }) => {
       state.shipping = payload;

@@ -71,6 +71,8 @@ const ShippingAddress = ({ setActiveAddress }) => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           toast.success(t("address added successfully."), { duration: 2000 });
+          setActiveAddress("");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       });
     }
@@ -91,7 +93,10 @@ const ShippingAddress = ({ setActiveAddress }) => {
     if (getValues("country") === "") setShowStateField(true);
     else if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
       if (getValues().province === "") {
-        setValue("province", State.getStatesOfCountry(findCountry?.isoCode)[0]?.name);
+        setValue(
+          "province",
+          State.getStatesOfCountry(findCountry?.isoCode)[0]?.name
+        );
       }
       setStates(State.getStatesOfCountry(findCountry?.isoCode));
       !showStateField && setShowStateField(true);

@@ -111,7 +111,7 @@ const Signup = () => {
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success(t("sign up successfully"), { duration: 2000 });
+          toast.success(t("sign up successfully"));
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignup(false));
           dispatch(handleGetUserAddress({ token: res?.payload?.token }));
@@ -120,25 +120,25 @@ const Signup = () => {
     }
   };
 
-  useEffect(() => {
-    if (showSignup) {
-      window.document.body.style.overflow = "hidden";
-    }
-    const handleClickOutside = (event) => {
-      if (
-        signupRef.current &&
-        !signupRef.current.contains(event?.target) &&
-        showSignup
-      ) {
-        dispatch(handleChangeShowSignup(false));
-        window.document.body.style.overflow = "unset";
-      }
-    };
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [handleClickOutside, showSignup]);
+  // useEffect(() => {
+  //   if (showSignup) {
+  //     window.document.body.style.overflow = "hidden";
+  //   }
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       signupRef.current &&
+  //       !signupRef.current.contains(event?.target) &&
+  //       showSignup
+  //     ) {
+  //       dispatch(handleChangeShowSignup(false));
+  //       window.document.body.style.overflow = "unset";
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside, true);
+  //   };
+  // }, [handleClickOutside, showSignup]);
 
   function handleClickOutside() {
     dispatch(handleChangeShowSignup(false));
@@ -150,6 +150,7 @@ const Signup = () => {
 
     return () => {
       abortApiCall();
+      window.document.body.style.overflow = "unset";
     };
   }, []);
 

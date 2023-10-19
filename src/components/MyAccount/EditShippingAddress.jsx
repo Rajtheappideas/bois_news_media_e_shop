@@ -73,6 +73,8 @@ const EditShippingAddress = ({ setActiveEditAddress }) => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           toast.success(t("address edited successfully."), { duration: 2000 });
+          setActiveEditAddress("");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       });
     }

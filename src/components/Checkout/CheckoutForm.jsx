@@ -305,134 +305,268 @@ const CheckoutForm = ({
   }
 
   function calculateShipping() {
-    const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
-    );
-    if (
-      convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
-      )
-    ) {
-      dispatch(
-        handleChangeShipping(
-          parseInt(shippingPricing?.EEC_Switzerland_Overseas)
+    if (showShippingAddressFields) {
+      const convertToLowerCase = eec_switzerland_overseas_territories.map(
+        (country) => country.toLocaleLowerCase()
+      );
+      if (
+        convertToLowerCase.includes(
+          getValues()?.shippingcountry.toLocaleLowerCase()
         )
-      );
-      return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
-    } else if (
-      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
-    ) {
-      dispatch(
-        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
-      );
-      return parseInt(shippingPricing?.MetropolitanFrance);
+      ) {
+        dispatch(
+          handleChangeShipping(
+            parseInt(shippingPricing?.EEC_Switzerland_Overseas)
+          )
+        );
+        return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
+      } else if (
+        getValues()?.shippingcountry.toLocaleLowerCase() === "france"
+      ) {
+        dispatch(
+          handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
+        );
+        return parseInt(shippingPricing?.MetropolitanFrance);
+      } else {
+        dispatch(
+          handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld))
+        );
+        return parseInt(shippingPricing?.RestOfTheWorld);
+      }
     } else {
-      dispatch(handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld)));
-      return parseInt(shippingPricing?.RestOfTheWorld);
+      const convertToLowerCase = eec_switzerland_overseas_territories.map(
+        (country) => country.toLocaleLowerCase()
+      );
+      if (
+        convertToLowerCase.includes(
+          getValues()?.billingcountry.toLocaleLowerCase()
+        )
+      ) {
+        dispatch(
+          handleChangeShipping(
+            parseInt(shippingPricing?.EEC_Switzerland_Overseas)
+          )
+        );
+        return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
+      } else if (getValues()?.billingcountry.toLocaleLowerCase() === "france") {
+        dispatch(
+          handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
+        );
+        return parseInt(shippingPricing?.MetropolitanFrance);
+      } else {
+        dispatch(
+          handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld))
+        );
+        return parseInt(shippingPricing?.RestOfTheWorld);
+      }
     }
   }
 
   function calculateTax() {
-    const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
-    );
-    if (subTotal === 0) return;
-    if (promoCode?.discountPercentage == 100) {
-      dispatch(handleChangeTax(0));
-      return 0;
-    }
-    if (
-      convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
-      )
-    ) {
-      if (!promoCodeDiscount) {
-        dispatch(
-          handleChangeTax(
+    if (showShippingAddressFields) {
+      const convertToLowerCase = eec_switzerland_overseas_territories.map(
+        (country) => country.toLocaleLowerCase()
+      );
+      if (subTotal === 0) return;
+      if (promoCode?.discountPercentage == 100) {
+        dispatch(handleChangeTax(0));
+        return 0;
+      }
+      if (
+        convertToLowerCase.includes(
+          getValues()?.shippingcountry.toLocaleLowerCase()
+        )
+      ) {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+                100
+            )
+          );
+          return (
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
-          )
-        );
-        return (
-          (parseInt(parseInt(subTotal) - discount) *
-            parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-          100
-        );
-      } else {
+            100
+          );
+        } else {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+                parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+                100
+            )
+          );
+          return (
+            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+            100
+          );
+        }
+      } else if (
+        getValues()?.shippingcountry.toLocaleLowerCase() === "france"
+      ) {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.MetropolitanFrance)) /
+                100
+            )
+          );
+
+          return (
+            (parseInt(parseInt(subTotal) - discount) *
+              parseInt(taxPricing?.MetropolitanFrance)) /
+            100
+          );
+        }
         dispatch(
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
-          )
-        );
-        return (
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-            parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-          100
-        );
-      }
-    } else if (
-      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
-    ) {
-      if (!promoCodeDiscount) {
-        dispatch(
-          handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.MetropolitanFrance)) /
               100
           )
         );
 
         return (
-          (parseInt(parseInt(subTotal) - discount) *
+          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
           100
         );
-      }
-      dispatch(
-        handleChangeTax(
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-            parseInt(taxPricing?.MetropolitanFrance)) /
-            100
-        )
-      );
+      } else {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.RestOfTheWorld)) /
+                100
+            )
+          );
 
-      return (
-        (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-          parseInt(taxPricing?.MetropolitanFrance)) /
-        100
-      );
-    } else {
-      if (!promoCodeDiscount) {
+          return (
+            (parseInt(parseInt(subTotal) - discount) *
+              parseInt(taxPricing?.RestOfTheWorld)) /
+            100
+          );
+        }
         dispatch(
           handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount) *
+            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
               100
           )
         );
 
         return (
-          (parseInt(parseInt(subTotal) - discount) *
+          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
           100
         );
       }
-      dispatch(
-        handleChangeTax(
+    } else {
+      const convertToLowerCase = eec_switzerland_overseas_territories.map(
+        (country) => country.toLocaleLowerCase()
+      );
+      if (subTotal === 0) return;
+      if (promoCode?.discountPercentage == 100) {
+        dispatch(handleChangeTax(0));
+        return 0;
+      }
+      if (
+        convertToLowerCase.includes(
+          getValues()?.billingcountry.toLocaleLowerCase()
+        )
+      ) {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+                100
+            )
+          );
+          return (
+            (parseInt(parseInt(subTotal) - discount) *
+              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+            100
+          );
+        } else {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+                parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+                100
+            )
+          );
+          return (
+            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
+            100
+          );
+        }
+      } else if (
+        getValues()?.billingcountry.toLocaleLowerCase() === "france"
+      ) {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.MetropolitanFrance)) /
+                100
+            )
+          );
+
+          return (
+            (parseInt(parseInt(subTotal) - discount) *
+              parseInt(taxPricing?.MetropolitanFrance)) /
+            100
+          );
+        }
+        dispatch(
+          handleChangeTax(
+            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+              parseInt(taxPricing?.MetropolitanFrance)) /
+              100
+          )
+        );
+
+        return (
+          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+            parseInt(taxPricing?.MetropolitanFrance)) /
+          100
+        );
+      } else {
+        if (!promoCodeDiscount) {
+          dispatch(
+            handleChangeTax(
+              (parseInt(parseInt(subTotal) - discount) *
+                parseInt(taxPricing?.RestOfTheWorld)) /
+                100
+            )
+          );
+
+          return (
+            (parseInt(parseInt(subTotal) - discount) *
+              parseInt(taxPricing?.RestOfTheWorld)) /
+            100
+          );
+        }
+        dispatch(
+          handleChangeTax(
+            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
+              parseInt(taxPricing?.RestOfTheWorld)) /
+              100
+          )
+        );
+
+        return (
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
-            100
-        )
-      );
-
-      return (
-        (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-          parseInt(taxPricing?.RestOfTheWorld)) /
-        100
-      );
+          100
+        );
+      }
     }
   }
 
@@ -441,6 +575,12 @@ const CheckoutForm = ({
     calculateTax();
     calculateDiscount();
     dispatch(handleCalculateTotal());
+    console.log(
+      addresses.shippingAddress.country,
+      addresses.billingAddress.country,
+      getValues().shippingcountry,
+      getValues().billingcountry
+    );
   }, [
     watch("billingcountry"),
     watch("shippingcountry"),

@@ -68,25 +68,25 @@ const ResetPassword = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (showResetPassword) {
-      window.document.body.style.overflow = "hidden";
-    }
-    const handleClickOutside = (event) => {
-      if (
-        resetRef.current &&
-        !resetRef.current.contains(event?.target) &&
-        showResetPassword
-      ) {
-        dispatch(handleChangeShowResetPassword(false));
-        window.document.body.style.overflow = "unset";
-      }
-    };
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [handleClickOutside, showResetPassword]);
+  // useEffect(() => {
+  //   if (showResetPassword) {
+  //     window.document.body.style.overflow = "hidden";
+  //   }
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       resetRef.current &&
+  //       !resetRef.current.contains(event?.target) &&
+  //       showResetPassword
+  //     ) {
+  //       dispatch(handleChangeShowResetPassword(false));
+  //       window.document.body.style.overflow = "unset";
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside, true);
+  //   };
+  // }, [handleClickOutside, showResetPassword]);
 
   function handleClickOutside() {
     dispatch(handleChangeShowResetPassword(false));

@@ -12,10 +12,11 @@ const SuccessPage = () => {
   const [loading, setLoading] = useState(false);
 
   const query = useLocation().search;
-  const token = query.split("?")[1].split("=")[1];
+  const token = query?.split("?")[1]?.split("=")[1];
   const navigate = useNavigate();
 
   const handleVerifyToken = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       const { data } = await axios("/api/verify-token", {
@@ -41,7 +42,7 @@ const SuccessPage = () => {
 
   return (
     <div className="pb-5">
-      {loading ? (
+      {token && loading ? (
         <div className="loading py-14">Verifying....</div>
       ) : (
         <Success

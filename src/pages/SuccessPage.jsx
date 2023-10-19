@@ -1,8 +1,6 @@
 import React from "react";
 import Success from "../components/Success";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import BaseUrl from "../BaseUrl";
-import toast from "react-hot-toast";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
@@ -28,7 +26,7 @@ const SuccessPage = () => {
       setSubscriptionDetails(data?.subscription);
       setLoading(false);
     } catch (error) {
-      toast.error(error.message);
+      navigate("/");
       setLoading(false);
     }
   };

@@ -28,7 +28,7 @@ const Error = () => {
       setMessage(data?.message);
       setLoading(false);
     } catch (error) {
-      toast.error(error.message);
+      navigate("/");
       setLoading(false);
     }
   };

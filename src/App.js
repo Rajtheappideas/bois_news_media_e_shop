@@ -28,6 +28,8 @@ import {
 import ScrollToTop from "./components/ScrollToTop";
 import { handleGetCart, handleGetTaxAndShipping } from "./redux/CartSlice";
 import { handleGetUserAddress } from "./redux/AuthSlice";
+import SuccessPage from "./pages/SuccessPage";
+import Error from "./pages/Error";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -127,6 +129,8 @@ function App() {
               caseSensitive
             />
             {/* <Route path="/checkout/renew/:token" element={<Checkout />} caseSensitive /> */}
+            <Route path="/success" element={<SuccessPage />} caseSensitive />
+            <Route path="/error" element={<Error />} caseSensitive />
             <Route
               path="/my-account"
               element={

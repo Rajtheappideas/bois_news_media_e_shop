@@ -59,7 +59,7 @@ const ActiveTabComponent = ({ activeComponent, setActiveComponent }) => {
         </li>
       </ul>
       <hr />
-      <p className="text-darkRed font-light text-left cursor-pointer py-2 px-4">
+      <p className="text-darkRed inline-block font-light text-left cursor-pointer py-2 px-4">
         {t("logout")}
       </p>
     </div>

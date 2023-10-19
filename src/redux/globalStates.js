@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { BroadcastChannel } from "broadcast-channel";
 import i18next from "i18next";
-import { toast } from "react-hot-toast";
 
 const initialState = {
   showSignin: false,

@@ -601,9 +601,9 @@ const CheckoutForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex items-start gap-3"
+      className="w-full flex lg:flex-row flex-col items-start gap-3"
     >
-      <div className="md:space-y-5 space-y-3 w-9/12">
+      <div className="md:space-y-5 space-y-3 lg:w-9/12 w-full">
         <p className="bg-darkBlue text-white text-left p-4 md:text-lg font-semibold">
           {t("Billing Information")}
         </p>

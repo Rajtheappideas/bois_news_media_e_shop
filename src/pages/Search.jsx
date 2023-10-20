@@ -42,19 +42,19 @@ const Search = () => {
           searchMagazines.map((magazine) => (
             <div
               key={magazine?._id}
-              className="flex md:flex-row flex-col items-start justify-start gap-3"
+              className="flex md:flex-row flex-col items-start justify-start gap-3 w-full"
             >
               <img
                 src={BaseUrl.concat(magazine?.image)}
                 alt={magazine?.title}
                 className="md:max-w-[15rem] md:min-w-[15rem] w-full lg:h-72 h-60 object-contain object-center"
               />
-              <div className="md:space-y-3 space-y-2">
+              <div className="md:space-y-3 space-y-2 w-full">
                 <p className="font-semibold md:text-xl md:text-left text-center md:mx-0 mx-auto">
                   {magazine?.title}
                 </p>
                 <p className="font-medium md:text-left text-center">01/01/70</p>
-                <p className="tracking-wide font-medium leading-normal lg:text-left text-justify">
+                <p className="tracking-wide font-medium leading-normal lg:text-left text-center">
                   {magazine?.description}
                 </p>
                 <div className="md:text-left text-center">

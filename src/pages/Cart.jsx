@@ -426,8 +426,9 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody className="w-full">
-                    {cart.length > 0 &&
-                      cart.map((product) => (
+                    {cart !== undefined &&
+                      cart?.length > 0 &&
+                      cart?.map((product) => (
                         <SingleProduct
                           handleUpdateProduct={handleUpdateProduct}
                           key={product?._id}

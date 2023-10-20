@@ -28,7 +28,9 @@ const SearchPopup = () => {
     const filteredProducts = allMagazinesAndSubscriptions.filter((entry) =>
       Object.values(entry).some((val) => {
         if (typeof val === "string") {
-          return val.toLocaleLowerCase().includes(searchTerm);
+          return val
+            .toLocaleLowerCase()
+            .includes(searchTerm.toLocaleLowerCase());
         }
       })
     );

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
 import {
   PaymentElement,
@@ -97,8 +96,8 @@ const PaymentMethod = ({
   }, []);
 
   return (
-    <form className="w-full md:space-y-5 space-y-3 flex items-start gap-3">
-      <div className="md:space-y-5 space-y-3 w-9/12">
+    <form className="w-full flex lg:flex-row flex-col items-start gap-3">
+      <div className="md:space-y-5 space-y-3 lg:w-9/12 w-full">
         <p className="bg-darkBlue text-white text-left p-4 md:text-lg font-semibold">
           {t("Card Details")}
         </p>

@@ -64,6 +64,7 @@ const Shop = () => {
 
   function handleChangeMagazinesAccordingToCategory() {
     if (magazineLoading || subscriptionLoading) return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (activeCategory === "view_all") {
       setShowMagazines(allMagazinesAndSubscriptions);
       handleFilter(allMagazinesAndSubscriptions);
@@ -126,12 +127,12 @@ const Shop = () => {
       return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {
       const highToLow = items?.slice().sort((a, b) => {
-        return b.digitalPrice - a.digitalPrice;
+        return b.price - a.price;
       });
       return setShowMagazines(highToLow);
     } else if (activeFilter === "low_to_high") {
       const lowToHigh = items?.slice().sort((a, b) => {
-        return a.digitalPrice - b.digitalPrice;
+        return a.price - b.price;
       });
       return setShowMagazines(lowToHigh);
     }
@@ -218,7 +219,9 @@ const Shop = () => {
                     <div className="loading col-span-full">
                       {t("Loading").concat("...")}
                     </div>
-                  ) : showMagazines.length > 0 ? (
+                  ) : showMagazines.length > 0 &&
+                    magazines.length > 0 &&
+                    subscriptions.length > 0 ? (
                     displayMagazines?.map((magazine, i) => (
                       <MagazineCard key={i} data={magazine} />
                     ))

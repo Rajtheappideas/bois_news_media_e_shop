@@ -128,8 +128,6 @@ const Cart = () => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           dispatch(handleUpdateProductToCart(productsToUpdate));
-          // calculatePromoCodeDiscount(promoCode);
-
           setProductsToUpdate([]);
         }
       });
@@ -319,17 +317,28 @@ const Cart = () => {
     }
   }
 
+  function calculateSubTotal() {
+    const subTotal = cart.reduce((acc, cur) => {
+      return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+    }, 0);
+    if (subTotal !== NaN && typeof subTotal === "number") {
+      return subTotal;
+    }
+  }
+
   function calculatePromoCodeDiscount(code) {
     if (!code) return;
+
     dispatch(
       handleChangePromoCodeDiscount(
         parseFloat(
-          (parseInt(code?.discountPercentage) * parseInt(subTotal)) / 100
+          (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) /
+            100
         ).toFixed(2)
       )
     );
     return parseFloat(
-      (parseInt(code?.discountPercentage) * parseInt(subTotal)) / 100
+      (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) / 100
     ).toFixed(2);
   }
 
@@ -351,17 +360,10 @@ const Cart = () => {
 
   // for calculate total & subtotal
   useEffect(() => {
-    if (
-      isPromoCodeApplied &&
-      !updateOrAddLoading &&
-      !getCartLoading &&
-      !addressLoading
-    ) {
-      calculatePromoCodeDiscount(promoCode);
-    }
     if (user !== null && cart?.length > 0 && !getCartLoading) {
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
+      calculatePromoCodeDiscount(promoCode);
       calculateDiscount();
     }
   }, [

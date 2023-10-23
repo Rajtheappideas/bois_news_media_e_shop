@@ -520,15 +520,15 @@ const Cart = () => {
                   </p>
                   {/* tax */}
                   <p>
-                    <b>€&nbsp;{calculateTax()}</b>
+                    €&nbsp;{calculateTax()}
                   </p>
                   {/* address */}
                   <div className="text-darkGray font-semibold space-y-3">
                     {/* address */}
                     <div className="space-y-2 text-black">
                       {/* shipping */}
-                      <p>
-                        <b>€&nbsp;{calculateShipping()}</b>
+                      <p className="font-normal">
+                        €&nbsp;{calculateShipping()}
                       </p>
                       <p>
                         {t("Delivery to")} {addresses?.shippingAddress?.zipCode}{" "}
@@ -629,23 +629,20 @@ const Cart = () => {
                 <div>
                   {discount !== 0 && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                      <b>
+                    
                         € -&nbsp;
                         {Intl.NumberFormat("en-US", {
                           maximumFractionDigits: 3,
                         }).format(calculateDiscount())}
-                      </b>
                     </p>
                   )}
                   {isPromoCodeApplied && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                      <b>
                         € -&nbsp;
                         {Intl.NumberFormat("en-US", {
                           maximumFractionDigits: 3,
                         }).format(promoCodeDiscount)}{" "}
                         ({promoCode?.discountPercentage}%) off
-                      </b>
                     </p>
                   )}
                   <p className="font-medium md:text-base text-sm text-right text-black">

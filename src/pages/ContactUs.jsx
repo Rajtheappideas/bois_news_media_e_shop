@@ -38,10 +38,18 @@ const ContactUs = () => {
     control,
     reset,
     resetField,
+    clearErrors,
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
     resolver: yupResolver(contactUsSchema),
+    defaultValues: {
+      email: "",
+      comments: "",
+      captcha: "",
+      name: "",
+      phone: "",
+    },
   });
 
   const onSubmit = async (data) => {
@@ -76,7 +84,12 @@ const ContactUs = () => {
   };
 
   function handleChange(value) {
-    setValue("captcha", value);
+    setValue("captcha", value, {
+      shouldTouch: false,
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+    clearErrors("captcha");
   }
   useEffect(() => {
     return () => {

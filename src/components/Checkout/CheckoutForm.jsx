@@ -60,7 +60,6 @@ const CheckoutForm = ({
   } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { t } = useTranslation();
 

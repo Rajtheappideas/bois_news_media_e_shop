@@ -106,7 +106,7 @@ const Signup = () => {
         company,
         shippingAddress,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -157,7 +157,7 @@ const Signup = () => {
   useEffect(() => {
     let findCountry = "";
     findCountry = Country.getAllCountries().find(
-      (c) => c.name === getValues("country")
+      (c) => c.name === getValues("country"),
     );
     if (getValues("country") === "") setShowStateField(true);
     else if (
@@ -332,12 +332,16 @@ const Signup = () => {
           <label htmlFor="civility" className="Label">
             {t("civility")}
           </label>
-          <input
-            type="text"
-            name="civility"
+          <select
             {...register("civility")}
+            name="civility"
             className="input_field"
-          />
+          >
+            <option label="Choose civility"></option>
+            <option value="Mr.">Mr.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Ms.">Ms.</option>
+          </select>
 
           <span className="error">{errors?.civility?.message}</span>
         </div>

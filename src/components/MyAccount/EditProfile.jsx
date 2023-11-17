@@ -23,7 +23,7 @@ const EditProfile = ({ setshowEditProfile }) => {
   const [showStateField, setShowStateField] = useState(true);
 
   const { user, token, editProfileLoading, addresses } = useSelector(
-    (state) => state.root.auth
+    (state) => state.root.auth,
   );
 
   const { t } = useTranslation();
@@ -108,7 +108,7 @@ const EditProfile = ({ setshowEditProfile }) => {
         shippingAddress,
         token,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -130,12 +130,12 @@ const EditProfile = ({ setshowEditProfile }) => {
     let findCountry = "";
     if (selectedCountry === "") {
       findCountry = Country.getAllCountries().find(
-        (c) => c.name === addresses?.shippingAddress?.country
+        (c) => c.name === addresses?.shippingAddress?.country,
       );
       setSelectedCountry(findCountry?.name);
     }
     findCountry = Country.getAllCountries().find(
-      (c) => c.name === getValues("country")
+      (c) => c.name === getValues("country"),
     );
     const states = State.getStatesOfCountry(findCountry?.isoCode);
     if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
@@ -144,11 +144,11 @@ const EditProfile = ({ setshowEditProfile }) => {
       if (getValues().province === "") {
         setValue(
           "province",
-          State.getStatesOfCountry(findCountry?.isoCode)[0]?.name
+          State.getStatesOfCountry(findCountry?.isoCode)[0]?.name,
         );
       }
       const findStateInStates = states.find((s) =>
-        s.name.includes(getValues().province)
+        s.name.includes(getValues().province),
       );
       if (!findStateInStates) {
         setValue("province", states[0]?.name);
@@ -381,12 +381,23 @@ const EditProfile = ({ setshowEditProfile }) => {
           <label htmlFor="civility" className="Label">
             {t("civility")}
           </label>
-          <input
+          <select
+            {...register("civility")}
+            name="civility"
+            className="input_field"
+          >
+            <option label="Choose civility"></option>
+            <option value="Mr.">Mr.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Ms.">Ms.</option>
+          </select>
+
+          {/* <input
             type="text"
             placeholder="Type here..."
             className="w-full input_field"
             {...register("civility")}
-          />
+          /> */}
           <span className="error">{errors?.civility?.message}</span>
         </div>
         <div className="md:w-1/2 w-full">

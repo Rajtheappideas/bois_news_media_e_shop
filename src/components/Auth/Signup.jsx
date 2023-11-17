@@ -403,7 +403,7 @@ const Signup = () => {
               {...register("province")}
               className="input_field"
             >
-              <option label="Select country"></option>
+              <option label="Select province"></option>
               {states.length > 0 &&
                 states.map((state, i) => (
                   <option value={state?.name} key={i}>

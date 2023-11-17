@@ -1,8 +1,23 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { handleLogout } from "../../redux/AuthSlice";
+import { handleLogoutFromAllTabs } from "../../redux/globalStates";
 
 const ActiveTabComponent = ({ activeComponent, setActiveComponent }) => {
   const { t } = useTranslation();
+
+  const dispatch = useDispatch();
+
+  const handlelogout = () => {
+    toast.loading(t("Logout").concat("..."));
+    setTimeout(() => {
+      toast.remove();
+      dispatch(handleLogout());
+      dispatch(handleLogoutFromAllTabs());
+    }, 2000);
+  };
 
   return (
     <div className="border border-gray-300 md:space-y-3 space-y-2 xl:sticky top-36  z-0 xl:w-3/12 md:w-1/2 w-full">
@@ -59,7 +74,10 @@ const ActiveTabComponent = ({ activeComponent, setActiveComponent }) => {
         </li>
       </ul>
       <hr />
-      <p className="text-darkRed inline-block font-light text-left cursor-pointer py-2 px-4">
+      <p
+        onClick={handlelogout}
+        className="text-darkRed inline-block font-light text-left cursor-pointer py-2 px-4"
+      >
         {t("logout")}
       </p>
     </div>

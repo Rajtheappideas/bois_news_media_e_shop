@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/ErrorFallback";
 import { Suspense, lazy, useEffect } from "react";
@@ -27,7 +27,7 @@ import {
 } from "./redux/ShopSlice";
 import ScrollToTop from "./components/ScrollToTop";
 import { handleGetCart, handleGetTaxAndShipping } from "./redux/CartSlice";
-import { handleGetUserAddress } from "./redux/AuthSlice";
+import { handleGetUserAddress, handleLogout } from "./redux/AuthSlice";
 import SuccessPage from "./pages/SuccessPage";
 import Error from "./pages/Error";
 
@@ -65,11 +65,20 @@ function App() {
     dispatch(handleGetTaxAndShipping());
 
     if (user !== null && user !== undefined) {
-      dispatch(handleGetCart({ token }));
+      const response = dispatch(handleGetCart({ token }));
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.code == 401) {
+            dispatch(handleLogout());
+            dispatch(logoutAllTabsEventListener());
+          }
+        });
+      }
+
       dispatch(
         handleGetUserAddress({
           token,
-        })
+        }),
       );
     }
   }, []);

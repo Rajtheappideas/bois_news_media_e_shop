@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { BaseUrl, PublicS3Url } from "../../BaseUrl";
+import BaseUrl, { PublicS3Url } from "../../BaseUrl";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useState } from "react";

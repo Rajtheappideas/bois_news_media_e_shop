@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import BaseUrl from "../../BaseUrl";
+import { PublicS3Url } from "../../BaseUrl";
 import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
@@ -47,7 +47,7 @@ const SubScribe = () => {
               className="w-full border rounded-lg md:p-3 p-2 flex lg:flex-row flex-col items-start md:gap-3 gap-1 min-h-[20rem]"
             >
               <img
-                src={BaseUrl.concat(subscription?.image)}
+                src={PublicS3Url.concat(subscription?.image)}
                 alt={subscription?.title}
                 className="lg:min-w-[12rem] lg:max-w-[12rem] w-full min-h-[15rem] max-h-[15rem] object-contain object-center rounded-lg"
               />

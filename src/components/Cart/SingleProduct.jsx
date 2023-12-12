@@ -9,14 +9,14 @@ import {
 } from "../../redux/CartSlice";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import BaseUrl from "../../BaseUrl";
+import { PublicS3Url } from "../../BaseUrl";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 
 const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
   const [quantity, setQuantity] = useState(null);
 
   const { token } = useSelector((s) => s.root.auth);
-  const { cart} = useSelector((s) => s.root.cart);
+  const { cart } = useSelector((s) => s.root.cart);
 
   const dispatch = useDispatch();
 
@@ -90,7 +90,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       </td>
       <td className="text-left p-4 flex lg:flex-row flex-col items-center justify-start lg:gap-4 gap-2">
         <img
-          src={BaseUrl.concat(product?.itemId?.image)}
+          src={PublicS3Url.concat(product?.itemId?.image)}
           alt={product?.title}
           className="w-fit md:h-48 h-40 object-contain object-center"
         />
@@ -114,7 +114,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       </td>
       {/* input field */}
 
-      {product?.itemType === "Magazine" && product?.support==="paper" ? (
+      {product?.itemType === "Magazine" && product?.support === "paper" ? (
         <td className="text-center p-4">
           <input
             type="number"

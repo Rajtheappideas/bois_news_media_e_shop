@@ -4,7 +4,7 @@ import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
-import BaseUrl from "../BaseUrl";
+import { PublicS3Url } from "../BaseUrl";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -50,7 +50,7 @@ const MagazineCard = ({ data, from }) => {
         //  horizontal card
         <div className="w-full md:text-left text-center group flex md:flex-row flex-col items-start  gap-3 md:border-0 md:p-0 border p-2">
           <img
-            src={BaseUrl.concat(data?.image)}
+            src={PublicS3Url.concat(data?.image)}
             alt={data?.title}
             className="md:min-w-[15rem] max-w-[15rem] md:min-h-[20rem] max-h-[20rem] md:mx-0 mx-auto w-full cursor-pointer group-hover:scale-110 transition-all duration-300 ease-in-out object-fill object-center"
             onClick={() => handleDispatchAction()}
@@ -72,12 +72,11 @@ const MagazineCard = ({ data, from }) => {
         //  vertical card
         <div
           onClick={() => handleDispatchAction()}
-          className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer ${
-            from === "similar_products" ? "border-0" : "border"
-          }  md:border-0 md:p-0 p-3`}
+          className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer ${from === "similar_products" ? "border-0" : "border"
+            }  md:border-0 md:p-0 p-3`}
         >
           <img
-            src={BaseUrl.concat(data?.image)}
+            src={PublicS3Url.concat(data?.image)}
             alt={data?.title}
             className={`w-full hover:scale-105 transition-all duration-300 lg:max-h-[25rem]  max-h-[20rem] min-h-[20rem] lg:min-h-[25rem] object-contain object-center`}
             loading="lazy"

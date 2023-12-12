@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import BaseUrl from "../BaseUrl";
+import { PublicS3Url } from "../BaseUrl";
 import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
@@ -95,7 +95,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer md:border-0 md:p-0 p-3`}
             >
               <img
-                src={BaseUrl.concat(magazine?.image)}
+                src={PublicS3Url.concat(magazine?.image)}
                 alt={magazine?.title}
                 className={`w-fit hover:scale-105 transition-all duration-300 lg:max-h-[25rem] max-h-[20rem] md:min-h-[25rem] sm:min-h-[20rem] min-h-[15rem] object-contain object-center`}
                 loading="lazy"

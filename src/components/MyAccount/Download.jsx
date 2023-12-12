@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import BaseUrl from "../../BaseUrl";
+import { BaseUrl, PublicS3Url } from "../../BaseUrl";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useState } from "react";
@@ -46,7 +46,7 @@ const Download = () => {
                     <tr key={magazine?._id}>
                       <td className="md:p-4 p-3 font-medium text-left whitespace-nowrap flex md:flex-row flex-col items-center justify-start gap-3">
                         <img
-                          src={BaseUrl.concat(magazine?.image)}
+                          src={PublicS3Url.concat(magazine?.image)}
                           alt={magazine?.title}
                           className="w-40 md:h-48 h-32 object-contain object-center"
                         />
@@ -60,6 +60,7 @@ const Download = () => {
 
                       <td className="md:p-4 p-3 font-medium text-center">
                         <a
+                          // TODO : Move to protected route to checkright
                           href={BaseUrl.concat(magazine?.pdf)}
                           target="_blank"
                           download

@@ -19,14 +19,12 @@
   "WoodPartners": "WoodPartners",
   "enter valid email": "entrez un courriel valide",
   "subscribed successfully": "souscrit avec succès",
-
   "//magazine_name": "------------------magazine name-------------------",
   "boismag": "BOISMAG",
   "artisans_and_bois": "ARTISANS & BOIS",
   "agenceur": "L’AGENCEUR MAGAZINE",
   "toiture": "TOITURE MAGAZINE",
   "bois_news_media": "BOIS NEWS MEDIA",
-
   "//error_comment": "----------------errors----------------",
   "email is required": "L'adresse électronique est requise",
   "password is required": "le mot de passe est requis",
@@ -54,26 +52,22 @@
   "old password is required": "l'ancien mot de passe est requis",
   "new password is required": "un nouveau mot de passe est requis",
   "check the captcha.": "vérifier le captcha.",
-
   "//sign-in": "--------------------sign-in----------------",
   "sign in successfully": "Connexion réussie",
   "Login to your account": "Connectez-vous à votre compte",
   "Register Now": "S'inscrire",
   "Don't have an account": "Pas de compte",
   "Forgot password": "Mot de passe oublié",
-
   "//sign-up": "--------------------signup----------------",
   "sign up successfully": "s'inscrire avec succès",
   "Create your account": "Créez votre compte",
   "Registering": "Enregistrement",
   "Already have an account": "Vous avez déjà un compte",
-
   "//forgot-password": "---------------------------forgot-passowrd----------------",
   "check your mails": "vérifiez vos courriels",
   "Please enter your username or email address. You will receive a link by email to create a new password.": "Veuillez saisir votre nom d'utilisateur ou votre adresse électronique. Vous recevrez un lien par e-mail pour créer un nouveau mot de passe..",
   "submitting": "soumettre",
   "submit": "soumettre",
-
   "//otp-verify": "---------------------otp-verify----------------------",
   "please fill all the fields": "remplissez tous les champs",
   "OTP verified successfully": "OTP vérifié avec succès",
@@ -85,12 +79,10 @@
   "Resend the code": "Renvoyer le code",
   "Verifying": "Vérification",
   "Continue": "Continuer",
-
   "//reset-password": "-------------------------------reset-password---------------",
   "password Reset successfully": "Mot de passe réinitialisé avec succès",
   "Reset Password": "Réinitialiser le mot de passe",
   "Confirm Password": "Confirmer le mot de passe",
-
   "//my-account": "----------------------my-account--------------------",
   "My Account": "Mon compte",
   "Profile": "Profil",
@@ -129,7 +121,6 @@
   "New password": "Nouveau mot de passe",
   "confirm password": "confirmer le mot de passe",
   "My-account": "Mon compte",
-
   "//home": "--------------------------home------------------------------",
   "SUBSCRIBE TO": "S'ABONNER",
   "MULTIPLE MAGAZINES": "PLUSIEURS MAGAZINES",
@@ -141,12 +132,10 @@
   "PURCHASE BY NUMBER": "ACHAT PAR NOMBRE",
   "Discover previous issues": "Découvrez les numéros précédents",
   "SEE OTHER ISSUES": "VOIR LES AUTRES NUMÉROS",
-
   "//contactUs": "---------------------------contact us--------------------",
   "Contact us": "Contactez nous",
   "Comments": "Commentaires",
   "Send": "Envoyer",
-
   "//shop": "-----------------------------------shop---------------------",
   "quantity should not less than 1 and value should be valid": "la quantité ne doit pas être inférieure à 1 et la valeur doit être valide",
   "From": "De",
@@ -172,7 +161,6 @@
   "High to Low": "De haut en bas",
   "Low to High": "De faible à élevé",
   "Shop": "Boutique",
-
   "//cart": "---------------------------cart-------------------------",
   "No Subscriptions or Magazines here": "Pas d'abonnements ou de magazines ici",
   "Subtotal": "Sous-total",
@@ -184,7 +172,6 @@
   "place order": "passer une commande",
   "Your cart is empty": "Votre panier est vide",
   "Cart": "Chariot",
-
   "//checkout": "------------------------------checkout-------------------",
   "Billing Information": "Informations sur la facturation",
   "First name": "Prénom",
@@ -207,14 +194,12 @@
   "Your order has been received.": "Votre commande a été reçue.",
   "continue shopping": "poursuivre les achats",
   "Checkout": "Sortie de caisse",
-
   "//search": "------------------------search-----------------------",
   "Search": "Recherche",
   "Search result found": "Résultat de la recherche trouvé",
   "Read more": "En savoir plus",
   "No Magazines or Subscription here, Search magazines or subscription": "Pas de magazines ou d'abonnements ici, Rechercher des magazines ou des abonnements",
   "Magazine not found": "Magazine introuvable",
-
   "//common_comment": "----------------common----------------",
   "loading": "Chargement",
   "E-mail": "Courriel",

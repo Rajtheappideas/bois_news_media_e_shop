@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import success from "../assests/animations/success.json";
-import BaseUrl from "../BaseUrl";
+import { PublicS3Url } from "../BaseUrl";
 
 const Success = ({ title, price, image, description, btnText, link }) => {
   return (
@@ -29,7 +29,7 @@ const Success = ({ title, price, image, description, btnText, link }) => {
           <div className="flex items-center justify-center gap-10 w-full">
             {image && (
               <img
-                src={BaseUrl.concat(image)}
+                src={PublicS3Url.concat(image)}
                 alt={title}
                 className="w-40 h-40 object-contain object-center"
               ></img>

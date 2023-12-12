@@ -3,7 +3,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeMagazineOrSubscriptionShow } from "../redux/ShopSlice";
 import SimilarProducts from "./SimilarProducts";
-import BaseUrl from "../BaseUrl";
+import { PublicS3Url } from "../BaseUrl";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import {
@@ -152,7 +152,7 @@ const MagazineOrSubscriptionDetails = () => {
       {/* img + add to cart details */}
       <div className="w-full flex lg:flex-row flex-col items-start justify-start md:gap-5 gap-3">
         <img
-          src={BaseUrl.concat(singleMagazineOrSubscription?.image)}
+          src={PublicS3Url.concat(singleMagazineOrSubscription?.image)}
           alt={singleMagazineOrSubscription?.title}
           className="lg:w-1/2 w-full max-h-[25rem] object-contain object-center"
           loading="lazy"
@@ -248,9 +248,8 @@ const MagazineOrSubscriptionDetails = () => {
           )}
           {/* btn */}
           <button
-            className={`w-full gray_button h-12 ${
-              isAlreadyInCart && "cursor-not-allowed"
-            } `}
+            className={`w-full gray_button h-12 ${isAlreadyInCart && "cursor-not-allowed"
+              } `}
             onClick={() => {
               handleProductAddToCartFunction();
             }}
@@ -259,29 +258,27 @@ const MagazineOrSubscriptionDetails = () => {
             {updateOrAddLoading
               ? t("Adding").concat("...")
               : isAlreadyInCart
-              ? t("Already in cart")
-              : t("+ Add to cart")}
+                ? t("Already in cart")
+                : t("+ Add to cart")}
           </button>
         </div>
       </div>
       {/* tab btns */}
       <div className="w-full border-b-2 flex items-center gap-3 md:text-base text-sm">
         <p
-          className={`${
-            activeComponent === "description"
+          className={`${activeComponent === "description"
               ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
               : "font-medium"
-          } cursor-pointer transition-all duration-100`}
+            } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("description")}
         >
           {t("Description")}
         </p>
         <p
-          className={`${
-            activeComponent === "further_info"
+          className={`${activeComponent === "further_info"
               ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
               : "font-medium"
-          } cursor-pointer transition-all duration-100`}
+            } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
         >
           {t("Further information")}

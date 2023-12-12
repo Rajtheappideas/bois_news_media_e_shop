@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import BaseUrl from "../BaseUrl";
+import { PublicS3Url } from "../BaseUrl";
 import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
@@ -45,7 +45,7 @@ const Search = () => {
               className="flex md:flex-row flex-col items-start justify-start gap-3 w-full"
             >
               <img
-                src={BaseUrl.concat(magazine?.image)}
+                src={PublicS3Url.concat(magazine?.image)}
                 alt={magazine?.title}
                 className="md:max-w-[15rem] md:min-w-[15rem] w-full lg:h-72 h-60 object-contain object-center"
               />

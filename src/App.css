@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* hide scrollbar */
+.hide_scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* remove number arrow */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+/* customzie scrollbar ---start------- */
+
+.scrollbar::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 6px #003F7A; */
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #003f7a;
+  width: 2px;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #003f7a;
+  width: 2px;
+  border-radius: 10px;
+}
+
+/* ----------end ----------------- */
+
+/* fonts */
+html {
+  font-family: "Poppins", sans-serif;
+}
+
+/* react phone input style change */
+.react-tel-input .flag-dropdown:hover,
+.react-tel-input .selected-flag:hover,
+.react-tel-input .selected-flag:focus,
+.react-tel-input .flag-dropdown.open,
+.react-tel-input .flag-dropdown.open .selected-flag {
+  background-color: #efefef !important;
+}
+
+.active {
+  background-color: #003f7a;
+  color: white;
+  font-weight: 600;
+}
+
+/* my custom class */
+.error {
+  @apply text-red-600 font-medium text-sm capitalize;
+}
+
+.gray_button {
+  @apply bg-darkGray md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-darkGray/70 active:scale-95 transition duration-100;
+}
+
+.light_gray_button {
+  @apply bg-gray-300 md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-gray-400 active:scale-95 transition duration-100;
+}
+
+.blue_button {
+  @apply bg-darkBlue md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-darkBlue/70 active:scale-95 transition duration-100;
+}
+
+.black_button {
+  @apply bg-black md:text-base text-sm text-white md:min-w-[7rem] rounded-lg text-center p-2 hover:bg-black/70 active:scale-95 transition duration-100;
+}
+
+Label {
+  @apply text-black capitalize font-medium block text-left md:text-lg text-sm;
+}
+
+.gray_input_field {
+  @apply outline-none w-full rounded-md bg-lightGray border border-gray-300 p-2.5 focus:border-gray-400 focus:border-2;
+}
+
+.input_field {
+  @apply outline-none w-full rounded-md border bg-lightGray bg-opacity-30 border-gray-300 p-2.5 focus:border-gray-400 focus:border-2;
+}
+
+.Container {
+  @apply container xl:px-3 lg:px-10 md:px-5 px-3 mx-auto;
+}
+
+.heading {
+  @apply 2xl:text-4xl xl:text-2xl md:text-xl font-semibold tracking-normal;
+}
+
+.magazine_img {
+  @apply lg:w-1/4 md:w-1/3 w-full 2xl:h-[30rem] lg:h-96 h-80 object-contain object-center;
+}
+
+.magazine_img_title {
+  @apply lg:w-1/6 md:w-1/4 w-1/3 h-fit object-contain object-center mx-auto;
+}
+
+.otp_Field {
+  @apply rounded-lg border font-bold md:text-base text-sm border-gray-300 md:h-12 md:w-12 h-8 w-8 outline-none text-center;
+}
+
+.loading {
+  @apply md:text-2xl text-center w-full font-semibold;
+}

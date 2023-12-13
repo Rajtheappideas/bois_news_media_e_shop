@@ -46,7 +46,6 @@ const Download = () => {
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      setDownloadLink(url);
 
       // Create a temporary link and trigger a click to start the download
       const a = document.createElement('a');

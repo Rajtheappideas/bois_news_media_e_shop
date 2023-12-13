@@ -11,6 +11,7 @@ const Download = () => {
   const [pageNumber, setPageNumber] = useState(0);
 
   const { downloads, loading } = useSelector((state) => state.root.cart);
+  const { token } = useSelector((state) => state.root.auth);
 
   const { t } = useTranslation();
 
@@ -25,6 +26,40 @@ const Download = () => {
   const changePage = ({ selected }) => {
     setPageNumber(selected);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleMagazineDownload = async (pdfPath) => {
+    try {
+      const response = await fetch(`${BaseUrl}/api/user/download/${pdfPath}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Failed to download file:', response.statusText);
+        // Handle the error, show a message, etc.
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      setDownloadLink(url);
+
+      // Create a temporary link and trigger a click to start the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = pdfPath; // Use the provided file name
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      // Handle the error, show a message, etc.
+    }
   };
 
   return (
@@ -59,16 +94,9 @@ const Download = () => {
                       </td>
 
                       <td className="md:p-4 p-3 font-medium text-center">
-                        <a
-                          // TODO : Move to protected route to checkright
-                          href={BaseUrl.concat(magazine?.pdf)}
-                          target="_blank"
-                          download
-                        >
-                          <button className="uppercase gray_button">
-                            {t("download")}
-                          </button>
-                        </a>
+                        <button onClick={() => handleMagazineDownload(magazine?.pdf)} className="uppercase gray_button">
+                          {t("download")}
+                        </button>
                       </td>
                     </tr>
                   ))}

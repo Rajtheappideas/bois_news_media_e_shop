@@ -15,7 +15,6 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-// const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK_TEST);
 
 const Checkout = () => {
   const [activeComponent, setActiveComponent] = useState("checkout_form");

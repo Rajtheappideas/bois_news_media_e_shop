@@ -47,14 +47,15 @@ const MagazineOrSubscriptionDetails = () => {
   function priceForMagazineAndSubscription() {
     if (!selectedTypeOfSupport) return;
     if (selectedTypeOfSupport === "digital") {
-      return parseFloat(singleMagazineOrSubscription?.price);
+      return parseFloat(singleMagazineOrSubscription?.priceDigital);
     } else {
       if (singleMagazineOrSubscription?.magazineId) {
         return (
-          parseFloat(singleMagazineOrSubscription?.price) * parseFloat(quantity)
+          parseFloat(singleMagazineOrSubscription?.pricePaper) *
+          parseFloat(quantity)
         );
       }
-      return parseFloat(singleMagazineOrSubscription?.price);
+      return parseFloat(singleMagazineOrSubscription?.pricePaper);
     }
   }
 
@@ -64,7 +65,7 @@ const MagazineOrSubscriptionDetails = () => {
     if (e.target.value < 1) {
       setQuantity(1);
       return toast.error(
-        "quantity should not less than 1 and value should be valid"
+        "quantity should not less than 1 and value should be valid",
       );
     }
     setQuantity(e.target.value.replace(/\b0+/g, ""));
@@ -90,13 +91,13 @@ const MagazineOrSubscriptionDetails = () => {
           id: singleMagazineOrSubscription?._id,
           token,
           signal: AbortControllerRef,
-        })
+        }),
       );
       if (response) {
         response.then((res) => {
           if (res?.payload?.status === "success") {
             toast.success(
-              `${singleMagazineOrSubscription?.title} Added to cart.`
+              `${singleMagazineOrSubscription?.title} Added to cart.`,
             );
           }
         });
@@ -111,13 +112,13 @@ const MagazineOrSubscriptionDetails = () => {
           id: singleMagazineOrSubscription?._id,
           token,
           signal: AbortControllerRef,
-        })
+        }),
       );
       if (response) {
         response.then((res) => {
           if (res?.payload?.status === "success") {
             toast.success(
-              `${singleMagazineOrSubscription?.title} Added to cart.`
+              `${singleMagazineOrSubscription?.title} Added to cart.`,
             );
           }
         });
@@ -128,8 +129,8 @@ const MagazineOrSubscriptionDetails = () => {
   useEffect(() => {
     setSimilarMagazines(
       allMagazinesAndSubscriptions.filter((m) =>
-        m?.magazineTitle.includes(singleMagazineOrSubscription?.magazineTitle)
-      )
+        m?.magazineTitle.includes(singleMagazineOrSubscription?.magazineTitle),
+      ),
     );
   }, [singleMagazineOrSubscription, selectedTypeOfSupport]);
 
@@ -162,12 +163,12 @@ const MagazineOrSubscriptionDetails = () => {
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
             {singleMagazineOrSubscription?.title}
           </p>
-          <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
+          {/* <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
             {t("Price")} €&nbsp;
             {Intl.NumberFormat("en-US", {
               minimumFractionDigits: 2,
-            }).format(singleMagazineOrSubscription?.price)}
-          </p>
+            }).format(singleMagazineOrSubscription?.pricePaper)}
+          </p> */}
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm md:whitespace-nowrap">
@@ -259,8 +260,8 @@ const MagazineOrSubscriptionDetails = () => {
             {updateOrAddLoading
               ? t("Adding").concat("...")
               : isAlreadyInCart
-              ? t("Already in cart")
-              : t("+ Add to cart")}
+                ? t("Already in cart")
+                : t("+ Add to cart")}
           </button>
         </div>
       </div>

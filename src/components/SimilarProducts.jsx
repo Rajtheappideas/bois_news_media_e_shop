@@ -32,7 +32,7 @@ const SimilarProducts = ({ similarMagazines }) => {
       handleChangeSingleMagazineOrSubscription({
         id,
         type,
-      })
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => {
@@ -89,7 +89,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               onClick={() =>
                 handleDispatchAction(
                   magazine?.magazineId ? "magazine" : "subscription",
-                  magazine?._id
+                  magazine?._id,
                 )
               }
               className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer md:border-0 md:p-0 p-3`}
@@ -105,7 +105,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                {t("From")} € {magazine?.price}
+                {t("From")} € {magazine?.pricePaper}
               </p>
             </div>
           </SwiperSlide>

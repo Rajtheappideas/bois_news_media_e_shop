@@ -18,7 +18,7 @@ export const handleGetCart = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleAddMagazineToCart = createAsyncThunk(
@@ -40,7 +40,7 @@ export const handleAddMagazineToCart = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleAddSubscriptionToCart = createAsyncThunk(
@@ -62,7 +62,7 @@ export const handleAddSubscriptionToCart = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleUpdateCart = createAsyncThunk(
@@ -84,7 +84,7 @@ export const handleUpdateCart = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleRemoveFromCart = createAsyncThunk(
@@ -105,7 +105,7 @@ export const handleRemoveFromCart = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleGetTaxAndShipping = createAsyncThunk(
@@ -119,7 +119,7 @@ export const handleGetTaxAndShipping = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleGetOrders = createAsyncThunk(
@@ -135,7 +135,7 @@ export const handleGetOrders = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleGetDownloads = createAsyncThunk(
@@ -151,7 +151,7 @@ export const handleGetDownloads = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleApplyPromoCode = createAsyncThunk(
@@ -173,7 +173,7 @@ export const handleApplyPromoCode = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleCreatePaymentIntent = createAsyncThunk(
@@ -191,7 +191,7 @@ export const handleCreatePaymentIntent = createAsyncThunk(
       token,
       signal,
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       signal.current = new AbortController();
@@ -218,7 +218,7 @@ export const handleCreatePaymentIntent = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 export const handleCreateOrder = createAsyncThunk(
@@ -242,7 +242,7 @@ export const handleCreateOrder = createAsyncThunk(
         return rejectWithValue(error?.response?.data);
       }
     }
-  }
+  },
 );
 
 const initialState = {
@@ -317,7 +317,15 @@ const CartSlice = createSlice({
   reducers: {
     handleCalculateTotal: (state, { payload }) => {
       const subtotal = state.cart.reduce((acc, cur) => {
-        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+        if (cur?.support === "paper") {
+          return (
+            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+          );
+        } else {
+          return (
+            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          );
+        }
       }, 0);
       if (subtotal !== NaN && typeof subtotal === "number") {
         if (state.promoCode !== null && state.isPromoCodeApplied) {
@@ -329,7 +337,7 @@ const CartSlice = createSlice({
             parseFloat(
               (parseInt(state.promoCode?.discountPercentage) *
                 parseInt(state.subTotal)) /
-                100
+                100,
             ).toFixed(2);
 
           if (total <= 0) {
@@ -349,7 +357,15 @@ const CartSlice = createSlice({
 
     handleCalculateSubTotal: (state, { payload }) => {
       const subTotal = state.cart.reduce((acc, cur) => {
-        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+        if (cur?.support === "paper") {
+          return (
+            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+          );
+        } else {
+          return (
+            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          );
+        }
       }, 0);
       if (subTotal !== NaN && typeof subTotal === "number") {
         state.subTotal = subTotal;
@@ -368,7 +384,7 @@ const CartSlice = createSlice({
           price,
           title,
         },
-      }
+      },
     ) => {
       const alreadyInCart = state.cart.find((product) => product?._id === _id);
       if (alreadyInCart) {
@@ -394,7 +410,7 @@ const CartSlice = createSlice({
     handleUpdateProductToCart: (state, { payload }) => {
       const updatedArr = state.cart.map((product) => {
         const updated = payload.find(
-          (updatedProduct) => updatedProduct._id === product._id
+          (updatedProduct) => updatedProduct._id === product._id,
         );
         return updated ? { ...product, quantity: updated?.quantity } : product;
       });
@@ -407,7 +423,7 @@ const CartSlice = createSlice({
 
     handleRemoveProductFromCart: (state, { payload }) => {
       const updatedProduct = state.cart.filter(
-        (product) => product?._id !== payload
+        (product) => product?._id !== payload,
       );
       if (updatedProduct) {
         state.cart = updatedProduct;
@@ -489,14 +505,14 @@ const CartSlice = createSlice({
         state.updateOrAddLoading = false;
         state.cart = payload?.cart?.items;
         state.error = null;
-      }
+      },
     );
     builder.addCase(
       handleAddSubscriptionToCart.rejected,
       (state, { payload }) => {
         state.updateOrAddLoading = false;
         state.error = payload ?? null;
-      }
+      },
     );
 
     // remove from cart
@@ -539,14 +555,14 @@ const CartSlice = createSlice({
       (state, { payload }) => {
         state.checkoutLoading = false;
         state.error = null;
-      }
+      },
     );
     builder.addCase(
       handleCreatePaymentIntent.rejected,
       (state, { payload }) => {
         state.checkoutLoading = false;
         state.error = payload ?? null;
-      }
+      },
     );
 
     // create order

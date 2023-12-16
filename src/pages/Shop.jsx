@@ -36,7 +36,7 @@ const Shop = () => {
   const pageVisited = pageNumber * magazinesPerPage;
   let displayMagazines = showMagazines.slice(
     pageVisited,
-    magazinesPerPage + pageVisited
+    magazinesPerPage + pageVisited,
   );
   const pageCount = Math.ceil(showMagazines.length / magazinesPerPage);
   const changePage = ({ selected }) => {
@@ -55,10 +55,10 @@ const Shop = () => {
       !showMagazines
         ? 0
         : showMagazines?.length < magazinesPerPage
-        ? showMagazines?.length
-        : magazinesPerPage * (pageNumber + 1) > showMagazines?.length
-        ? showMagazines?.length
-        : magazinesPerPage * (pageNumber + 1)
+          ? showMagazines?.length
+          : magazinesPerPage * (pageNumber + 1) > showMagazines?.length
+            ? showMagazines?.length
+            : magazinesPerPage * (pageNumber + 1)
     } of ${showMagazines?.length ?? 0} results`;
   }
 
@@ -80,7 +80,7 @@ const Shop = () => {
     } else if (activeCategory === "boismag") {
       if (magazines.length > 0) {
         const updatedMagazines = magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("boismag")
+          magazine?.magazineTitle.includes("boismag"),
         );
         setShowMagazines(updatedMagazines);
         handleFilter(updatedMagazines);
@@ -90,7 +90,7 @@ const Shop = () => {
     } else if (activeCategory === "agenceur") {
       if (magazines.length > 0) {
         const updatedMagazines = magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("agenceur")
+          magazine?.magazineTitle.includes("agenceur"),
         );
         setShowMagazines(updatedMagazines);
         handleFilter(updatedMagazines);
@@ -100,7 +100,7 @@ const Shop = () => {
     } else if (activeCategory === "artisans_and_bois") {
       if (magazines.length > 0) {
         const updatedMagazines = magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("artisans_and_bois")
+          magazine?.magazineTitle.includes("artisans_and_bois"),
         );
         setShowMagazines(updatedMagazines);
         handleFilter(updatedMagazines);
@@ -110,7 +110,7 @@ const Shop = () => {
     } else if (activeCategory === "toiture") {
       if (magazines.length > 0) {
         const updatedMagazines = magazines.filter((magazine) =>
-          magazine?.magazineTitle.includes("toiture")
+          magazine?.magazineTitle.includes("toiture"),
         );
         setShowMagazines(updatedMagazines);
         handleFilter(updatedMagazines);
@@ -127,12 +127,12 @@ const Shop = () => {
       return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {
       const highToLow = items?.slice().sort((a, b) => {
-        return b.price - a.price;
+        return b.pricePaper - a.pricePaper;
       });
       return setShowMagazines(highToLow);
     } else if (activeFilter === "low_to_high") {
       const lowToHigh = items?.slice().sort((a, b) => {
-        return a.price - b.price;
+        return a.pricePaper - b.pricePaper;
       });
       return setShowMagazines(lowToHigh);
     }
@@ -146,6 +146,8 @@ const Shop = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  // console.log(magazines);
 
   return (
     <>

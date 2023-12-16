@@ -26,7 +26,7 @@ const MagazineCard = ({ data, from }) => {
       handleChangeSingleMagazineOrSubscription({
         id: data?._id,
         type: data?.magazineId ? "magazine" : "subscription",
-      })
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => {
@@ -64,7 +64,7 @@ const MagazineCard = ({ data, from }) => {
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
-              {t("From")} € {data?.price}
+              {t("From")} € {data?.pricePaper}
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ const MagazineCard = ({ data, from }) => {
 
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-              {t("From")} € {data?.price}
+              {t("From")} € {data?.pricePaper}
             </p>
           )}
         </div>

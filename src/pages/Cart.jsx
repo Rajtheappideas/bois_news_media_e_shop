@@ -39,7 +39,7 @@ const Cart = () => {
   const [promoCodeText, setPromoCodeText] = useState("");
 
   const { user, token, addresses, addressLoading } = useSelector(
-    (state) => state.root.auth
+    (state) => state.root.auth,
   );
   const {
     cart,
@@ -102,7 +102,7 @@ const Cart = () => {
         zipCode,
         token,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -122,7 +122,7 @@ const Cart = () => {
         products: productsToUpdate,
         token,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -142,7 +142,7 @@ const Cart = () => {
         code: promoCodeText,
         token,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -187,24 +187,24 @@ const Cart = () => {
 
   function calculateShipping() {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
+      (country) => country.toLocaleLowerCase(),
     );
     if (
       convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
+        addresses?.shippingAddress?.country.toLocaleLowerCase(),
       )
     ) {
       dispatch(
         handleChangeShipping(
-          parseInt(shippingPricing?.EEC_Switzerland_Overseas)
-        )
+          parseInt(shippingPricing?.EEC_Switzerland_Overseas),
+        ),
       );
       return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
     } else if (
       addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
     ) {
       dispatch(
-        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
+        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance)),
       );
       return parseInt(shippingPricing?.MetropolitanFrance);
     } else {
@@ -215,7 +215,7 @@ const Cart = () => {
 
   function calculateTax() {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
+      (country) => country.toLocaleLowerCase(),
     );
     if (subTotal === 0) return;
     if (promoCode?.discountPercentage == 100) {
@@ -224,7 +224,7 @@ const Cart = () => {
     }
     if (
       convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
+        addresses?.shippingAddress?.country.toLocaleLowerCase(),
       )
     ) {
       if (!promoCodeDiscount) {
@@ -232,8 +232,8 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
-          )
+              100,
+          ),
         );
         return (
           (parseInt(parseInt(subTotal) - discount) *
@@ -245,8 +245,8 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
-          )
+              100,
+          ),
         );
         return (
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
@@ -262,8 +262,8 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.MetropolitanFrance)) /
-              100
-          )
+              100,
+          ),
         );
 
         return (
@@ -276,8 +276,8 @@ const Cart = () => {
         handleChangeTax(
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
-            100
-        )
+            100,
+        ),
       );
 
       return (
@@ -291,8 +291,8 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
-              100
-          )
+              100,
+          ),
         );
 
         return (
@@ -305,8 +305,8 @@ const Cart = () => {
         handleChangeTax(
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
-            100
-        )
+            100,
+        ),
       );
 
       return (
@@ -319,7 +319,16 @@ const Cart = () => {
 
   function calculateSubTotal() {
     const subTotal = cart.reduce((acc, cur) => {
-      return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+      console.log(cur);
+      if (cur?.support == "paper") {
+        return (
+          acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+        );
+      } else {
+        return (
+          acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+        );
+      }
     }, 0);
     if (subTotal !== NaN && typeof subTotal === "number") {
       return subTotal;
@@ -333,12 +342,13 @@ const Cart = () => {
       handleChangePromoCodeDiscount(
         parseFloat(
           (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) /
-            100
-        ).toFixed(2)
-      )
+            100,
+        ).toFixed(2),
+      ),
     );
     return parseFloat(
-      (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) / 100
+      (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) /
+        100,
     ).toFixed(2);
   }
 
@@ -380,12 +390,12 @@ const Cart = () => {
     let findCountry = "";
     if (selectedCountry === "") {
       findCountry = Country.getAllCountries().find(
-        (c) => c.name === addresses?.shippingAddress?.country
+        (c) => c.name === addresses?.shippingAddress?.country,
       );
       setSelectedCountry(findCountry?.name);
     }
     findCountry = Country.getAllCountries().find(
-      (c) => c.name === getValues("country")
+      (c) => c.name === getValues("country"),
     );
     if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
       resetField("province", "");
@@ -397,6 +407,7 @@ const Cart = () => {
     }
   }, [watch("country")]);
 
+  console.log(cart);
   return (
     <>
       <Helmet>
@@ -473,8 +484,8 @@ const Cart = () => {
                     {isPromoCodeApplied
                       ? "Applied"
                       : promoCodeLoading
-                      ? t("Applying").concat("...")
-                      : t("Apply Promo code")}
+                        ? t("Applying").concat("...")
+                        : t("Apply Promo code")}
                   </button>
                   {isPromoCodeApplied && (
                     <AiOutlineClose
@@ -519,9 +530,7 @@ const Cart = () => {
                     }).format(parseFloat(subTotal))}
                   </p>
                   {/* tax */}
-                  <p>
-                    €&nbsp;{calculateTax()}
-                  </p>
+                  <p>€&nbsp;{calculateTax()}</p>
                   {/* address */}
                   <div className="text-darkGray font-semibold space-y-3">
                     {/* address */}
@@ -629,20 +638,19 @@ const Cart = () => {
                 <div>
                   {discount !== 0 && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                    
-                        € -&nbsp;
-                        {Intl.NumberFormat("en-US", {
-                          maximumFractionDigits: 3,
-                        }).format(calculateDiscount())}
+                      € -&nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(calculateDiscount())}
                     </p>
                   )}
                   {isPromoCodeApplied && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                        € -&nbsp;
-                        {Intl.NumberFormat("en-US", {
-                          maximumFractionDigits: 3,
-                        }).format(promoCodeDiscount)}{" "}
-                        ({promoCode?.discountPercentage}%) off
+                      € -&nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(promoCodeDiscount)}{" "}
+                      ({promoCode?.discountPercentage}%) off
                     </p>
                   )}
                   <p className="font-medium md:text-base text-sm text-right text-black">

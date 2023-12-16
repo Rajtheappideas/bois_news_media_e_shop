@@ -16,7 +16,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
   const [quantity, setQuantity] = useState(null);
 
   const { token } = useSelector((s) => s.root.auth);
-  const { cart} = useSelector((s) => s.root.cart);
+  const { cart } = useSelector((s) => s.root.cart);
 
   const dispatch = useDispatch();
 
@@ -29,24 +29,24 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
     if (e.target.value < 1) {
       setQuantity(product?.quantity);
       const removeFromProdcutsToUpdate = productsToUpdate.filter(
-        (p) => p?._id !== product?._id
+        (p) => p?._id !== product?._id,
       );
       setProductsToUpdate(removeFromProdcutsToUpdate);
       return toast.error(
-        t("quantity should not less than 1 and value should be valid")
+        t("quantity should not less than 1 and value should be valid"),
       );
     }
 
     const alreadyInArr = productsToUpdate.find(
-      (p) => p?.itemId === product?.itemId?._id
+      (p) => p?.itemId === product?.itemId?._id,
     );
     if (alreadyInArr) {
       setProductsToUpdate(
         productsToUpdate.map((p) =>
           product?.itemId?._id === p?.itemId
             ? { ...p, quantity: parseFloat(e.target.value) }
-            : p
-        )
+            : p,
+        ),
       );
     } else {
       setProductsToUpdate([
@@ -63,7 +63,7 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
         token,
         id: product?.itemId?._id,
         signal: AbortControllerRef,
-      })
+      }),
     );
     if (response) {
       response.then((res) => {
@@ -108,13 +108,17 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       </td>
       <td className="text-center p-4 whitespace-nowrap font-semibold">
         € &nbsp;
-        {Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-        }).format(product?.itemId?.price)}
+        {product?.support == "paper"
+          ? Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(product?.itemId?.pricePaper)
+          : Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(product?.itemId?.priceDigital)}
       </td>
       {/* input field */}
 
-      {product?.itemType === "Magazine" && product?.support==="paper" ? (
+      {product?.itemType === "Magazine" && product?.support === "paper" ? (
         <td className="text-center p-4">
           <input
             type="number"
@@ -130,11 +134,19 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       )}
       <td className="p-4 whitespace-nowrap text-right font-semibold">
         €&nbsp;
-        {Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-        }).format(
-          parseFloat(product?.itemId?.price) * parseFloat(product?.quantity)
-        )}
+        {product?.support == "paper"
+          ? Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(
+              parseFloat(product?.itemId?.pricePaper) *
+                parseFloat(product?.quantity),
+            )
+          : Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 2,
+            }).format(
+              parseFloat(product?.itemId?.priceDigital) *
+                parseFloat(product?.quantity),
+            )}
       </td>
     </tr>
   );

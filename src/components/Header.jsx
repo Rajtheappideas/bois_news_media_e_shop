@@ -119,7 +119,7 @@ const Header = () => {
       }
     });
     return () => {
-      window.removeEventListener("resize", () => {});
+      window.removeEventListener("resize", () => { });
     };
   }, [openSidebar, window.innerWidth]);
 
@@ -154,17 +154,15 @@ const Header = () => {
             >
               {userLanguage}{" "}
               <BsChevronDown
-                className={`inline-block ml-1 ${
-                  showDropdown ? "rotate-180" : "rotate-0"
-                } transition-all duration-100`}
+                className={`inline-block ml-1 ${showDropdown ? "rotate-180" : "rotate-0"
+                  } transition-all duration-100`}
                 size={15}
               />
             </p>
             <div
               ref={dropDownRef}
-              className={`absolute z-10 -bottom-14 left-5 w-32 transition-all duration-100 ${
-                showDropdown ? "scale-100" : "scale-0"
-              } origin-top-left p-1 space-y-1 rounded-lg drop-shadow-xl shadow-xl bg-white text-black`}
+              className={`absolute z-10 -bottom-14 left-5 w-32 transition-all duration-100 ${showDropdown ? "scale-100" : "scale-0"
+                } origin-top-left p-1 space-y-1 rounded-lg drop-shadow-xl shadow-xl bg-white text-black`}
             >
               <p
                 onClick={() => handlechangelanguage("en")}
@@ -244,11 +242,10 @@ const Header = () => {
             {/* home */}
             <Link
               to="/"
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === "home"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } `}
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${activeLink === "home"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } `}
               onClick={() => setActiveLink("home")}
             >
               {t("home")}
@@ -256,11 +253,10 @@ const Header = () => {
             {/* shop */}
             <Link
               to="/shop"
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === "shop"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } `}
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${activeLink === "shop"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } `}
               onClick={() => {
                 setActiveLink("shop");
                 dispatch(handleChangeActiveCategory("view_all"));
@@ -271,11 +267,10 @@ const Header = () => {
             </Link>
             {/* subscribe */}
             <div
-              className={`uppercase transition-all hover:bg-gray-200 hover:p-1 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${
-                activeLink === "subscribe"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } relative group`}
+              className={`uppercase transition-all hover:bg-gray-200 hover:p-1 2xl:text-xl duration-100 hover:font-semibold text-sm cursor-pointer ${activeLink === "subscribe"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } relative group`}
               onClick={() => {
                 dispatch(handleChangeActiveCategory("subscriptions"));
               }}
@@ -306,11 +301,10 @@ const Header = () => {
             {/* buy by number */}
             <div
               to="/shop"
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === "buy_by_number"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } relative group`}
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${activeLink === "buy_by_number"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } relative group`}
             >
               <Link
                 to="/shop"
@@ -359,19 +353,13 @@ const Header = () => {
             </div>
             {/* our magaziens */}
             <div
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === "our_magazines"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } relative group`}
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${activeLink === "our_magazines"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } relative group`}
             >
               <span>{t("our_magazines")}</span>
               <div className="absolute group-hover:scale-100  z-10 whitespace-nowrap font-medium transition-all duration-300 origin-top-left scale-0 top-8 left-0 space-y-2 bg-white drop-shadow-2xl rounded-lg">
-                <Link to="https://www.boisnewsmedia.com/" target="_blank">
-                  <p className="p-3 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                    {t("bois_news_media")}
-                  </p>
-                </Link>
                 <Link to="https://www.boismag.com/" target="_blank">
                   <p className="p-3 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                     {t("boismag")}
@@ -397,11 +385,10 @@ const Header = () => {
             {/* contact */}
             <Link
               to="/contact-us"
-              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${
-                activeLink === "contact"
-                  ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
-                  : "border-0 text-black font-medium"
-              } relative`}
+              className={`uppercase transition-all 2xl:text-xl duration-100 hover:font-semibold hover:bg-gray-200 hover:p-1  text-sm cursor-pointer ${activeLink === "contact"
+                ? "border-b-2 border-darkBlue text-darkBlue font-semibold"
+                : "border-0 text-black font-medium"
+                } relative`}
               onClick={() => setActiveLink("contact")}
             >
               {t("contact")}
@@ -441,9 +428,8 @@ const Header = () => {
       </div>
       {/* mobile sidebar */}
       <div
-        className={`fixed top-0 left-0 z-20 p-2 pt-10 transition-all origin-top-right duration-300 min-h-screen max-h-screen w-screen bg-white text-black ${
-          openSidebar ? "scale-100" : "scale-0"
-        }`}
+        className={`fixed top-0 left-0 z-20 p-2 pt-10 transition-all origin-top-right duration-300 min-h-screen max-h-screen w-screen bg-white text-black ${openSidebar ? "scale-100" : "scale-0"
+          }`}
       >
         <AiOutlineClose
           size={30}
@@ -453,11 +439,10 @@ const Header = () => {
         <ul className="md:w-1/2 w-[85%] md:mx-auto md:space-y-5 space-y-3 md:px-10 px-5">
           {/* home */}
           <li
-            className={`${
-              activeLink === "home"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            className={`${activeLink === "home"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 `}
           >
             <Link
               to="/"
@@ -472,11 +457,10 @@ const Header = () => {
           </li>
           {/* shop */}
           <li
-            className={`${
-              activeLink === "shop"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            className={`${activeLink === "shop"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 `}
           >
             <Link
               to="/shop"
@@ -493,18 +477,17 @@ const Header = () => {
           </li>
           {/* subscribe */}
           <li
-            className={`${
-              activeLink === "subscribe"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            className={`${activeLink === "subscribe"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 `}
           >
             <div
               className="flex justify-between items-center cursor-pointer select-none"
               onClick={() => {
                 dropDownList === "" ||
-                dropDownList === "buy_by_number" ||
-                dropDownList === "our_magazines"
+                  dropDownList === "buy_by_number" ||
+                  dropDownList === "our_magazines"
                   ? setDropDownList("subscribe")
                   : setDropDownList("");
               }}
@@ -519,17 +502,15 @@ const Header = () => {
               </p>
               <AiOutlineDown
                 size={20}
-                className={`ransition-all duration-100 cursor-pointer ease-linear ${
-                  dropDownList === "subscribe" ? "rotate-180" : "rotate-0"
-                }`}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${dropDownList === "subscribe" ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </div>
 
             {/* dropdown */}
             <div
-              className={`rounded-lg font-medium transition-all duration-300 origin-top ${
-                dropDownList === "subscribe" ? "block" : "hidden"
-              }  space-y-2 bg-gray-100`}
+              className={`rounded-lg font-medium transition-all duration-300 origin-top ${dropDownList === "subscribe" ? "block" : "hidden"
+                }  space-y-2 bg-gray-100`}
             >
               {!subscriptionLoading && subscriptions?.length > 0 && (
                 <div className="space-y-1 text-sm">
@@ -551,18 +532,17 @@ const Header = () => {
           </li>
           {/* buy by number */}
           <li
-            className={`${
-              activeLink === "buy_by_number"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 space-y-2`}
+            className={`${activeLink === "buy_by_number"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 space-y-2`}
           >
             <div
               className="flex justify-between items-center cursor-pointer select-none"
               onClick={() => {
                 dropDownList === "" ||
-                dropDownList === "subscribe" ||
-                dropDownList === "our_magazines"
+                  dropDownList === "subscribe" ||
+                  dropDownList === "our_magazines"
                   ? setDropDownList("buy_by_number")
                   : setDropDownList("");
               }}
@@ -570,16 +550,14 @@ const Header = () => {
               <p>{t("buy_by_number")}</p>
               <AiOutlineDown
                 size={20}
-                className={`ransition-all duration-100 cursor-pointer ease-linear ${
-                  dropDownList === "buy_by_number" ? "rotate-180" : "rotate-0"
-                }`}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${dropDownList === "buy_by_number" ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </div>
             {/* dropdown */}
             <div
-              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${
-                dropDownList === "buy_by_number" ? "block" : "hidden"
-              }  space-y-1 bg-gray-100`}
+              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${dropDownList === "buy_by_number" ? "block" : "hidden"
+                }  space-y-1 bg-gray-100`}
             >
               <p
                 onClick={() => {
@@ -617,18 +595,17 @@ const Header = () => {
           </li>
           {/* our mmagazines */}
           <li
-            className={`${
-              activeLink === "our_magazines"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 space-y-2`}
+            className={`${activeLink === "our_magazines"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 space-y-2`}
           >
             <div
               className="flex justify-between items-center select-none cursor-pointer"
               onClick={() => {
                 dropDownList === "" ||
-                dropDownList === "buy_by_number" ||
-                dropDownList === "subscribe"
+                  dropDownList === "buy_by_number" ||
+                  dropDownList === "subscribe"
                   ? setDropDownList("our_magazines")
                   : setDropDownList("");
               }}
@@ -636,16 +613,14 @@ const Header = () => {
               <span>our magazines</span>
               <AiOutlineDown
                 size={20}
-                className={`ransition-all duration-100 cursor-pointer ease-linear ${
-                  dropDownList === "our_magazines" ? "rotate-180" : "rotate-0"
-                }`}
+                className={`ransition-all duration-100 cursor-pointer ease-linear ${dropDownList === "our_magazines" ? "rotate-180" : "rotate-0"
+                  }`}
               />
             </div>
             {/* dropdown */}
             <div
-              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${
-                dropDownList === "our_magazines" ? "block" : "hidden"
-              }  space-y-1 bg-gray-100`}
+              className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${dropDownList === "our_magazines" ? "block" : "hidden"
+                }  space-y-1 bg-gray-100`}
             >
               <Link to="https://www.boisnewsmedia.com/" target="_blank">
                 <p className="p-2 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
@@ -676,11 +651,10 @@ const Header = () => {
           </li>
           {/* contact */}
           <li
-            className={`${
-              activeLink === "contact"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            className={`${activeLink === "contact"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 `}
           >
             <Link
               to="/contact-us"
@@ -695,11 +669,10 @@ const Header = () => {
           </li>
           {/* cart */}
           <li
-            className={`${
-              activeLink === "cart"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 `}
+            className={`${activeLink === "cart"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 `}
           >
             {user === null ? (
               <span
@@ -726,11 +699,10 @@ const Header = () => {
           </li>
           {/* search */}
           <li
-            className={`${
-              activeLink === "search"
-                ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
-                : "bg-none font-medium"
-            } uppercase transition-all duration-300 cursor-pointer`}
+            className={`${activeLink === "search"
+              ? "border-l-4 border-darkBlue font-semibold pl-4 bg-gray-100"
+              : "bg-none font-medium"
+              } uppercase transition-all duration-300 cursor-pointer`}
             onClick={() => {
               setOpenSidebar(false);
               dispatch(handleChangeShowSearch(true));

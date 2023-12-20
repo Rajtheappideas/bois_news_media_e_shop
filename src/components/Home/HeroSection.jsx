@@ -33,7 +33,7 @@ const HeroSection = () => {
               - 15 €
             </p>
             <p className="md:text-base text-xs">
-              On <br />2 {t("TRACKS")}
+              Pour <br />2 {t("TRACKS")}
             </p>
           </div>
           <div className="text-center space-y-2 text-white">
@@ -41,7 +41,7 @@ const HeroSection = () => {
               - 30 €
             </p>
             <p className="md:text-base text-xs">
-              On <br />3 {t("TRACKS")}
+              Pour <br />3 {t("TRACKS")}
             </p>
           </div>
           <div className="text-center space-y-2 text-white">
@@ -49,7 +49,7 @@ const HeroSection = () => {
               - 40 €
             </p>
             <p className="md:text-base text-xs">
-              On <br />4 {t("TRACKS")}
+              Pour <br />4 {t("TRACKS")}
             </p>
           </div>
         </div>

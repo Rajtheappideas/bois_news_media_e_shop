@@ -105,7 +105,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                {t("From")} € {magazine?.price}
+                {t("From")} € {magazine?.pricePaper}
               </p>
             </div>
           </SwiperSlide>

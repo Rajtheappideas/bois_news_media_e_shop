@@ -47,14 +47,14 @@ const MagazineOrSubscriptionDetails = () => {
   function priceForMagazineAndSubscription() {
     if (!selectedTypeOfSupport) return;
     if (selectedTypeOfSupport === "digital") {
-      return parseFloat(singleMagazineOrSubscription?.price);
+      return parseFloat(singleMagazineOrSubscription?.priceDigital);
     } else {
       if (singleMagazineOrSubscription?.magazineId) {
         return (
-          parseFloat(singleMagazineOrSubscription?.price) * parseFloat(quantity)
+          parseFloat(singleMagazineOrSubscription?.pricePaper) * parseFloat(quantity)
         );
       }
-      return parseFloat(singleMagazineOrSubscription?.price);
+      return parseFloat(singleMagazineOrSubscription?.pricePaper);
     }
   }
 

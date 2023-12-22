@@ -317,7 +317,15 @@ const CartSlice = createSlice({
   reducers: {
     handleCalculateTotal: (state, { payload }) => {
       const subtotal = state.cart.reduce((acc, cur) => {
-        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+        if (cur?.support === "paper") {
+          return (
+            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+          );
+        } else {
+          return (
+            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          );
+        }
       }, 0);
       if (subtotal !== NaN && typeof subtotal === "number") {
         if (state.promoCode !== null && state.isPromoCodeApplied) {
@@ -349,7 +357,15 @@ const CartSlice = createSlice({
 
     handleCalculateSubTotal: (state, { payload }) => {
       const subTotal = state.cart.reduce((acc, cur) => {
-        return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+        if (cur?.support === "paper") {
+          return (
+            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+          );
+        } else {
+          return (
+            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          );
+        }
       }, 0);
       if (subTotal !== NaN && typeof subTotal === "number") {
         state.subTotal = subTotal;

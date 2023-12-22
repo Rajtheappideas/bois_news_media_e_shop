@@ -319,7 +319,16 @@ const Cart = () => {
 
   function calculateSubTotal() {
     const subTotal = cart.reduce((acc, cur) => {
-      return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+      // return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
+      if (cur?.support == "paper") {
+        return (
+          acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+        );
+      } else {
+        return (
+          acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+        );
+      }
     }, 0);
     if (subTotal !== NaN && typeof subTotal === "number") {
       return subTotal;
@@ -519,9 +528,7 @@ const Cart = () => {
                     }).format(parseFloat(subTotal))}
                   </p>
                   {/* tax */}
-                  <p>
-                    €&nbsp;{calculateTax()}
-                  </p>
+                  <p>€&nbsp;{calculateTax()}</p>
                   {/* address */}
                   <div className="text-darkGray font-semibold space-y-3">
                     {/* address */}
@@ -629,20 +636,19 @@ const Cart = () => {
                 <div>
                   {discount !== 0 && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                    
-                        € -&nbsp;
-                        {Intl.NumberFormat("en-US", {
-                          maximumFractionDigits: 3,
-                        }).format(calculateDiscount())}
+                      € -&nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(calculateDiscount())}
                     </p>
                   )}
                   {isPromoCodeApplied && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
-                        € -&nbsp;
-                        {Intl.NumberFormat("en-US", {
-                          maximumFractionDigits: 3,
-                        }).format(promoCodeDiscount)}{" "}
-                        ({promoCode?.discountPercentage}%) off
+                      € -&nbsp;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 3,
+                      }).format(promoCodeDiscount)}{" "}
+                      ({promoCode?.discountPercentage}%) off
                     </p>
                   )}
                   <p className="font-medium md:text-base text-sm text-right text-black">

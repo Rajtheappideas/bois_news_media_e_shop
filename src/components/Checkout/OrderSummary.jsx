@@ -62,12 +62,19 @@ const OrderSummary = ({
               </div>
               <p className="font-medium w-1/3 text-right break-words">
                 €{" "}
-                {Intl.NumberFormat("en-US", {
-                  minimumFractionDigits: 2,
-                }).format(
-                  parseFloat(product?.itemId?.price) *
-                    parseFloat(product?.quantity)
-                )}
+                {product?.support == "paper"
+                  ? Intl.NumberFormat("en-US", {
+                      minimumFractionDigits: 2,
+                    }).format(
+                      parseFloat(product?.itemId?.pricePaper) *
+                        parseFloat(product?.quantity),
+                    )
+                  : Intl.NumberFormat("en-US", {
+                      minimumFractionDigits: 2,
+                    }).format(
+                      parseFloat(product?.itemId?.priceDigital) *
+                        parseFloat(product?.quantity),
+                    )}
               </p>
             </div>
           ))}

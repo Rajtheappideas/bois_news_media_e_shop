@@ -127,12 +127,12 @@ const Shop = () => {
       return setShowMagazines(items?.slice()?.reverse());
     } else if (activeFilter === "high_to_low") {
       const highToLow = items?.slice().sort((a, b) => {
-        return b.price - a.price;
+        return b.pricePaper - a.pricePaper;
       });
       return setShowMagazines(highToLow);
     } else if (activeFilter === "low_to_high") {
       const lowToHigh = items?.slice().sort((a, b) => {
-        return a.price - b.price;
+        return a.pricePaper - b.pricePaper;
       });
       return setShowMagazines(lowToHigh);
     }

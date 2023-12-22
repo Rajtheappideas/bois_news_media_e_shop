@@ -19,14 +19,12 @@
   "WoodPartners": "WoodPartners",
   "enter valid email": "enter valid email",
   "subscribed successfully": "subscribed successfully",
-
   "//magazine_name": "------------------magazine name-------------------",
   "boismag": "wood mag",
   "artisans_and_bois": "craftsmen & wood",
   "agenceur": "the magazine designer",
   "toiture": "roofing magazine",
   "bois_news_media": "wood news media",
-
   "//error_comment": "----------------errors----------------",
   "email is required": "email is required",
   "password is required": "password is required",
@@ -54,26 +52,22 @@
   "old password is required": "old password is required",
   "new password is required": "new password is required",
   "check the captcha.": "check the captcha.",
-
   "//sign-in": "--------------------sign-in----------------",
   "sign in successfully": "sign in successfully",
   "Login to your account": "Login to your account",
   "Register Now": "Register Now",
   "Don't have an account": "Don't have an account",
   "Forgot password": "Forgot password",
-
   "//sign-up": "--------------------signup----------------",
   "sign up successfully": "sign up successfully",
   "Create your account": "Create your account",
   "Registering": "Registering",
   "Already have an account": "Already have an account",
-
   "//forgot-password": "---------------------------forgot-passowrd----------------",
   "check your mails": "check your mails",
   "Please enter your username or email address. You will receive a link by email to create a new password.": "Please enter your username or email address. You will receive a link by email to create a new password.",
   "submitting": "submitting",
   "submit": "submit",
-
   "//otp-verify": "---------------------otp-verify----------------------",
   "please fill all the fields": "please fill all the fields",
   "OTP verified successfully": "OTP verified successfully",
@@ -85,12 +79,10 @@
   "Resend the code": "Resend the code",
   "Verifying": "Verifying",
   "Continue": "Continue",
-
   "//reset-password": "-------------------------------reset-password---------------",
   "password Reset successfully": "password Reset successfully",
   "Reset Password": "Reset Password",
   "Confirm Password": "Confirm Password",
-
   "//my-account": "----------------------my-account--------------------",
   "My Account": "My Account",
   "Profile": "Profile",
@@ -125,11 +117,10 @@
   "address added successfully.": "address added successfully.",
   "Save address": "Save address",
   "address edited successfully.": "address edited successfully.",
-  "Currnet password": "Currnet password",
+  "Current password": "Current password",
   "New password": "New password",
   "confirm password": "confirm password",
   "My-account": "My-account",
-
   "//home": "--------------------------home------------------------------",
   "SUBSCRIBE TO": "SUBSCRIBE TO",
   "MULTIPLE MAGAZINES": "MULTIPLE MAGAZINES",
@@ -141,12 +132,10 @@
   "PURCHASE BY NUMBER": "PURCHASE BY NUMBER",
   "Discover previous issues": "Discover previous issues",
   "SEE OTHER ISSUES": "SEE OTHER ISSUES",
-
   "//contactUs": "---------------------------contact us--------------------",
   "Contact us": "Contact us",
   "Comments": "Comments",
   "Send": "Send",
-
   "//shop": "-----------------------------------shop---------------------",
   "quantity should not less than 1 and value should be valid": "quantity should not less than 1 and value should be valid",
   "From": "From",
@@ -156,6 +145,7 @@
   "Metropolitan France": "Metropolitan France",
   "Quantity": "Quantity",
   "Price": "Price",
+  "Starting From": "Starting From",
   "Already in cart": "Already in cart",
   "+ Add to cart": "+ Add to cart",
   "Description": "Description",
@@ -172,7 +162,6 @@
   "High to Low": "High to Low",
   "Low to High": "Low to High",
   "Shop": "Shop",
-
   "//cart": "---------------------------cart-------------------------",
   "No Subscriptions or Magazines here": "No Subscriptions or Magazines here",
   "Subtotal": "Subtotal",
@@ -184,7 +173,6 @@
   "place order": "place order",
   "Your cart is empty": "Your cart is empty",
   "Cart": "Cart",
-
   "//checkout": "------------------------------checkout-------------------",
   "Billing Information": "Billing Information",
   "First name": "First name",
@@ -207,14 +195,12 @@
   "Your order has been received.": "Your order has been received.",
   "continue shopping": "continue shopping",
   "Checkout": "Checkout",
-
   "//search": "------------------------search-----------------------",
   "Search": "Search",
   "Search result found": "Search result found",
   "Read more": "Read more",
   "No Magazines or Subscription here, Search magazines or subscription": "No Magazines or Subscription here, Search magazines or subscription",
   "Magazine not found": "Magazine not found",
-
   "//common_comment": "----------------common----------------",
   "loading": "Loading",
   "E-mail": "E-mail",

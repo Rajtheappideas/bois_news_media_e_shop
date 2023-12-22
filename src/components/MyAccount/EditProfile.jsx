@@ -221,7 +221,7 @@ const EditProfile = ({ setshowEditProfile }) => {
           }}
           render={({ field: { onChange, value } }) => (
             <PhoneInput
-              country={"in"}
+              country={"fr"}
               onChange={(value) => {
                 onChange((e) => {
                   setValue("phone", "+".concat(value));
@@ -263,7 +263,7 @@ const EditProfile = ({ setshowEditProfile }) => {
           }}
           render={({ field: { onChange, value } }) => (
             <PhoneInput
-              country={"in"}
+              country={"fr"}
               onChange={(value) => {
                 onChange((e) => {
                   setValue("mobile", "+".concat(value));

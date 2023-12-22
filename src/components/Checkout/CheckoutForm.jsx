@@ -381,7 +381,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-                100
+              100
             )
           );
           return (
@@ -394,7 +394,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
                 parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-                100
+              100
             )
           );
           return (
@@ -411,7 +411,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.MetropolitanFrance)) /
-                100
+              100
             )
           );
 
@@ -425,7 +425,7 @@ const CheckoutForm = ({
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.MetropolitanFrance)) /
-              100
+            100
           )
         );
 
@@ -440,7 +440,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.RestOfTheWorld)) /
-                100
+              100
             )
           );
 
@@ -454,7 +454,7 @@ const CheckoutForm = ({
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
-              100
+            100
           )
         );
 
@@ -483,7 +483,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-                100
+              100
             )
           );
           return (
@@ -496,7 +496,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
                 parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-                100
+              100
             )
           );
           return (
@@ -513,7 +513,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.MetropolitanFrance)) /
-                100
+              100
             )
           );
 
@@ -527,7 +527,7 @@ const CheckoutForm = ({
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.MetropolitanFrance)) /
-              100
+            100
           )
         );
 
@@ -542,7 +542,7 @@ const CheckoutForm = ({
             handleChangeTax(
               (parseInt(parseInt(subTotal) - discount) *
                 parseInt(taxPricing?.RestOfTheWorld)) /
-                100
+              100
             )
           );
 
@@ -556,7 +556,7 @@ const CheckoutForm = ({
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
-              100
+            100
           )
         );
 
@@ -759,7 +759,7 @@ const CheckoutForm = ({
               }}
               render={({ field: { onChange, value } }) => (
                 <PhoneInput
-                  country={"in"}
+                  country={"fr"}
                   onChange={(value) => {
                     onChange((e) => {
                       setValue("phone", "+".concat(value));

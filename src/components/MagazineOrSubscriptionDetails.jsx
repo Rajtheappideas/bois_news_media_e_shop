@@ -163,10 +163,10 @@ const MagazineOrSubscriptionDetails = () => {
             {singleMagazineOrSubscription?.title}
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            {t("Price")} €&nbsp;
+            {t("Starting From")} €&nbsp;
             {Intl.NumberFormat("en-US", {
               minimumFractionDigits: 2,
-            }).format(singleMagazineOrSubscription?.price)}
+            }).format(singleMagazineOrSubscription?.priceDigital)}
           </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
@@ -267,8 +267,8 @@ const MagazineOrSubscriptionDetails = () => {
       <div className="w-full border-b-2 flex items-center gap-3 md:text-base text-sm">
         <p
           className={`${activeComponent === "description"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
-              : "font-medium"
+            ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
+            : "font-medium"
             } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("description")}
         >
@@ -276,8 +276,8 @@ const MagazineOrSubscriptionDetails = () => {
         </p>
         <p
           className={`${activeComponent === "further_info"
-              ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
-              : "font-medium"
+            ? "text-darkBlue font-semibold border-b-2 border-darkBlue bg-gray-100 p-1"
+            : "font-medium"
             } cursor-pointer transition-all duration-100`}
           onClick={() => setActiveComponent("further_info")}
         >

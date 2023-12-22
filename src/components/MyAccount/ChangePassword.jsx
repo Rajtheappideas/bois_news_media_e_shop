@@ -69,7 +69,7 @@ const ChangePassword = () => {
       {/* curr password */}
       <div className="space-y-2 relative">
         <label htmlFor="" className="Label">
-          {t("Currnet password")}
+          {t("Current password")}
         </label>
         <input
           type={showOldPassword ? "text" : "password"}

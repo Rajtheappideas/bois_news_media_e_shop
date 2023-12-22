@@ -204,7 +204,7 @@ const ContactUs = () => {
                 }}
                 render={({ field: { onChange, value } }) => (
                   <PhoneInput
-                    country={"in"}
+                    country={"fr"}
                     onChange={(value) => {
                       onChange((e) => {
                         setValue("phone", "+".concat(value));

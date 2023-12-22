@@ -109,12 +109,12 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       <td className="text-center p-4 whitespace-nowrap font-semibold">
         € &nbsp;
         {product?.support == "paper"
-          ? Intl.NumberFormat("en-US", {
-              minimumFractionDigits: 2,
-            }).format(product?.itemId?.pricePaper)
-          : Intl.NumberFormat("en-US", {
-              minimumFractionDigits: 2,
-            }).format(product?.itemId?.priceDigital)}
+          ? Intl.NumberFormat("fr-FR", {
+            minimumFractionDigits: 2,
+          }).format(product?.itemId?.pricePaper)
+          : Intl.NumberFormat("fr-FR", {
+            minimumFractionDigits: 2,
+          }).format(product?.itemId?.priceDigital)}
       </td>
       {/* input field */}
 
@@ -135,18 +135,18 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
       <td className="p-4 whitespace-nowrap text-right font-semibold">
         €&nbsp;
         {product?.support == "paper"
-          ? Intl.NumberFormat("en-US", {
-              minimumFractionDigits: 2,
-            }).format(
-              parseFloat(product?.itemId?.pricePaper) *
-                parseFloat(product?.quantity)
-            )
-          : Intl.NumberFormat("en-US", {
-              minimumFractionDigits: 2,
-            }).format(
-              parseFloat(product?.itemId?.priceDigital) *
-                parseFloat(product?.quantity)
-            )}
+          ? Intl.NumberFormat("fr-FR", {
+            minimumFractionDigits: 2,
+          }).format(
+            parseFloat(product?.itemId?.pricePaper) *
+            parseFloat(product?.quantity)
+          )
+          : Intl.NumberFormat("fr-FR", {
+            minimumFractionDigits: 2,
+          }).format(
+            parseFloat(product?.itemId?.priceDigital) *
+            parseFloat(product?.quantity)
+          )}
       </td>
     </tr>
   );

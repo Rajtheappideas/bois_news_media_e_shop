@@ -64,7 +64,7 @@ const Orders = () => {
                           </td>
                           <td className="md:p-4 p-3 font-medium text-center whitespace-nowrap">
                             €&nbsp;
-                            {Intl.NumberFormat("en-US", {
+                            {Intl.NumberFormat("fr-FR", {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             }).format(order?.total)}{" "}

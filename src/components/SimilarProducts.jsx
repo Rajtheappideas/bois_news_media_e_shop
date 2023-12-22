@@ -105,7 +105,9 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                {t("From")} € {magazine?.pricePaper}
+                {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
+                  minimumFractionDigits: 2,
+                }).format(magazine?.priceDigital)}
               </p>
             </div>
           </SwiperSlide>

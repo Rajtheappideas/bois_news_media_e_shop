@@ -64,7 +64,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
             <div className="text-right md:text-base text-sm">
               {" "}
               €&nbsp;
-              {Intl.NumberFormat("en-US", {
+              {Intl.NumberFormat("fr-FR", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               }).format(parseFloat(item?.quantity) * parseFloat(item?.price))}
@@ -76,7 +76,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>{t("Sub Total")}</p>
           <p>
             €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }).format(parseFloat(singleOrder?.subtotal))}
@@ -89,7 +89,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>
             {" "}
             €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }).format(parseFloat(singleOrder?.shipping))}
@@ -101,7 +101,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>{t("Tax")}</p>
           <p>
             €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }).format(parseFloat(singleOrder?.tax))}
@@ -113,7 +113,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>{t("Discount")}</p>
           <p>
             €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }).format(parseFloat(singleOrder?.discount))}
@@ -132,7 +132,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>
             {" "}
             €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }).format(parseFloat(singleOrder?.total))}

@@ -164,7 +164,7 @@ const MagazineOrSubscriptionDetails = () => {
           </p>
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
             {t("Starting From")} €&nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
             }).format(singleMagazineOrSubscription?.priceDigital)}
           </p>
@@ -240,7 +240,7 @@ const MagazineOrSubscriptionDetails = () => {
               <span>{t("Price")}:</span>
               <span className="text-darkBlue">
                 €&nbsp;
-                {Intl.NumberFormat("en-US", {
+                {Intl.NumberFormat("fr-FR", {
                   minimumFractionDigits: 2,
                 }).format(priceForMagazineAndSubscription())}
               </span>

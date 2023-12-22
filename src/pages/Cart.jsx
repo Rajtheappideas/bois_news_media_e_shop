@@ -232,7 +232,7 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
+            100
           )
         );
         return (
@@ -245,7 +245,7 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
               parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-              100
+            100
           )
         );
         return (
@@ -262,7 +262,7 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.MetropolitanFrance)) /
-              100
+            100
           )
         );
 
@@ -276,7 +276,7 @@ const Cart = () => {
         handleChangeTax(
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.MetropolitanFrance)) /
-            100
+          100
         )
       );
 
@@ -291,7 +291,7 @@ const Cart = () => {
           handleChangeTax(
             (parseInt(parseInt(subTotal) - discount) *
               parseInt(taxPricing?.RestOfTheWorld)) /
-              100
+            100
           )
         );
 
@@ -305,7 +305,7 @@ const Cart = () => {
         handleChangeTax(
           (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
             parseInt(taxPricing?.RestOfTheWorld)) /
-            100
+          100
         )
       );
 
@@ -342,7 +342,7 @@ const Cart = () => {
       handleChangePromoCodeDiscount(
         parseFloat(
           (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) /
-            100
+          100
         ).toFixed(2)
       )
     );
@@ -474,16 +474,15 @@ const Cart = () => {
                       promoCodeLoading ||
                       isPromoCodeApplied
                     }
-                    className={` ${
-                      (isPromoCodeApplied || promoCodeLoading) &&
+                    className={` ${(isPromoCodeApplied || promoCodeLoading) &&
                       "cursor-not-allowed"
-                    } uppercase gray_button w-full md:min-h-[3rem]`}
+                      } uppercase gray_button w-full md:min-h-[3rem]`}
                   >
                     {isPromoCodeApplied
                       ? "Applied"
                       : promoCodeLoading
-                      ? t("Applying").concat("...")
-                      : t("Apply Promo code")}
+                        ? t("Applying").concat("...")
+                        : t("Apply Promo code")}
                   </button>
                   {isPromoCodeApplied && (
                     <AiOutlineClose
@@ -497,9 +496,8 @@ const Cart = () => {
                 <div className="w-full md:w-auto">
                   <button
                     onClick={() => handleUpdateProduct()}
-                    className={`uppercase gray_button w-auto ${
-                      productsToUpdate.length === 0 && "cursor-not-allowed"
-                    } `}
+                    className={`uppercase gray_button w-auto ${productsToUpdate.length === 0 && "cursor-not-allowed"
+                      } `}
                     disabled={
                       updateOrAddLoading || getCartLoading || promoCodeLoading
                     }
@@ -523,7 +521,7 @@ const Cart = () => {
                   {/* subtotal */}
                   <p>
                     €&nbsp;
-                    {Intl.NumberFormat("en-US", {
+                    {Intl.NumberFormat("fr-FR", {
                       minimumFractionDigits: 2,
                     }).format(parseFloat(subTotal))}
                   </p>
@@ -553,9 +551,8 @@ const Cart = () => {
                     {/* address fields */}
                     <form
                       onSubmit={handleSubmit(handleChangeAddress)}
-                      className={`${
-                        showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
-                      } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
+                      className={`${showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
+                        } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
                     >
                       <select
                         name="country"
@@ -637,7 +634,7 @@ const Cart = () => {
                   {discount !== 0 && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
                       € -&nbsp;
-                      {Intl.NumberFormat("en-US", {
+                      {Intl.NumberFormat("fr-FR", {
                         maximumFractionDigits: 3,
                       }).format(calculateDiscount())}
                     </p>
@@ -645,7 +642,7 @@ const Cart = () => {
                   {isPromoCodeApplied && (
                     <p className="font-medium md:text-base text-sm text-right text-black">
                       € -&nbsp;
-                      {Intl.NumberFormat("en-US", {
+                      {Intl.NumberFormat("fr-FR", {
                         maximumFractionDigits: 3,
                       }).format(promoCodeDiscount)}{" "}
                       ({promoCode?.discountPercentage}%) off
@@ -654,7 +651,7 @@ const Cart = () => {
                   <p className="font-medium md:text-base text-sm text-right text-black">
                     <b>
                       € &nbsp;
-                      {Intl.NumberFormat("en-US", {
+                      {Intl.NumberFormat("fr-FR", {
                         maximumFractionDigits: 3,
                       }).format(parseFloat(total))}
                     </b>

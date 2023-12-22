@@ -63,18 +63,18 @@ const OrderSummary = ({
               <p className="font-medium w-1/3 text-right break-words">
                 €{" "}
                 {product?.support == "paper"
-                  ? Intl.NumberFormat("en-US", {
-                      minimumFractionDigits: 2,
-                    }).format(
-                      parseFloat(product?.itemId?.pricePaper) *
-                        parseFloat(product?.quantity),
-                    )
-                  : Intl.NumberFormat("en-US", {
-                      minimumFractionDigits: 2,
-                    }).format(
-                      parseFloat(product?.itemId?.priceDigital) *
-                        parseFloat(product?.quantity),
-                    )}
+                  ? Intl.NumberFormat("fr-FR", {
+                    minimumFractionDigits: 2,
+                  }).format(
+                    parseFloat(product?.itemId?.pricePaper) *
+                    parseFloat(product?.quantity),
+                  )
+                  : Intl.NumberFormat("fr-FR", {
+                    minimumFractionDigits: 2,
+                  }).format(
+                    parseFloat(product?.itemId?.priceDigital) *
+                    parseFloat(product?.quantity),
+                  )}
               </p>
             </div>
           ))}
@@ -89,7 +89,7 @@ const OrderSummary = ({
           </p>
           <p className="break-words w-1/2 text-right">
             € &nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
             }).format(parseFloat(subTotal))}
           </p>
@@ -101,7 +101,7 @@ const OrderSummary = ({
           </p>
           <p className="break-words w-1/2 text-right">
             € &nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
             }).format(parseFloat(tax))}
           </p>
@@ -113,7 +113,7 @@ const OrderSummary = ({
           </p>
           <p className="break-words w-1/2 text-right">
             € &nbsp;
-            {Intl.NumberFormat("en-US", {
+            {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
             }).format(parseFloat(shipping))}
           </p>
@@ -126,7 +126,7 @@ const OrderSummary = ({
             </p>
             <p className="break-words w-1/2 text-right">
               € &nbsp;-&nbsp;
-              {Intl.NumberFormat("en-US", {
+              {Intl.NumberFormat("fr-FR", {
                 minimumFractionDigits: 2,
               }).format(parseFloat(discount))}
             </p>
@@ -140,7 +140,7 @@ const OrderSummary = ({
             </p>
             <p className="break-words w-1/2 text-right">
               € &nbsp;-
-              {Intl.NumberFormat("en-US", {
+              {Intl.NumberFormat("fr-FR", {
                 minimumFractionDigits: 2,
               }).format(promoCodeDiscount)}
             </p>
@@ -157,7 +157,7 @@ const OrderSummary = ({
             <b>
               {" "}
               € &nbsp;
-              {Intl.NumberFormat("en-US", {
+              {Intl.NumberFormat("fr-FR", {
                 minimumFractionDigits: 2,
               }).format(parseFloat(total))}
             </b>
@@ -176,8 +176,8 @@ const OrderSummary = ({
               ? "Submitting Details..."
               : "continue"
             : checkoutLoading || loading
-            ? "Processing..."
-            : "Checkout"}
+              ? "Processing..."
+              : "Checkout"}
           {/* {checkoutLoading ? t("Placing order...") : t("Confirm Order")} */}
         </button>
         {activeComponent === "payment_method" && (

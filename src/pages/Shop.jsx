@@ -45,21 +45,19 @@ const Shop = () => {
   };
 
   function paginationResult() {
-    return `${
-      showMagazines?.length > 0
+    return `${showMagazines?.length > 0
         ? pageNumber * magazinesPerPage === 0
           ? 1
           : pageNumber * magazinesPerPage + 1
         : 0
-    } - ${
-      !showMagazines
+      } - ${!showMagazines
         ? 0
         : showMagazines?.length < magazinesPerPage
-        ? showMagazines?.length
-        : magazinesPerPage * (pageNumber + 1) > showMagazines?.length
-        ? showMagazines?.length
-        : magazinesPerPage * (pageNumber + 1)
-    } of ${showMagazines?.length ?? 0} results`;
+          ? showMagazines?.length
+          : magazinesPerPage * (pageNumber + 1) > showMagazines?.length
+            ? showMagazines?.length
+            : magazinesPerPage * (pageNumber + 1)
+      } of ${showMagazines?.length ?? 0} results`;
   }
 
   function handleChangeMagazinesAccordingToCategory() {
@@ -169,19 +167,17 @@ const Shop = () => {
                   {/* btns  */}
                   <div className="flex items-center flex-wrap gap-2">
                     <BsFillGridFill
-                      className={`text-2xl cursor-pointer ${
-                        selectedView === "grid"
+                      className={`text-2xl cursor-pointer ${selectedView === "grid"
                           ? "text-darkBlue"
                           : "text-gray-300"
-                      }`}
+                        }`}
                       onClick={() => dispatch(handleChangeGridView("grid"))}
                     />
                     <IoListOutline
-                      className={`text-3xl cursor-pointer ${
-                        selectedView === "single"
+                      className={`text-3xl cursor-pointer ${selectedView === "single"
                           ? "text-darkBlue"
                           : "text-gray-300"
-                      }`}
+                        }`}
                       onClick={() => dispatch(handleChangeGridView("single"))}
                     />
                     <span className="font-semibold md:text-base text-sm">
@@ -211,9 +207,8 @@ const Shop = () => {
                 </div>
                 {/* products */}
                 <div
-                  className={`w-full py-4 ${
-                    selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
-                  } grid  place-items-start items-start md:gap-5 gap-3`}
+                  className={`w-full py-4 ${selectedView === "grid" && "xl:grid-cols-3 md:grid-cols-2"
+                    } grid  place-items-start items-start md:gap-5 gap-3`}
                 >
                   {magazineLoading || subscriptionLoading ? (
                     <div className="loading col-span-full">

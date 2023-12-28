@@ -26,8 +26,8 @@ const MagazineOrSubscriptionDetails = () => {
   const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
     useSelector((state) => state.root.shop);
 
-  const { cart, updateOrAddLoading } = useSelector((state) => state.root.cart);
-  const { token } = useSelector((state) => state.root.auth);
+  const { cart, updateOrAddLoading, shippingPricing, eec_switzerland_overseas_territories, taxPricing } = useSelector((state) => state.root.cart);
+  const { token, addresses } = useSelector((state) => state.root.auth);
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
@@ -44,18 +44,50 @@ const MagazineOrSubscriptionDetails = () => {
     isAlreadyInCart = false;
   }
 
+  function getAnnualPublications(magazineTitle) {
+    const magazinePublications = {
+      boismag: 8,
+      agenceur: 5,
+      artisans_and_bois: 4,
+      toiture: 4,
+    };
+
+    if (magazinePublications.hasOwnProperty(magazineTitle))
+      return magazinePublications[magazineTitle];
+    else return 0;
+  };
+
   function priceForMagazineAndSubscription() {
+    const convertToLowerCase = eec_switzerland_overseas_territories.map(
+      (country) => country.toLocaleLowerCase()
+    );
+
+    let price;
     if (!selectedTypeOfSupport) return;
     if (selectedTypeOfSupport === "digital") {
-      return parseFloat(singleMagazineOrSubscription?.priceDigital);
+      price = parseFloat(singleMagazineOrSubscription?.priceDigital);
     } else {
-      if (singleMagazineOrSubscription?.magazineId) {
-        return (
-          parseFloat(singleMagazineOrSubscription?.pricePaper) * parseFloat(quantity)
-        );
+      const baseShippingPriceFromZone = convertToLowerCase.includes(
+        addresses?.shippingAddress?.country.toLocaleLowerCase()
+      ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
+
+      let _quantity = quantity;
+
+      if (singleMagazineOrSubscription?.subscriptionId) {
+        // In a subscription, there are N magazines, so we multiply the N per the price of shipping
+        _quantity = getAnnualPublications(singleMagazineOrSubscription.magazineTitle);
       }
-      return parseFloat(singleMagazineOrSubscription?.pricePaper);
+
+      price = parseFloat(singleMagazineOrSubscription?.pricePaper) * (singleMagazineOrSubscription?.subscriptionId ? 1 : parseFloat(quantity)) + (parseFloat(baseShippingPriceFromZone) * parseFloat(_quantity));
     }
+
+    const baseTaxFromZone = convertToLowerCase.includes(
+      addresses?.shippingAddress?.country.toLocaleLowerCase()
+    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld);
+
+    return price + (parseInt(price) *
+      parseInt(baseTaxFromZone)) /
+      100;
   }
 
   const handleOnchageQuantity = (e) => {
@@ -189,34 +221,8 @@ const MagazineOrSubscriptionDetails = () => {
               <option value="digital">{"Digital"}</option>
             </select>
           </div>
-          {/* shipping area */}
-          {/* <div className="w-full flex items-center gap-3 font-semibold">
-            <p className="md:w-3/12 md:text-base text-sm">
-              {t("Shipping area")}
-            </p>
-            <select
-              onChange={(e) => setSelectedShippingZone(e.target.value)}
-              disabled={isAlreadyInCart}
-              name="shipping_area"
-              className="border p-2 w-full font-light outline-none"
-              value={
-                findIncart !== undefined && findIncart
-                  ? findIncart?.selectedShippingZone
-                  : selectedShippingZone
-              }
-            >
-              <option label="Select your shipping zone"></option>
-              <option value="EEC_Switzerland_Overseas">
-                EEC / Switzerland / Dom-tom
-              </option>
-              <option value="MetropolitanFrance">
-                {t("Metropolitan France")}
-              </option>
-              <option value="RestOfTheWorld">{t("Rest of the world")}</option>
-            </select>
-          </div> */}
           {/* qty */}
-          {!singleMagazineOrSubscription?.subscriptionId && (
+          {!singleMagazineOrSubscription?.subscriptionId && selectedTypeOfSupport === 'paper' && (
             <div className="w-full flex items-center gap-3 font-semibold">
               <p className="md:w-3/12 md:text-base text-sm">{t("Quantity")}</p>
               <input
@@ -235,7 +241,7 @@ const MagazineOrSubscriptionDetails = () => {
             </div>
           )}
           {/* price */}
-          {selectedTypeOfSupport && (
+          {(selectedTypeOfSupport) && (
             <p className="font-semibold md:text-xl text-lg space-x-2">
               <span>{t("Price")}:</span>
               <span className="text-darkBlue">

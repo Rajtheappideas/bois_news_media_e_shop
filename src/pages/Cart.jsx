@@ -185,6 +185,19 @@ const Cart = () => {
     }
   }
 
+  function getAnnualPublications(magazineTitle) {
+    const magazinePublications = {
+      boismag: 8,
+      agenceur: 5,
+      artisans_and_bois: 4,
+      toiture: 4,
+    };
+
+    if (magazinePublications.hasOwnProperty(magazineTitle))
+      return magazinePublications[magazineTitle];
+    else return 0;
+  };
+
   function calculateShipping() {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
@@ -194,10 +207,14 @@ const Cart = () => {
       addresses?.shippingAddress?.country.toLocaleLowerCase()
     ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
 
+
     const shippingPrice = cart.reduce((acc, cur) => {
       if (cur?.support == "paper") {
+        // In a subscription, there are N magazines, so we multiply the N per the price of shipping
+        const quantityPerSubscription = cur.itemType !== 'Subscription' ? 1 : getAnnualPublications(cur.itemId.magazineTitle);
+
         return (
-          acc + parseInt(baseShippingPriceFromZone) * parseInt(cur?.quantity)
+          acc + parseInt(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
         );
       } else {
         return acc + 0;
@@ -442,7 +459,10 @@ const Cart = () => {
                 </div>
 
                 <div class="w-full flex justify-between p-4">
-                  <p class="font-semibold">{t("Shipping")}</p>
+                  <div class="flex flex-col">
+                    <span class="font-semibold">{t("Shipping")}</span>
+                    <span class="text-xs">{t("Shipping disclaimer")}</span>
+                  </div>
 
                   {/* address */}
                   <div className="text-darkGray font-semibold space-y-3 text-right">

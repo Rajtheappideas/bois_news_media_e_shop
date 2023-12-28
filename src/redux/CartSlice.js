@@ -337,7 +337,7 @@ const CartSlice = createSlice({
             parseFloat(
               (parseInt(state.promoCode?.discountPercentage) *
                 parseInt(state.subTotal)) /
-                100
+              100
             ).toFixed(2);
 
           if (total <= 0) {
@@ -464,7 +464,7 @@ const CartSlice = createSlice({
   },
   extraReducers: (builder) => {
     // get cart
-    builder.addCase(handleGetCart.pending, (state, {}) => {
+    builder.addCase(handleGetCart.pending, (state, { }) => {
       state.getCartLoading = true;
       state.error = null;
     });
@@ -480,7 +480,7 @@ const CartSlice = createSlice({
     });
 
     // add magazine to cart
-    builder.addCase(handleAddMagazineToCart.pending, (state, {}) => {
+    builder.addCase(handleAddMagazineToCart.pending, (state, { }) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -495,7 +495,7 @@ const CartSlice = createSlice({
     });
 
     // add subscriptioon to cart
-    builder.addCase(handleAddSubscriptionToCart.pending, (state, {}) => {
+    builder.addCase(handleAddSubscriptionToCart.pending, (state, { }) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -516,7 +516,7 @@ const CartSlice = createSlice({
     );
 
     // remove from cart
-    builder.addCase(handleRemoveFromCart.pending, (state, {}) => {
+    builder.addCase(handleRemoveFromCart.pending, (state, { }) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -531,7 +531,7 @@ const CartSlice = createSlice({
     });
 
     // update from cart
-    builder.addCase(handleUpdateCart.pending, (state, {}) => {
+    builder.addCase(handleUpdateCart.pending, (state, { }) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -546,7 +546,7 @@ const CartSlice = createSlice({
     });
 
     // create paymnet intent
-    builder.addCase(handleCreatePaymentIntent.pending, (state, {}) => {
+    builder.addCase(handleCreatePaymentIntent.pending, (state, { }) => {
       state.checkoutLoading = true;
       state.error = null;
     });
@@ -566,7 +566,7 @@ const CartSlice = createSlice({
     );
 
     // create order
-    builder.addCase(handleCreateOrder.pending, (state, {}) => {
+    builder.addCase(handleCreateOrder.pending, (state, { }) => {
       state.checkoutLoading = true;
       state.error = null;
     });
@@ -582,7 +582,7 @@ const CartSlice = createSlice({
     });
 
     // get tax & shipping price
-    builder.addCase(handleGetTaxAndShipping.pending, (state, {}) => {
+    builder.addCase(handleGetTaxAndShipping.pending, (state, { }) => {
       state.loading = true;
       state.error = null;
     });
@@ -598,7 +598,7 @@ const CartSlice = createSlice({
     });
 
     // get orders
-    builder.addCase(handleGetOrders.pending, (state, {}) => {
+    builder.addCase(handleGetOrders.pending, (state, { }) => {
       state.loading = true;
       state.error = null;
     });
@@ -614,7 +614,7 @@ const CartSlice = createSlice({
     });
 
     // get downloads
-    builder.addCase(handleGetDownloads.pending, (state, {}) => {
+    builder.addCase(handleGetDownloads.pending, (state, { }) => {
       state.loading = true;
       state.error = null;
     });
@@ -630,7 +630,7 @@ const CartSlice = createSlice({
     });
 
     // handle apply promo code
-    builder.addCase(handleApplyPromoCode.pending, (state, {}) => {
+    builder.addCase(handleApplyPromoCode.pending, (state, { }) => {
       state.promoCodeLoading = true;
       state.error = null;
     });

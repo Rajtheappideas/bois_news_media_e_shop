@@ -94,18 +94,6 @@ const OrderSummary = ({
             }).format(parseFloat(subTotal))}
           </p>
         </div>
-        {/* tax */}
-        <div className="flex items-center justify-between">
-          <p className="w-1/2">
-            <b>{t("Tax")}</b>
-          </p>
-          <p className="break-words w-1/2 text-right">
-            € &nbsp;
-            {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-            }).format(parseFloat(tax))}
-          </p>
-        </div>
         {/* shipping */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
@@ -116,6 +104,18 @@ const OrderSummary = ({
             {Intl.NumberFormat("fr-FR", {
               minimumFractionDigits: 2,
             }).format(parseFloat(shipping))}
+          </p>
+        </div>
+        {/* tax */}
+        <div className="flex items-center justify-between">
+          <p className="w-1/2">
+            <b>{t("Tax")}</b>
+          </p>
+          <p className="break-words w-1/2 text-right">
+            € &nbsp;
+            {Intl.NumberFormat("fr-FR", {
+              minimumFractionDigits: 2,
+            }).format(parseFloat(tax))}
           </p>
         </div>
         {/* discount */}

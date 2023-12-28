@@ -189,28 +189,28 @@ const Cart = () => {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
     );
-    if (
-      convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
+
+    const baseShippingPriceFromZone = convertToLowerCase.includes(
+      addresses?.shippingAddress?.country.toLocaleLowerCase()
+    ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
+
+    const shippingPrice = cart.reduce((acc, cur) => {
+      if (cur?.support == "paper") {
+        return (
+          acc + parseInt(baseShippingPriceFromZone) * parseInt(cur?.quantity)
+        );
+      } else {
+        return acc + 0;
+      }
+    }, 0);
+
+    dispatch(
+      handleChangeShipping(
+        parseInt(shippingPrice)
       )
-    ) {
-      dispatch(
-        handleChangeShipping(
-          parseInt(shippingPricing?.EEC_Switzerland_Overseas)
-        )
-      );
-      return parseInt(shippingPricing?.EEC_Switzerland_Overseas);
-    } else if (
-      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
-    ) {
-      dispatch(
-        handleChangeShipping(parseInt(shippingPricing?.MetropolitanFrance))
-      );
-      return parseInt(shippingPricing?.MetropolitanFrance);
-    } else {
-      dispatch(handleChangeShipping(parseInt(shippingPricing?.RestOfTheWorld)));
-      return parseInt(shippingPricing?.RestOfTheWorld);
-    }
+    );
+
+    return parseInt(shippingPrice);
   }
 
   function calculateTax() {
@@ -222,99 +222,19 @@ const Cart = () => {
       dispatch(handleChangeTax(0));
       return 0;
     }
-    if (
-      convertToLowerCase.includes(
-        addresses?.shippingAddress?.country.toLocaleLowerCase()
-      )
-    ) {
-      if (!promoCodeDiscount) {
-        dispatch(
-          handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount) *
-              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-            100
-          )
-        );
-        return (
-          (parseInt(parseInt(subTotal) - discount) *
-            parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-          100
-        );
-      } else {
-        dispatch(
-          handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-              parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-            100
-          )
-        );
-        return (
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-            parseInt(taxPricing?.EEC_Switzerland_Overseas)) /
-          100
-        );
-      }
-    } else if (
-      addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
-    ) {
-      if (!promoCodeDiscount) {
-        dispatch(
-          handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount) *
-              parseInt(taxPricing?.MetropolitanFrance)) /
-            100
-          )
-        );
 
-        return (
-          (parseInt(parseInt(subTotal) - discount) *
-            parseInt(taxPricing?.MetropolitanFrance)) /
-          100
-        );
-      }
-      dispatch(
-        handleChangeTax(
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-            parseInt(taxPricing?.MetropolitanFrance)) /
-          100
-        )
-      );
+    const baseTaxFromZone = convertToLowerCase.includes(
+      addresses?.shippingAddress?.country.toLocaleLowerCase()
+    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld);
 
-      return (
-        (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-          parseInt(taxPricing?.MetropolitanFrance)) /
-        100
-      );
-    } else {
-      if (!promoCodeDiscount) {
-        dispatch(
-          handleChangeTax(
-            (parseInt(parseInt(subTotal) - discount) *
-              parseInt(taxPricing?.RestOfTheWorld)) /
-            100
-          )
-        );
+    const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
 
-        return (
-          (parseInt(parseInt(subTotal) - discount) *
-            parseInt(taxPricing?.RestOfTheWorld)) /
-          100
-        );
-      }
-      dispatch(
-        handleChangeTax(
-          (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-            parseInt(taxPricing?.RestOfTheWorld)) /
-          100
-        )
-      );
+    const tax = (parseInt(calculateShipping() + parseInt(subTotal) - discount - discountCode) *
+      parseInt(baseTaxFromZone)) /
+      100;
 
-      return (
-        (parseInt(parseInt(subTotal) - discount - promoCodeDiscount) *
-          parseInt(taxPricing?.RestOfTheWorld)) /
-        100
-      );
-    }
+    dispatch(handleChangeTax(tax));
+    return tax;
   }
 
   function calculateSubTotal() {
@@ -509,15 +429,9 @@ const Cart = () => {
             </div>
             {/* total box */}
             <div className="w-full border transition-all duration-100 ease-linear">
-              {/* sub total */}
-              <div className="w-full flex items-start justify-between p-4">
-                {/* sub total + shipping */}
-                <div className="font-semibold md:text-base text-sm text-left space-y-2">
-                  <p>{t("Sub total")}</p>
-                  <p>{t("Tax")}</p>
-                  <p>{t("Shipping")}</p>
-                </div>
-                <div className="font-medium md:text-base text-sm text-right space-y-2">
+              <div className="flex flex-col">
+                <div class="w-full flex justify-between p-4">
+                  <p class="font-semibold">{t("Sub total")}</p>
                   {/* subtotal */}
                   <p>
                     €&nbsp;
@@ -525,10 +439,13 @@ const Cart = () => {
                       minimumFractionDigits: 2,
                     }).format(parseFloat(subTotal))}
                   </p>
-                  {/* tax */}
-                  <p>€&nbsp;{calculateTax()}</p>
+                </div>
+
+                <div class="w-full flex justify-between p-4">
+                  <p class="font-semibold">{t("Shipping")}</p>
+
                   {/* address */}
-                  <div className="text-darkGray font-semibold space-y-3">
+                  <div className="text-darkGray font-semibold space-y-3 text-right">
                     {/* address */}
                     <div className="space-y-2 text-black">
                       {/* shipping */}
@@ -621,6 +538,11 @@ const Cart = () => {
                       </button>
                     </form>
                   </div>
+                </div>
+                <div class="w-full flex justify-between p-4">
+                  <p class="font-semibold">{t("Tax")}</p>
+                  {/* tax */}
+                  <p>€&nbsp;{calculateTax()}</p>
                 </div>
               </div>
               <hr />

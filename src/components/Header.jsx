@@ -207,7 +207,7 @@ const Header = () => {
                 to="/my-account"
                 className="uppercase cursor-pointer"
               >
-                {user?.fname} {user?.lname}
+                {t("My Account")}
               </Link>
               |
               <span

@@ -12,6 +12,8 @@ import {
 } from "../redux/CartSlice";
 import { useTranslation } from "react-i18next";
 import useAbortApiCall from "../hooks/useAbortApiCall";
+import { useNavigate } from "react-router-dom";
+import { handleChangeShowSignup } from "../redux/globalStates";
 
 const MagazineOrSubscriptionDetails = () => {
   const [activeComponent, setActiveComponent] = useState("description");
@@ -22,6 +24,7 @@ const MagazineOrSubscriptionDetails = () => {
   const dispatch = useDispatch();
 
   const { t } = useTranslation();
+
 
   const { singleMagazineOrSubscription, allMagazinesAndSubscriptions } =
     useSelector((state) => state.root.shop);
@@ -67,9 +70,9 @@ const MagazineOrSubscriptionDetails = () => {
     if (selectedTypeOfSupport === "digital") {
       price = parseFloat(singleMagazineOrSubscription?.priceDigital);
     } else {
-      const baseShippingPriceFromZone = convertToLowerCase.includes(
+      const baseShippingPriceFromZone = addresses ? (convertToLowerCase.includes(
         addresses?.shippingAddress?.country.toLocaleLowerCase()
-      ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
+      ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld)) : shippingPricing?.MetropolitanFrance;
 
       let _quantity = quantity;
 
@@ -81,9 +84,9 @@ const MagazineOrSubscriptionDetails = () => {
       price = parseFloat(singleMagazineOrSubscription?.pricePaper) * (singleMagazineOrSubscription?.subscriptionId ? 1 : parseFloat(quantity)) + (parseFloat(baseShippingPriceFromZone) * parseFloat(_quantity));
     }
 
-    const baseTaxFromZone = convertToLowerCase.includes(
+    const baseTaxFromZone = addresses ? (convertToLowerCase.includes(
       addresses?.shippingAddress?.country.toLocaleLowerCase()
-    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld);
+    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
 
     return price + (parseInt(price) *
       parseInt(baseTaxFromZone)) /
@@ -103,6 +106,11 @@ const MagazineOrSubscriptionDetails = () => {
   };
 
   const handleProductAddToCartFunction = () => {
+    if (!token) {
+      dispatch(handleChangeShowSignup(true));
+      return;
+    }
+
     toast.remove();
     if (
       selectedTypeOfSupport === "" ||

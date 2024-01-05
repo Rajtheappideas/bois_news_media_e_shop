@@ -64,13 +64,13 @@ const OrderSummary = ({
                 €{" "}
                 {product?.support == "paper"
                   ? Intl.NumberFormat("fr-FR", {
-                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 1,
                   }).format(
                     parseFloat(product?.itemId?.pricePaper) *
                     parseFloat(product?.quantity),
                   )
                   : Intl.NumberFormat("fr-FR", {
-                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 1,
                   }).format(
                     parseFloat(product?.itemId?.priceDigital) *
                     parseFloat(product?.quantity),
@@ -90,7 +90,7 @@ const OrderSummary = ({
           <p className="break-words w-1/2 text-right">
             € &nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(subTotal))}
           </p>
         </div>
@@ -102,7 +102,7 @@ const OrderSummary = ({
           <p className="break-words w-1/2 text-right">
             € &nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(shipping))}
           </p>
         </div>
@@ -114,7 +114,7 @@ const OrderSummary = ({
           <p className="break-words w-1/2 text-right">
             € &nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(tax))}
           </p>
         </div>
@@ -127,7 +127,7 @@ const OrderSummary = ({
             <p className="break-words w-1/2 text-right">
               € &nbsp;-&nbsp;
               {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(parseFloat(discount))}
             </p>
           </div>
@@ -141,7 +141,7 @@ const OrderSummary = ({
             <p className="break-words w-1/2 text-right">
               € &nbsp;-
               {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(promoCodeDiscount)}
             </p>
           </div>
@@ -158,7 +158,7 @@ const OrderSummary = ({
               {" "}
               € &nbsp;
               {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(parseFloat(total))}
             </b>
           </p>

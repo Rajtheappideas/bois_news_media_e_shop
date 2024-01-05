@@ -214,7 +214,7 @@ const Cart = () => {
         const quantityPerSubscription = cur.itemType !== 'Subscription' ? 1 : getAnnualPublications(cur.itemId.magazineTitle);
 
         return (
-          acc + parseInt(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
+          acc + parseFloat(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
         );
       } else {
         return acc + 0;
@@ -223,11 +223,11 @@ const Cart = () => {
 
     dispatch(
       handleChangeShipping(
-        parseInt(shippingPrice)
+        parseFloat(shippingPrice)
       )
     );
 
-    return parseInt(shippingPrice);
+    return parseFloat(shippingPrice);
   }
 
   function calculateTax() {
@@ -246,8 +246,8 @@ const Cart = () => {
 
     const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
 
-    const tax = (parseInt(calculateShipping() + parseInt(subTotal) - discount - discountCode) *
-      parseInt(baseTaxFromZone)) /
+    const tax = (parseFloat(calculateShipping() + parseFloat(subTotal) - discount - discountCode) *
+      parseFloat(baseTaxFromZone)) /
       100;
 
     dispatch(handleChangeTax(tax));
@@ -259,11 +259,11 @@ const Cart = () => {
       // return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
       if (cur?.support == "paper") {
         return (
-          acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+          acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
         );
       } else {
         return (
-          acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
         );
       }
     }, 0);
@@ -278,13 +278,13 @@ const Cart = () => {
     dispatch(
       handleChangePromoCodeDiscount(
         parseFloat(
-          (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) /
+          (parseFloat(code?.discountPercentage) * parseFloat(calculateSubTotal())) /
           100
         ).toFixed(2)
       )
     );
     return parseFloat(
-      (parseInt(code?.discountPercentage) * parseInt(calculateSubTotal())) / 100
+      (parseFloat(code?.discountPercentage) * parseFloat(calculateSubTotal())) / 100
     ).toFixed(2);
   }
 
@@ -453,7 +453,7 @@ const Cart = () => {
                   <p>
                     €&nbsp;
                     {Intl.NumberFormat("fr-FR", {
-                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 1,
                     }).format(parseFloat(subTotal))}
                   </p>
                 </div>
@@ -562,7 +562,9 @@ const Cart = () => {
                 <div class="w-full flex justify-between p-4">
                   <p class="font-semibold">{t("Tax")}</p>
                   {/* tax */}
-                  <p>€&nbsp;{calculateTax()}</p>
+                  <p>€&nbsp; {Intl.NumberFormat("fr-FR", {
+                    maximumFractionDigits: 1,
+                  }).format(calculateTax())}</p>
                 </div>
               </div>
               <hr />
@@ -577,7 +579,7 @@ const Cart = () => {
                     <p className="font-medium md:text-base text-sm text-right text-black">
                       € -&nbsp;
                       {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 3,
+                        maximumFractionDigits: 1,
                       }).format(calculateDiscount())}
                     </p>
                   )}
@@ -585,7 +587,7 @@ const Cart = () => {
                     <p className="font-medium md:text-base text-sm text-right text-black">
                       € -&nbsp;
                       {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 3,
+                        maximumFractionDigits: 1,
                       }).format(promoCodeDiscount)}{" "}
                       ({promoCode?.discountPercentage}%) off
                     </p>
@@ -594,7 +596,7 @@ const Cart = () => {
                     <b>
                       € &nbsp;
                       {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 3,
+                        maximumFractionDigits: 1,
                       }).format(parseFloat(total))}
                     </b>
                     &nbsp; (including tax + shipping)

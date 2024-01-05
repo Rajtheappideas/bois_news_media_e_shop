@@ -88,8 +88,8 @@ const MagazineOrSubscriptionDetails = () => {
       addresses?.shippingAddress?.country.toLocaleLowerCase()
     ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
 
-    return price + (parseInt(price) *
-      parseInt(baseTaxFromZone)) /
+    return price + (parseFloat(price) *
+      parseFloat(baseTaxFromZone)) /
       100;
   }
 
@@ -205,7 +205,7 @@ const MagazineOrSubscriptionDetails = () => {
           <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
             {t("Starting From")} €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(singleMagazineOrSubscription?.priceDigital)}
           </p>
           {/* type of support */}
@@ -255,7 +255,7 @@ const MagazineOrSubscriptionDetails = () => {
               <span className="text-darkBlue">
                 €&nbsp;
                 {Intl.NumberFormat("fr-FR", {
-                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 1,
                 }).format(priceForMagazineAndSubscription())}
               </span>
             </p>

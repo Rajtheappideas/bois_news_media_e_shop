@@ -65,7 +65,7 @@ const MagazineCard = ({ data, from }) => {
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
               {t("Starting From")} €  {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(data?.priceDigital)}
             </p>
           </div>
@@ -88,7 +88,7 @@ const MagazineCard = ({ data, from }) => {
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
               {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(data?.priceDigital)}
             </p>
           )}

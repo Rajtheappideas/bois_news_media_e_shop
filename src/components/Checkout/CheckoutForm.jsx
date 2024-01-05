@@ -333,7 +333,7 @@ const CheckoutForm = ({
         const quantityPerSubscription = cur.itemType !== 'Subscription' ? 1 : getAnnualPublications(cur.itemId.magazineTitle);
 
         return (
-          acc + parseInt(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
+          acc + parseFloat(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
         );
       } else {
         return acc + 0;
@@ -342,11 +342,11 @@ const CheckoutForm = ({
 
     dispatch(
       handleChangeShipping(
-        parseInt(shippingPrice)
+        parseFloat(shippingPrice)
       )
     );
 
-    return parseInt(shippingPrice);
+    return parseFloat(shippingPrice);
   }
 
   function calculateTax() {
@@ -368,8 +368,8 @@ const CheckoutForm = ({
 
     const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
 
-    const tax = (parseInt(calculateShipping() + parseInt(subTotal) - discount - discountCode) *
-      parseInt(baseTaxFromZone)) /
+    const tax = (parseFloat(calculateShipping() + parseFloat(subTotal) - discount - discountCode) *
+      parseFloat(baseTaxFromZone)) /
       100;
 
     dispatch(handleChangeTax(tax));

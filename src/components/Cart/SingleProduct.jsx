@@ -110,10 +110,10 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
         € &nbsp;
         {product?.support == "paper"
           ? Intl.NumberFormat("fr-FR", {
-            minimumFractionDigits: 2,
+            maximumFractionDigits: 1,
           }).format(product?.itemId?.pricePaper)
           : Intl.NumberFormat("fr-FR", {
-            minimumFractionDigits: 2,
+            maximumFractionDigits: 1,
           }).format(product?.itemId?.priceDigital)}
       </td>
       {/* input field */}
@@ -136,13 +136,13 @@ const SingleProduct = ({ product, productsToUpdate, setProductsToUpdate }) => {
         €&nbsp;
         {product?.support == "paper"
           ? Intl.NumberFormat("fr-FR", {
-            minimumFractionDigits: 2,
+            maximumFractionDigits: 1,
           }).format(
             parseFloat(product?.itemId?.pricePaper) *
             parseFloat(product?.quantity)
           )
           : Intl.NumberFormat("fr-FR", {
-            minimumFractionDigits: 2,
+            maximumFractionDigits: 1,
           }).format(
             parseFloat(product?.itemId?.priceDigital) *
             parseFloat(product?.quantity)

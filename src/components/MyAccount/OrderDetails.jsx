@@ -65,8 +65,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
               {" "}
               €&nbsp;
               {Intl.NumberFormat("fr-FR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                maximumFractionDigits: 1,
               }).format(parseFloat(item?.quantity) * parseFloat(item?.price))}
             </div>
           </div>
@@ -77,8 +76,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>
             €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.subtotal))}
           </p>
         </div>
@@ -90,8 +88,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
             {" "}
             €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.shipping))}
           </p>
         </div>
@@ -102,8 +99,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>
             €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.tax))}
           </p>
         </div>
@@ -114,8 +110,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
           <p>
             €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.discount))}
           </p>
         </div>
@@ -133,8 +128,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
             {" "}
             €&nbsp;
             {Intl.NumberFormat("fr-FR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.total))}
           </p>
         </div>

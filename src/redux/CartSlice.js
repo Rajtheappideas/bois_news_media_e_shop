@@ -319,38 +319,38 @@ const CartSlice = createSlice({
       const subtotal = state.cart.reduce((acc, cur) => {
         if (cur?.support === "paper") {
           return (
-            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+            acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
           );
         } else {
           return (
-            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+            acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
           );
         }
       }, 0);
       if (subtotal !== NaN && typeof subtotal === "number") {
         if (state.promoCode !== null && state.isPromoCodeApplied) {
           const total =
-            parseInt(subtotal) +
-            parseInt(state.shipping) +
+            parseFloat(subtotal) +
+            parseFloat(state.shipping) +
             parseFloat(state.tax) -
             parseInt(state.discount) -
             parseFloat(
               (parseInt(state.promoCode?.discountPercentage) *
-                parseInt(state.subTotal)) /
+                parseFloat(state.subTotal)) /
               100
             ).toFixed(2);
 
           if (total <= 0) {
-            state.total = parseInt(state.shipping);
+            state.total = parseFloat(state.shipping);
           } else {
             state.total = total;
           }
         } else {
           state.total =
-            parseInt(subtotal) +
-            parseInt(state.shipping) +
+            parseFloat(subtotal) +
+            parseFloat(state.shipping) +
             parseFloat(state.tax) -
-            parseInt(state.discount);
+            parseFloat(state.discount);
         }
       }
     },
@@ -359,11 +359,11 @@ const CartSlice = createSlice({
       const subTotal = state.cart.reduce((acc, cur) => {
         if (cur?.support === "paper") {
           return (
-            acc + parseInt(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
+            acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
           );
         } else {
           return (
-            acc + parseInt(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+            acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
           );
         }
       }, 0);

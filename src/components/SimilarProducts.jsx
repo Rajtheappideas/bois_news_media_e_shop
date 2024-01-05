@@ -106,7 +106,7 @@ const SimilarProducts = ({ similarMagazines }) => {
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
                 {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
-                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 1,
                 }).format(magazine?.priceDigital)}
               </p>
             </div>

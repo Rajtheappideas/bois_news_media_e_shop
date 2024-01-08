@@ -15,13 +15,13 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-
 const Checkout = () => {
   const [activeComponent, setActiveComponent] = useState("checkout_form");
   const [clientSecret, setClientSecret] = useState(
     "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
   );
   const [stripePromise, setStripePromise] = useState(null);
+  console.log(clientSecret);
 
   const { user } = useSelector((state) => state.root.auth);
   const { cart, checkoutLoading } = useSelector((state) => state.root.cart);
@@ -44,11 +44,29 @@ const Checkout = () => {
     if (user !== null) {
       dispatch(handleCalculateSubTotal());
       dispatch(handleCalculateTotal());
-      setStripePromise(loadStripe(process.env.REACT_APP_STRIPE_PK_TEST));
     }
 
     return () => abortApiCall();
   }, []);
+  useEffect(() => {
+    // setStripePromise(
+    //   loadStripe(
+    //     "pk_live_51NptSmIEhdCVsY1P48BRPHzl6zLtOviR1wQ3ORciNmzuGjAvnqSL49J3fmbY4DwbY7jslIHAmk56OKbANXkqGHOU00OitBOK0D"
+    //   )
+    // );
+    if (
+      user !== null &&
+      clientSecret !==
+        "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
+    ) {
+      // console.log("runn");
+      setStripePromise(
+        loadStripe(
+          "pk_live_51NptSmIEhdCVsY1P48BRPHzl6zLtOviR1wQ3ORciNmzuGjAvnqSL49J3fmbY4DwbY7jslIHAmk56OKbANXkqGHOU00OitBOK0D"
+        )
+      );
+    }
+  }, [clientSecret]);
 
   return (
     <>
@@ -79,6 +97,7 @@ const Checkout = () => {
               options={{
                 clientSecret,
               }}
+              key={clientSecret}
             >
               {activeComponent === "payment_method" &&
                 stripePromise &&

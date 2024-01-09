@@ -50,9 +50,9 @@ const ValidationSchema = (required, required2) => {
       .string()
       .required("Password is required")
       .matches(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/,
+        /^(?=.*[0-9])(?=.*[!@#$%^<>&*])[a-zA-Z0-9!@#$%^<>&*]{8,20}$/,
         t(
-          "Minimum 8 characters, at least one special character, at least one digit"
+          "Minimum 8 characters, at least one special character (!@#$%^<>&*), at least one digit"
         )
       ),
     province: required

@@ -386,7 +386,7 @@ const EditProfile = ({ setshowEditProfile }) => {
             name="civility"
             className="input_field"
           >
-            <option label="Choose civility"></option>
+            <option label="Choisissez une civilité"></option>
             <option value="Mr.">Mr.</option>
             <option value="Mrs.">Mrs.</option>
             <option value="Ms.">Ms.</option>

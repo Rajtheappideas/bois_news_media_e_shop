@@ -151,15 +151,6 @@ const Footer = () => {
           </p>
           <ul className="font-medium ">
             <Link
-              to="https://www.boisnewsmedia.com/"
-              target="_blank"
-              onClick={() => scrollToTop()}
-            >
-              <li className="hover:border-l-4 hover:font-semibold border-darkBlue transition-all duration-100 ease-linear hover:pl-3">
-                {t("bois_news_media")}
-              </li>
-            </Link>
-            <Link
               to="https://www.boismag.com/"
               target="_blank"
               onClick={() => scrollToTop()}

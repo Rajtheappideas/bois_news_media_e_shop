@@ -71,6 +71,7 @@ const Signup = () => {
       country,
       mobile,
       company,
+      vat
     } = data;
     let shippingAddress = {
       address1: address,
@@ -80,6 +81,9 @@ const Signup = () => {
       city,
       province,
       country,
+    };
+    let billingSupplement = {
+      VATnumber: vat,
     };
     if (!isPossiblePhoneNumber(phone) || !isValidPhoneNumber(phone)) {
       toast.remove();
@@ -105,6 +109,7 @@ const Signup = () => {
         mobile,
         company,
         shippingAddress,
+        billingSupplement,
         signal: AbortControllerRef,
       }),
     );
@@ -144,6 +149,13 @@ const Signup = () => {
     dispatch(handleChangeShowSignup(false));
     window.document.body.style.overflow = "unset";
   }
+
+  useEffect(() => {
+    if (countries.length > 0) {
+      // Définir la valeur par défaut pour le champ "country" avec setValue
+      setValue('country', 'France');
+    }
+  }, [countries, setValue]);
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
@@ -195,7 +207,7 @@ const Signup = () => {
         <div className="flex items-center gap-2">
           <div className="w-1/2">
             <label htmlFor="fname" className="Label">
-              {t("first name")}
+              {t("first name")} <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -207,7 +219,7 @@ const Signup = () => {
           </div>
           <div className="w-1/2">
             <label htmlFor="lname" className="Label">
-              {t("last name")}
+              {t("last name")} <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -221,7 +233,7 @@ const Signup = () => {
         {/* email */}
         <div>
           <label htmlFor="email" className="Label">
-            {t("E-mail")}
+            {t("E-mail")} <span className="text-red-600">*</span>
           </label>
           <input
             type="email"
@@ -234,7 +246,7 @@ const Signup = () => {
         {/* phone */}
         <div>
           <label htmlFor="phone" className="Label">
-            {t("phone")}
+            {t("Phone")} <span className="text-red-600">*</span>
           </label>
           <Controller
             name="phone"
@@ -311,12 +323,12 @@ const Signup = () => {
               />
             )}
           />
-          <span className="error">{errors?.phone?.message}</span>
+          <span className="error">{errors?.mobile?.message}</span>
         </div>
         {/* company name */}
         <div>
           <label htmlFor="company" className="Label">
-            {t("company name")}
+            {t("Company name")}
           </label>
           <input
             type="text"
@@ -327,17 +339,31 @@ const Signup = () => {
 
           <span className="error">{errors?.company?.message}</span>
         </div>
+        {/* vat number */}
+        <div>
+          <label htmlFor="vat" className="Label">
+            {t("VAT number")} (🇪🇺 only)
+          </label>
+          <input
+            type="text"
+            name="vat"
+            {...register("vat")}
+            className="input_field"
+          />
+
+          <span className="error">{errors?.vat?.message}</span>
+        </div>
         {/* civility */}
         <div>
           <label htmlFor="civility" className="Label">
-            {t("civility")}
+            {t("civility")} <span className="text-red-600">*</span>
           </label>
           <select
             {...register("civility")}
             name="civility"
             className="input_field"
           >
-            <option label="Choose civility"></option>
+            <option label="Choisissez une civilité"></option>
             <option value="Mr.">Mr.</option>
             <option value="Mrs.">Mrs.</option>
             <option value="Ms.">Ms.</option>
@@ -349,14 +375,14 @@ const Signup = () => {
         <div className="flex items-center gap-2">
           <div className="w-1/2">
             <label htmlFor="country" className="Label">
-              {t("country")}
+              {t("Country")} <span className="text-red-600">*</span>
             </label>
             <select
               name="country"
-              {...register("country")}
               className="input_field"
+              {...register("country")}
             >
-              <option label="Select country"></option>
+              <option label="Choisissez un pays"></option>
               {countries.length > 0 &&
                 countries.map((country, i) => (
                   <option value={country?.name} key={i}>
@@ -375,13 +401,13 @@ const Signup = () => {
 
           <div className="w-1/2">
             <label htmlFor="city" className="Label">
-              city
+              {t("City")} <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
               {...register("city")}
               className="input_field"
-              placeholder="city"
+              placeholder={t("City")}
             />
             <span className="error">{errors?.city?.message}</span>
           </div>
@@ -390,7 +416,7 @@ const Signup = () => {
         {showStateField && (
           <div>
             <label htmlFor="province" className="Label">
-              {t("province")}
+              {t("Province")} <span className="text-red-600">*</span>
             </label>
             {/* <input
               type="text"
@@ -403,7 +429,7 @@ const Signup = () => {
               {...register("province")}
               className="input_field"
             >
-              <option label="Select province"></option>
+              <option label="Choisissez un département"></option>
               {states.length > 0 &&
                 states.map((state, i) => (
                   <option value={state?.name} key={i}>
@@ -418,13 +444,13 @@ const Signup = () => {
         {/* address */}
         <div>
           <label htmlFor="address" className="Label">
-            {t("address")}
+            {t("address")} <span className="text-red-600">*</span>
           </label>
           <input
             type="text"
             {...register("address")}
             className="input_field"
-            placeholder="address"
+            placeholder={t("address")}
           />
           <span className="error">{errors?.address?.message}</span>
         </div>
@@ -432,12 +458,12 @@ const Signup = () => {
         {/* postal code */}
         <div>
           <label htmlFor="postalCode" className="Label">
-            {t("postal code")}
+            {t("Postal code")} <span className="text-red-600">*</span>
           </label>
           <input
             type="number"
             className="input_field"
-            placeholder="postal code"
+            placeholder={t("Postal code")}
             {...register("zipCode")}
           />
           <span className="error">{errors?.zipCode?.message}</span>
@@ -445,7 +471,7 @@ const Signup = () => {
         {/* password */}
         <div>
           <label htmlFor="password" className="Label">
-            {t("password")}
+            {t("Password")} <span className="text-red-600">*</span>
           </label>
           <input
             type="password"

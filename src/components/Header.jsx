@@ -622,11 +622,6 @@ const Header = () => {
               className={`text-sm rounded-lg font-medium transition-all duration-300 origin-top ${dropDownList === "our_magazines" ? "block" : "hidden"
                 }  space-y-1 bg-gray-100`}
             >
-              <Link to="https://www.boisnewsmedia.com/" target="_blank">
-                <p className="p-2 block hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
-                  {t("bois_news_media")}
-                </p>
-              </Link>
               <Link to="https://www.boismag.com/" target="_blank">
                 <p className="p-2 hover:bg-darkGray uppercase hover:text-white transition-all duration-100">
                   {t("boismag")}

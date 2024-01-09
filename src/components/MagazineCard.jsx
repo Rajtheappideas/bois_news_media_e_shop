@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 
 const MagazineCard = ({ data, from }) => {
   const { selectedView } = useSelector((state) => state.root.shop);
+  const { taxPricing, eec_switzerland_overseas_territories } = useSelector((state) => state.root.cart);
+  const { addresses } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
 
@@ -33,6 +35,20 @@ const MagazineCard = ({ data, from }) => {
       if (!location.pathname.includes("shop")) return navigate("shop");
     }, 300);
   };
+
+  function getStartingFromPrice() {
+    const convertToLowerCase = eec_switzerland_overseas_territories.map(
+      (country) => country.toLocaleLowerCase()
+    );
+
+    const baseTaxFromZone = addresses ? (convertToLowerCase.includes(
+      addresses?.shippingAddress?.country.toLocaleLowerCase()
+    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
+
+    const tax = data?.priceDigital * baseTaxFromZone / 100;
+
+    return data?.priceDigital + tax;
+  }
 
   return (
     <motion.div
@@ -66,7 +82,7 @@ const MagazineCard = ({ data, from }) => {
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
               {t("Starting From")} €  {Intl.NumberFormat("fr-FR", {
                 maximumFractionDigits: 1,
-              }).format(data?.priceDigital)}
+              }).format(getStartingFromPrice())}
             </p>
           </div>
         </div>
@@ -89,7 +105,7 @@ const MagazineCard = ({ data, from }) => {
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
               {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
                 maximumFractionDigits: 1,
-              }).format(data?.priceDigital)}
+              }).format(getStartingFromPrice())}
             </p>
           )}
         </div>

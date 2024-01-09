@@ -200,7 +200,7 @@ const BillingAddress = ({ setActiveAddress }) => {
           {t("country")}
         </label>
         <select name="country" {...register("country")} className="input_field">
-          <option label="Select country"></option>
+          <option label="Choisissez un pays"></option>
           {countries.length > 0 &&
             countries.map((country, i) => (
               <option value={country?.name} key={i}>

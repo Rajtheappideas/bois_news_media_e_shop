@@ -100,7 +100,7 @@ const CheckoutForm = ({
       phone: user?.phone,
       email: user?.email,
       shippingCompanyName: user?.company,
-      VAT: "",
+      VAT: user?.billingSupplement?.VATnumber,
       purchaseOrder: "",
       fieldOfActivity: "",
       orderNotes: "",
@@ -614,7 +614,7 @@ const CheckoutForm = ({
             {t("VAT number")} (optional)
           </label>
           <input
-            type="number"
+            type="text"
             placeholder="Type here..."
             className="w-full input_field"
             {...register("VAT")}

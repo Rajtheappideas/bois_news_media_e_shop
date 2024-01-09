@@ -15,6 +15,7 @@ export const handleRegisterUser = createAsyncThunk(
       mobile,
       company,
       shippingAddress,
+      billingSupplement,
       signal,
     },
     { rejectWithValue }
@@ -32,6 +33,7 @@ export const handleRegisterUser = createAsyncThunk(
           mobile,
           company,
           shippingAddress,
+          billingSupplement
         },
         signal: signal.current.signal,
       });
@@ -285,7 +287,7 @@ const AuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     // register user
-    builder.addCase(handleRegisterUser.pending, (state, {}) => {
+    builder.addCase(handleRegisterUser.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -309,7 +311,7 @@ const AuthSlice = createSlice({
       state.email = null;
     });
     // login user
-    builder.addCase(handleLoginUser.pending, (state, {}) => {
+    builder.addCase(handleLoginUser.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -333,7 +335,7 @@ const AuthSlice = createSlice({
       state.email = null;
     });
     // forgot password
-    builder.addCase(handleForgotPassword.pending, (state, {}) => {
+    builder.addCase(handleForgotPassword.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -353,7 +355,7 @@ const AuthSlice = createSlice({
       state.token = null;
     });
     // verfiy otp
-    builder.addCase(handleVerifyOtp.pending, (state, {}) => {
+    builder.addCase(handleVerifyOtp.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -372,7 +374,7 @@ const AuthSlice = createSlice({
       state.error = payload ?? null;
     });
     // reset password
-    builder.addCase(handleResetPassword.pending, (state, {}) => {
+    builder.addCase(handleResetPassword.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -394,7 +396,7 @@ const AuthSlice = createSlice({
       state.token = null;
     });
     // change password
-    builder.addCase(handleChangePassword.pending, (state, {}) => {
+    builder.addCase(handleChangePassword.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -410,7 +412,7 @@ const AuthSlice = createSlice({
       state.error = payload ?? null;
     });
     // edit profile
-    builder.addCase(handleEditProfile.pending, (state, {}) => {
+    builder.addCase(handleEditProfile.pending, (state, { }) => {
       state.editProfileLoading = true;
       state.success = false;
       state.error = null;
@@ -427,7 +429,7 @@ const AuthSlice = createSlice({
       state.error = payload ?? null;
     });
     // get user address
-    builder.addCase(handleGetUserAddress.pending, (state, {}) => {
+    builder.addCase(handleGetUserAddress.pending, (state, { }) => {
       state.loading = true;
       state.success = false;
       state.error = null;
@@ -448,7 +450,7 @@ const AuthSlice = createSlice({
       state.error = payload ?? null;
     });
     // change user address
-    builder.addCase(handleChangeUserAddress.pending, (state, {}) => {
+    builder.addCase(handleChangeUserAddress.pending, (state, { }) => {
       state.addressLoading = true;
       state.success = false;
       state.error = null;

@@ -202,12 +202,6 @@ const MagazineOrSubscriptionDetails = () => {
           <p className="font-semibold md:text-xl text-lg lg:text-left text-center">
             {singleMagazineOrSubscription?.title}
           </p>
-          <p className="font-semibold md:text-lg lg:text-left text-center text-darkBlue">
-            {t("Starting From")} €&nbsp;
-            {Intl.NumberFormat("fr-FR", {
-              maximumFractionDigits: 1,
-            }).format(singleMagazineOrSubscription?.priceDigital)}
-          </p>
           {/* type of support */}
           <div className="w-full flex items-center gap-3 font-semibold">
             <p className="md:w-3/12 md:text-base text-sm md:whitespace-nowrap">
@@ -224,7 +218,7 @@ const MagazineOrSubscriptionDetails = () => {
                   : selectedTypeOfSupport
               }
             >
-              <option label="Choose an option"></option>
+              <option label="Choisissez une option"></option>
               <option value="paper">{t("Paper and Digital")}</option>
               <option value="digital">{"Digital"}</option>
             </select>

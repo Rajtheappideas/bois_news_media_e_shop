@@ -10,13 +10,15 @@ import {
   handleChangeMagazineOrSubscriptionShow,
   handleChangeSingleMagazineOrSubscription,
 } from "../redux/ShopSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const SimilarProducts = ({ similarMagazines }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const { taxPricing, eec_switzerland_overseas_territories } = useSelector((state) => state.root.cart);
+  const { addresses } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
 
@@ -39,6 +41,20 @@ const SimilarProducts = ({ similarMagazines }) => {
       if (!location.pathname.includes("shop")) return navigate("shop");
     }, 300);
   };
+
+  function getStartingFromPrice(magazine) {
+    const convertToLowerCase = eec_switzerland_overseas_territories.map(
+      (country) => country.toLocaleLowerCase()
+    );
+
+    const baseTaxFromZone = addresses ? (convertToLowerCase.includes(
+      addresses?.shippingAddress?.country.toLocaleLowerCase()
+    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
+
+    const tax = magazine?.priceDigital * baseTaxFromZone / 100;
+
+    return magazine?.priceDigital + tax;
+  }
 
   return (
     <div className="space-y-3 relative">
@@ -107,7 +123,7 @@ const SimilarProducts = ({ similarMagazines }) => {
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
                 {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
                   maximumFractionDigits: 1,
-                }).format(magazine?.priceDigital)}
+                }).format(getStartingFromPrice(magazine))}
               </p>
             </div>
           </SwiperSlide>

@@ -165,8 +165,8 @@ const Cart = () => {
 
   function calculateDiscount() {
     const quantity = cart.reduce((acc, curr) => {
-      if (curr?.itemType === "Magazine") {
-        return parseInt(acc + curr?.quantity);
+      if (curr?.itemType === "Subscription") {
+        return parseInt(acc + 1);
       }
       return acc;
     }, 0);

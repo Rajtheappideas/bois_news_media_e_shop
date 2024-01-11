@@ -29,7 +29,7 @@ const Categories = () => {
       }
     });
     return () => {
-      window.removeEventListener("resize", () => {});
+      window.removeEventListener("resize", () => { });
     };
   }, [window.innerWidth]);
 
@@ -47,17 +47,15 @@ const Categories = () => {
         <div className="space-y-3 font-semibold p-3 md:text-base text-sm">
           <p
             onClick={() => dispatch(handleChangeActiveCategory("view_all"))}
-            className={`${
-              activeCategory === "view_all" && "underline text-darkBlue"
-            } underline-offset-2 cursor-pointer text-left capitalize md:text-base text-sm`}
+            className={`${activeCategory === "view_all" && "underline text-darkBlue"
+              } underline-offset-2 cursor-pointer text-left capitalize md:text-base text-sm`}
           >
             {t("View All")}
           </p>
           <p
-            className={`${
-              activeCategory === "subscriptions" &&
+            className={`${activeCategory === "subscriptions" &&
               "underline text-darkBlue underline-offset-2"
-            } text-black text-left capitalize cursor-pointer`}
+              } text-black text-left capitalize cursor-pointer`}
             onClick={() =>
               dispatch(handleChangeActiveCategory("subscriptions"))
             }
@@ -66,10 +64,9 @@ const Categories = () => {
           </p>
           <p
             onClick={() => dispatch(handleChangeActiveCategory("magazines"))}
-            className={`${
-              activeCategory === "magazines" &&
+            className={`${activeCategory === "magazines" &&
               "underline text-darkBlue underline-offset-2"
-            } text-black text-left capitalize cursor-pointer`}
+              } text-black text-left capitalize cursor-pointer`}
           >
             {t("Magazines")} ({magazines?.length ?? "0"}){" "}
           </p>
@@ -78,10 +75,9 @@ const Categories = () => {
               onClick={() =>
                 dispatch(handleChangeActiveCategory("artisans_and_bois"))
               }
-              className={`${
-                activeCategory === "artisans_and_bois" &&
+              className={`${activeCategory === "artisans_and_bois" &&
                 "text-darkBlue underline underline-offset-2"
-              } cursor-pointer`}
+                } cursor-pointer`}
             >
               {t("artisans_and_bois")} (
               {magazines.length > 0 &&
@@ -91,10 +87,9 @@ const Categories = () => {
               )
             </li>
             <li
-              className={`${
-                activeCategory === "boismag" &&
+              className={`${activeCategory === "boismag" &&
                 "text-darkBlue underline underline-offset-2"
-              } cursor-pointer`}
+                } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("boismag"))}
             >
               {t("boismag")} (
@@ -105,10 +100,9 @@ const Categories = () => {
               )
             </li>
             <li
-              className={`${
-                activeCategory === "agenceur" &&
+              className={`${activeCategory === "agenceur" &&
                 "text-darkBlue underline underline-offset-2"
-              } cursor-pointer`}
+                } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("agenceur"))}
             >
               {t("agenceur")} (
@@ -119,10 +113,9 @@ const Categories = () => {
               )
             </li>
             <li
-              className={`${
-                activeCategory === "toiture" &&
+              className={`${activeCategory === "toiture" &&
                 "text-darkBlue underline underline-offset-2"
-              } cursor-pointer`}
+                } cursor-pointer`}
               onClick={() => dispatch(handleChangeActiveCategory("toiture"))}
             >
               {t("toiture")} (

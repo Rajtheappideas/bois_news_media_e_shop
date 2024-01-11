@@ -46,10 +46,10 @@ const Shop = () => {
 
   function paginationResult() {
     return `${showMagazines?.length > 0
-        ? pageNumber * magazinesPerPage === 0
-          ? 1
-          : pageNumber * magazinesPerPage + 1
-        : 0
+      ? pageNumber * magazinesPerPage === 0
+        ? 1
+        : pageNumber * magazinesPerPage + 1
+      : 0
       } - ${!showMagazines
         ? 0
         : showMagazines?.length < magazinesPerPage
@@ -63,11 +63,7 @@ const Shop = () => {
   function handleChangeMagazinesAccordingToCategory() {
     if (magazineLoading || subscriptionLoading) return;
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (activeCategory === "view_all") {
-      setShowMagazines(allMagazinesAndSubscriptions);
-      handleFilter(allMagazinesAndSubscriptions);
-      return;
-    } else if (activeCategory === "subscriptions") {
+    if (activeCategory === "subscriptions") {
       setShowMagazines(subscriptions);
       handleFilter(subscriptions);
       return;
@@ -115,6 +111,10 @@ const Shop = () => {
         return;
       }
       return setShowMagazines([]);
+    } else {
+      setShowMagazines(allMagazinesAndSubscriptions);
+      handleFilter(allMagazinesAndSubscriptions);
+      return;
     }
   }
 
@@ -168,15 +168,15 @@ const Shop = () => {
                   <div className="flex items-center flex-wrap gap-2">
                     <BsFillGridFill
                       className={`text-2xl cursor-pointer ${selectedView === "grid"
-                          ? "text-darkBlue"
-                          : "text-gray-300"
+                        ? "text-darkBlue"
+                        : "text-gray-300"
                         }`}
                       onClick={() => dispatch(handleChangeGridView("grid"))}
                     />
                     <IoListOutline
                       className={`text-3xl cursor-pointer ${selectedView === "single"
-                          ? "text-darkBlue"
-                          : "text-gray-300"
+                        ? "text-darkBlue"
+                        : "text-gray-300"
                         }`}
                       onClick={() => dispatch(handleChangeGridView("single"))}
                     />

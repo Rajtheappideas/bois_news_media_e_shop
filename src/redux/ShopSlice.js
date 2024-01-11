@@ -95,7 +95,7 @@ const ShopSlice = createSlice({
   },
   extraReducers: (builder) => {
     // get magazines
-    builder.addCase(handleGetMagazines.pending, (state, {}) => {
+    builder.addCase(handleGetMagazines.pending, (state, { }) => {
       state.magazineLoading = true;
       state.error = null;
     });
@@ -113,7 +113,7 @@ const ShopSlice = createSlice({
       state.error = payload ?? null;
     });
     // get latest magazines
-    builder.addCase(handleGetLastestMagazines.pending, (state, {}) => {
+    builder.addCase(handleGetLastestMagazines.pending, (state, { }) => {
       state.magazineLoading = true;
       state.error = null;
     });
@@ -133,7 +133,7 @@ const ShopSlice = createSlice({
       }
     );
     // get subscriptions
-    builder.addCase(handleGetSubscriptions.pending, (state, {}) => {
+    builder.addCase(handleGetSubscriptions.pending, (state, { }) => {
       state.subscriptionLoading = true;
       state.error = null;
     });

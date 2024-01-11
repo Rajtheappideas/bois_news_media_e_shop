@@ -63,7 +63,13 @@ const Shop = () => {
   function handleChangeMagazinesAccordingToCategory() {
     if (magazineLoading || subscriptionLoading) return;
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (activeCategory === "subscriptions") {
+
+    if (activeCategory === "view_all") {
+      setShowMagazines(allMagazinesAndSubscriptions);
+      handleFilter(allMagazinesAndSubscriptions);
+      return;
+    }
+    else if (activeCategory === "subscriptions") {
       setShowMagazines(subscriptions);
       handleFilter(subscriptions);
       return;
@@ -111,10 +117,6 @@ const Shop = () => {
         return;
       }
       return setShowMagazines([]);
-    } else {
-      setShowMagazines(allMagazinesAndSubscriptions);
-      handleFilter(allMagazinesAndSubscriptions);
-      return;
     }
   }
 
@@ -140,6 +142,12 @@ const Shop = () => {
     handleChangeMagazinesAccordingToCategory();
     setPageNumber(0);
   }, [activeCategory, activeFilter]);
+
+  useEffect(() => {
+    if (!magazineLoading && !subscriptionLoading) {
+      handleChangeMagazinesAccordingToCategory();
+    }
+  }, [magazineLoading, subscriptionLoading]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

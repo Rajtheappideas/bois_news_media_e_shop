@@ -21,7 +21,6 @@ const Checkout = () => {
     "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
   );
   const [stripePromise, setStripePromise] = useState(null);
-  console.log(clientSecret);
 
   const { user } = useSelector((state) => state.root.auth);
   const { cart, checkoutLoading } = useSelector((state) => state.root.cart);
@@ -57,7 +56,7 @@ const Checkout = () => {
     if (
       user !== null &&
       clientSecret !==
-        "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
+      "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
     ) {
       // console.log("runn");
       setStripePromise(

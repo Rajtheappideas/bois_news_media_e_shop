@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeMagazineOrSubscriptionShow,
@@ -9,9 +9,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-const MagazineCard = ({ data, from }) => {
+const MagazineCard = memo(({ data, from }) => {
   const { selectedView } = useSelector((state) => state.root.shop);
-  const { taxPricing, eec_switzerland_overseas_territories } = useSelector((state) => state.root.cart);
+  const { taxPricing, eec_switzerland_overseas_territories } = useSelector(
+    (state) => state.root.cart
+  );
   const { addresses } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
@@ -23,17 +25,19 @@ const MagazineCard = ({ data, from }) => {
   const { t } = useTranslation();
 
   const handleDispatchAction = () => {
-    dispatch(handleChangeMagazineOrSubscriptionShow(true));
-    dispatch(
-      handleChangeSingleMagazineOrSubscription({
-        id: data?._id,
-        type: data?.magazineId ? "magazine" : "subscription",
-      })
-    );
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setTimeout(() => {
-      if (!location.pathname.includes("shop")) return navigate("shop");
-    }, 300);
+    if (data?.magazineId) return navigate(`/shop/magazine/${data?._id}`);
+    return navigate(`/shop/subscription/${data?._id}`);
+    // dispatch(handleChangeMagazineOrSubscriptionShow(true));
+    // dispatch(
+    //   handleChangeSingleMagazineOrSubscription({
+    //     id: data?._id,
+    //     type: data?.magazineId ? "magazine" : "subscription",
+    //   })
+    // );
+    // window.scrollTo({ top: 0, behavior: "smooth" });
+    // setTimeout(() => {
+    //   if (!location.pathname.includes("shop")) return navigate("shop");
+    // }, 300);
   };
 
   function getStartingFromPrice() {
@@ -41,13 +45,46 @@ const MagazineCard = ({ data, from }) => {
       (country) => country.toLocaleLowerCase()
     );
 
-    const baseTaxFromZone = addresses ? (convertToLowerCase.includes(
-      addresses?.shippingAddress?.country.toLocaleLowerCase()
-    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
+    const baseTaxFromZone = addresses
+      ? convertToLowerCase.includes(
+          addresses?.shippingAddress?.country.toLocaleLowerCase()
+        )
+        ? taxPricing?.EEC_Switzerland_Overseas
+        : addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+        ? taxPricing?.MetropolitanFrance
+        : taxPricing?.RestOfTheWorld
+      : taxPricing?.MetropolitanFrance;
 
-    const tax = data?.priceDigital * baseTaxFromZone / 100;
+    const tax = (data?.priceDigital * baseTaxFromZone) / 100;
 
     return data?.priceDigital + tax;
+  }
+
+  const lowerCaseStatesAndCountries = eec_switzerland_overseas_territories.map(
+    (country) => country.toLocaleLowerCase()
+  );
+
+  function CheckConutryAndState() {
+    if (data?.subscriptionId) {
+      if (
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.province.toLowerCase()
+        ) ||
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.country.toLowerCase()
+        )
+      ) {
+        return data?.pricePaperEEC;
+      } else if (
+        addresses?.shippingAddress?.country.toLowerCase() === "france"
+      ) {
+        return data?.pricePaperFrance;
+      } else {
+        return data?.pricePaperRestOfWorld;
+      }
+    } else {
+      return data?.pricePaper;
+    }
   }
 
   return (
@@ -80,9 +117,10 @@ const MagazineCard = ({ data, from }) => {
               {data?.description}
             </p>
             <p className="md:text-xl text-lg font-semibold text-darkBlue">
-              {t("Starting From")} €  {Intl.NumberFormat("fr-FR", {
+              {t("Starting From")} €{" "}
+              {Intl.NumberFormat("fr-FR", {
                 maximumFractionDigits: 1,
-              }).format(getStartingFromPrice())}
+              }).format(CheckConutryAndState())}
             </p>
           </div>
         </div>
@@ -90,8 +128,9 @@ const MagazineCard = ({ data, from }) => {
         //  vertical card
         <div
           onClick={() => handleDispatchAction()}
-          className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer ${from === "similar_products" ? "border-0" : "border"
-            }  md:border-0 md:p-0 p-3`}
+          className={`md:space-y-2 space-y-1 md:text-left text-center w-full cursor-pointer ${
+            from === "similar_products" ? "border-0" : "border"
+          }  md:border-0 md:p-0 p-3`}
         >
           <img
             src={PublicS3Url.concat(data?.image)}
@@ -103,15 +142,16 @@ const MagazineCard = ({ data, from }) => {
 
           {from !== "purchase_by_number" && (
             <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-              {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
+              {t("Starting From")} €{" "}
+              {Intl.NumberFormat("fr-FR", {
                 maximumFractionDigits: 1,
-              }).format(getStartingFromPrice())}
+              }).format(CheckConutryAndState())}
             </p>
           )}
         </div>
       )}
     </motion.div>
   );
-};
+});
 
 export default MagazineCard;

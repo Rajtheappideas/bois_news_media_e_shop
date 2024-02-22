@@ -41,8 +41,8 @@ const CheckoutForm = ({
     useState("");
   const [selectedCountryForShipping, setSelectedCountryForShipping] =
     useState("");
-  const [showShippingStateField, setShowShippingStateField] = useState(true);
-  const [showBillingStateField, setShowBillingStateField] = useState(true);
+  const [showShippingStateField, setShowShippingStateField] = useState(false);
+  const [showBillingStateField, setShowBillingStateField] = useState(false);
 
   const { addresses, token, user, addressLoading } = useSelector(
     (state) => state.root.auth
@@ -314,37 +314,45 @@ const CheckoutForm = ({
     if (magazinePublications.hasOwnProperty(magazineTitle))
       return magazinePublications[magazineTitle];
     else return 0;
-  };
+  }
 
   function calculateShipping() {
     const convertToLowerCase = eec_switzerland_overseas_territories.map(
       (country) => country.toLocaleLowerCase()
     );
 
-    const selectedShippingCountry = showShippingAddressFields ? getValues()?.shippingcountry : getValues()?.billingcountry;
+    const selectedShippingCountry = showShippingAddressFields
+      ? getValues()?.shippingcountry
+      : getValues()?.billingcountry;
 
     const baseShippingPriceFromZone = convertToLowerCase.includes(
       selectedShippingCountry.toLocaleLowerCase()
-    ) ? shippingPricing?.EEC_Switzerland_Overseas : (selectedShippingCountry.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
+    )
+      ? shippingPricing?.EEC_Switzerland_Overseas
+      : selectedShippingCountry.toLocaleLowerCase() === "france"
+      ? shippingPricing?.MetropolitanFrance
+      : shippingPricing?.RestOfTheWorld;
 
     const shippingPrice = cart.reduce((acc, cur) => {
       if (cur?.support == "paper") {
         // In a subscription, there are N magazines, so we multiply the N per the price of shipping
-        const quantityPerSubscription = cur.itemType !== 'Subscription' ? 1 : getAnnualPublications(cur.itemId.magazineTitle);
+        const quantityPerSubscription =
+          cur.itemType !== "Subscription"
+            ? 1
+            : getAnnualPublications(cur.itemId.magazineTitle);
 
         return (
-          acc + parseFloat(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
+          acc +
+          parseFloat(baseShippingPriceFromZone) *
+            parseInt(cur?.quantity) *
+            quantityPerSubscription
         );
       } else {
         return acc + 0;
       }
     }, 0);
 
-    dispatch(
-      handleChangeShipping(
-        parseFloat(shippingPrice)
-      )
-    );
+    dispatch(handleChangeShipping(parseFloat(shippingPrice)));
 
     return parseFloat(shippingPrice);
   }
@@ -354,7 +362,9 @@ const CheckoutForm = ({
       (country) => country.toLocaleLowerCase()
     );
 
-    const selectedShippingCountry = showShippingAddressFields ? getValues()?.shippingcountry : getValues()?.billingcountry;
+    const selectedShippingCountry = showShippingAddressFields
+      ? getValues()?.shippingcountry
+      : getValues()?.billingcountry;
 
     if (subTotal === 0) return;
     if (promoCode?.discountPercentage == 100) {
@@ -364,12 +374,19 @@ const CheckoutForm = ({
 
     const baseTaxFromZone = convertToLowerCase.includes(
       selectedShippingCountry.toLocaleLowerCase()
-    ) ? taxPricing?.EEC_Switzerland_Overseas : (selectedShippingCountry.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld);
+    )
+      ? taxPricing?.EEC_Switzerland_Overseas
+      : selectedShippingCountry.toLocaleLowerCase() === "france"
+      ? taxPricing?.MetropolitanFrance
+      : taxPricing?.RestOfTheWorld;
 
     const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
 
-    const tax = (parseFloat(calculateShipping() + parseFloat(subTotal) - discount - discountCode) *
-      parseFloat(baseTaxFromZone)) /
+    const tax =
+      (parseFloat(
+        calculateShipping() + parseFloat(subTotal) - discount - discountCode
+      ) *
+        parseFloat(baseTaxFromZone)) /
       100;
 
     dispatch(handleChangeTax(tax));
@@ -377,8 +394,8 @@ const CheckoutForm = ({
   }
 
   useEffect(() => {
-    calculateShipping();
-    calculateTax();
+    // calculateShipping();
+    // calculateTax();
     calculateDiscount();
     dispatch(handleCalculateTotal());
   }, [

@@ -21,7 +21,9 @@ const OrderSummary = ({
     promoCodeDiscount,
     isPromoCodeApplied,
     subTotal,
+    eec_switzerland_overseas_territories,
   } = useSelector((state) => state.root.cart);
+  const { user, addresses } = useSelector((state) => state.root.auth);
 
   const { t } = useTranslation();
 
@@ -35,6 +37,38 @@ const OrderSummary = ({
       handleCreateOrder();
     }
   };
+
+  const lowerCaseStatesAndCountries = eec_switzerland_overseas_territories.map(
+    (country) => country.toLocaleLowerCase()
+  );
+
+  function CheckConutryAndState(product) {
+    if (product?.itemType === "Subscription") {
+      if (product?.support === "paper") {
+        if (
+          lowerCaseStatesAndCountries.includes(
+            addresses?.shippingAddress?.province.toLowerCase()
+          ) ||
+          lowerCaseStatesAndCountries.includes(
+            addresses?.shippingAddress?.country.toLowerCase()
+          )
+        ) {
+          return product?.itemId?.pricePaperEEC;
+        } else if (
+          addresses?.shippingAddress?.country.toLowerCase() === "france"
+        ) {
+          return product?.itemId?.pricePaperFrance;
+        } else {
+          return product?.itemId?.pricePaperRestOfWorld;
+        }
+      } else {
+        return product?.itemId?.priceDigital;
+      }
+    } else {
+      if (product?.support === "paper") return product?.itemId?.pricePaper;
+      return product?.itemId?.priceDigital;
+    }
+  }
 
   return (
     <div className="border border-gray-300 md:space-y-3 space-y-2 xl:sticky top-36 z-0 xl:w-3/12 md:w-1/2 w-full ml-auto">
@@ -64,17 +98,17 @@ const OrderSummary = ({
                 €{" "}
                 {product?.support == "paper"
                   ? Intl.NumberFormat("fr-FR", {
-                    maximumFractionDigits: 1,
-                  }).format(
-                    parseFloat(product?.itemId?.pricePaper) *
-                    parseFloat(product?.quantity),
-                  )
+                      maximumFractionDigits: 1,
+                    }).format(
+                      parseFloat(CheckConutryAndState(product)) *
+                        parseFloat(product?.quantity)
+                    )
                   : Intl.NumberFormat("fr-FR", {
-                    maximumFractionDigits: 1,
-                  }).format(
-                    parseFloat(product?.itemId?.priceDigital) *
-                    parseFloat(product?.quantity),
-                  )}
+                      maximumFractionDigits: 1,
+                    }).format(
+                      parseFloat(product?.itemId?.priceDigital) *
+                        parseFloat(product?.quantity)
+                    )}
               </p>
             </div>
           ))}
@@ -95,7 +129,7 @@ const OrderSummary = ({
           </p>
         </div>
         {/* shipping */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <p className="w-1/2">
             <b>{t("Shipping")}</b>
           </p>
@@ -105,9 +139,9 @@ const OrderSummary = ({
               maximumFractionDigits: 1,
             }).format(parseFloat(shipping))}
           </p>
-        </div>
+        </div> */}
         {/* tax */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <p className="w-1/2">
             <b>{t("Tax")}</b>
           </p>
@@ -117,7 +151,7 @@ const OrderSummary = ({
               maximumFractionDigits: 1,
             }).format(parseFloat(tax))}
           </p>
-        </div>
+        </div> */}
         {/* discount */}
         {discount !== 0 && (
           <div className="flex items-center justify-between">
@@ -148,6 +182,19 @@ const OrderSummary = ({
         )}
 
         <hr />
+        {/* tax show if france is country */}
+        <div className="flex items-center justify-between">
+          <p className="w-1/2">
+            {addresses?.shippingAddress?.country.toLocaleLowerCase() ===
+              "france" && <p>{t("Total without tax")}</p>}
+          </p>
+          <p className="break-words w-1/2 text-right">
+              € &nbsp;
+              {Intl.NumberFormat("fr-FR", {
+                maximumFractionDigits: 1,
+              }).format(Math.abs(parseFloat(total * 2.1) / 100 - total))}
+          </p>
+        </div>
         {/* total */}
         <div className="flex items-center justify-between">
           <p className="w-1/2">
@@ -155,7 +202,6 @@ const OrderSummary = ({
           </p>
           <p className="break-words w-1/2 text-right">
             <b>
-              {" "}
               € &nbsp;
               {Intl.NumberFormat("fr-FR", {
                 maximumFractionDigits: 1,
@@ -176,8 +222,8 @@ const OrderSummary = ({
               ? "Submitting Details..."
               : "continue"
             : checkoutLoading || loading
-              ? "Processing..."
-              : "Checkout"}
+            ? "Processing..."
+            : "Checkout"}
           {/* {checkoutLoading ? t("Placing order...") : t("Confirm Order")} */}
         </button>
         {activeComponent === "payment_method" && (

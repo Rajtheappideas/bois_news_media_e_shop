@@ -100,11 +100,11 @@ const ForgotPassword = () => {
   // }
 
   return (
-    <div className="fixed z-10 inset-0 bg-black bg-opacity-50">
+    <div className="fixed z-50 inset-0 bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={forgotRef}
-        className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
+        className="absolute z-50 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
       >
         <div className="w-full flex items-center justify-between">
           <p className="font-semibold text-left md:text-lg capitalize">{t("Forgot password")}</p>

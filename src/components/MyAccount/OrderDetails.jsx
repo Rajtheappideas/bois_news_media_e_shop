@@ -82,7 +82,7 @@ const OrderDetails = ({ setShowOrderDetails }) => {
         </div>
         <hr />
         {/* shipping */}
-        <div className="md:p-4 p-2 font-medium flex justify-between items-center">
+        {/* <div className="md:p-4 p-2 font-medium flex justify-between items-center">
           <p>{t("Shipping")}</p>
           <p>
             {" "}
@@ -91,10 +91,10 @@ const OrderDetails = ({ setShowOrderDetails }) => {
               maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.shipping))}
           </p>
-        </div>
-        <hr />
+        </div> */}
+        {/* <hr /> */}
         {/* tax */}
-        <div className="md:p-4 p-2 font-medium flex justify-between items-center">
+        {/* <div className="md:p-4 p-2 font-medium flex justify-between items-center">
           <p>{t("Tax")}</p>
           <p>
             €&nbsp;
@@ -102,8 +102,8 @@ const OrderDetails = ({ setShowOrderDetails }) => {
               maximumFractionDigits: 1,
             }).format(parseFloat(singleOrder?.tax))}
           </p>
-        </div>
-        <hr />
+        </div> */}
+        {/* <hr /> */}
         {/* discount */}
         <div className="md:p-4 p-2 font-medium flex justify-between items-center">
           <p>{t("Discount")}</p>

@@ -28,12 +28,12 @@ import ValidationSchema from "../validations/ValidationSchema";
 import toast from "react-hot-toast";
 import { handleChangeUserAddress } from "../redux/AuthSlice";
 import { AiOutlineClose } from "react-icons/ai";
+import axios from "axios";
 
 const Cart = () => {
-  const [showAddressFields, setshowAddressFields] = useState(false);
   const [productsToUpdate, setProductsToUpdate] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
+  // const [countries, setCountries] = useState([]);
+  // const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [showStateField, setShowStateField] = useState(true);
   const [promoCodeText, setPromoCodeText] = useState("");
@@ -86,35 +86,115 @@ const Cart = () => {
     },
   });
 
-  const handleChangeAddress = (data) => {
-    const { city, zipCode, province, country } = data;
+  // const handleChangeAddress = (data) => {
+  //   const { city, zipCode, province, country } = data;
 
-    if (!isDirty) return;
-    const response = dispatch(
-      handleChangeUserAddress({
-        addressType: "shipping",
-        address1: addresses?.shippingAddress?.address1,
-        address2: addresses?.shippingAddress?.address2,
-        address3: addresses?.shippingAddress?.address3,
-        city,
-        province,
-        country,
-        zipCode,
-        token,
-        signal: AbortControllerRef,
-      })
-    );
-    if (response) {
-      response.then((res) => {
-        if (res?.payload?.status === "success") {
-          toast.success(t("address edited successfully."), { duration: 2000 });
-          setshowAddressFields(false);
-          dispatch(handleCalculateTotal());
-        }
-      });
-    }
-  };
+  //   if (!isDirty) return;
+  //   const response = dispatch(
+  //     handleChangeUserAddress({
+  //       addressType: "shipping",
+  //       address1: addresses?.shippingAddress?.address1,
+  //       address2: addresses?.shippingAddress?.address2,
+  //       address3: addresses?.shippingAddress?.address3,
+  //       city,
+  //       province,
+  //       country,
+  //       zipCode,
+  //       token,
+  //       signal: AbortControllerRef,
+  //     })
+  //   );
+  //   if (response) {
+  //     response.then((res) => {
+  //       if (res?.payload?.status === "success") {
+  //         toast.success(t("address edited successfully."), { duration: 2000 });
+  //         setshowAddressFields(false);
+  //         dispatch(handleCalculateTotal());
+  //       }
+  //     });
+  //   }
+  // };
 
+  // function getAnnualPublications(magazineTitle) {
+  //   const magazinePublications = {
+  //     boismag: 8,
+  //     agenceur: 5,
+  //     artisans_and_bois: 4,
+  //     toiture: 4,
+  //   };
+
+  //   if (magazinePublications.hasOwnProperty(magazineTitle))
+  //     return magazinePublications[magazineTitle];
+  //   else return 0;
+  // }
+
+  // function calculateShipping() {
+  //   const convertToLowerCase = eec_switzerland_overseas_territories.map(
+  //     (country) => country.toLocaleLowerCase()
+  //   );
+
+  //   const baseShippingPriceFromZone = convertToLowerCase.includes(
+  //     addresses?.shippingAddress?.country.toLocaleLowerCase()
+  //   )
+  //     ? shippingPricing?.EEC_Switzerland_Overseas
+  //     : addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+  //     ? shippingPricing?.MetropolitanFrance
+  //     : shippingPricing?.RestOfTheWorld;
+
+  //   const shippingPrice = cart.reduce((acc, cur) => {
+  //     if (cur?.support == "paper") {
+  //       // In a subscription, there are N magazines, so we multiply the N per the price of shipping
+  //       const quantityPerSubscription =
+  //         cur.itemType !== "Subscription"
+  //           ? 1
+  //           : getAnnualPublications(cur.itemId.magazineTitle);
+
+  //       return (
+  //         acc +
+  //         parseFloat(baseShippingPriceFromZone) *
+  //           parseInt(cur?.quantity) *
+  //           quantityPerSubscription
+  //       );
+  //     } else {
+  //       return acc + 0;
+  //     }
+  //   }, 0);
+
+  //   dispatch(handleChangeShipping(parseFloat(shippingPrice)));
+
+  //   return parseFloat(shippingPrice);
+  // }
+
+  // function calculateTax() {
+  //   const convertToLowerCase = eec_switzerland_overseas_territories.map(
+  //     (country) => country.toLocaleLowerCase()
+  //   );
+  //   if (subTotal === 0) return;
+  //   if (promoCode?.discountPercentage == 100) {
+  //     dispatch(handleChangeTax(0));
+  //     return 0;
+  //   }
+
+  //   const baseTaxFromZone = convertToLowerCase.includes(
+  //     addresses?.shippingAddress?.country.toLocaleLowerCase()
+  //   )
+  //     ? taxPricing?.EEC_Switzerland_Overseas
+  //     : addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+  //     ? taxPricing?.MetropolitanFrance
+  //     : taxPricing?.RestOfTheWorld;
+
+  //   const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
+
+  //   const tax =
+  //     (parseFloat(
+  //       calculateShipping() + parseFloat(subTotal) - discount - discountCode
+  //     ) *
+  //       parseFloat(baseTaxFromZone)) /
+  //     100;
+
+  //   dispatch(handleChangeTax(tax));
+  //   return tax;
+  // }
   const handleUpdateProduct = () => {
     if (productsToUpdate.length === 0) return;
     const response = dispatch(
@@ -149,7 +229,6 @@ const Cart = () => {
         if (res?.payload?.status === "success") {
           toast.success(res?.payload?.message);
           calculatePromoCodeDiscount(res?.payload?.promoCode);
-          calculateTax();
         } else {
           setPromoCodeText("");
         }
@@ -185,86 +264,69 @@ const Cart = () => {
     }
   }
 
-  function getAnnualPublications(magazineTitle) {
-    const magazinePublications = {
-      boismag: 8,
-      agenceur: 5,
-      artisans_and_bois: 4,
-      toiture: 4,
-    };
+  const lowerCaseStatesAndCountries = eec_switzerland_overseas_territories.map(
+    (country) => country.toLocaleLowerCase()
+  );
 
-    if (magazinePublications.hasOwnProperty(magazineTitle))
-      return magazinePublications[magazineTitle];
-    else return 0;
-  };
-
-  function calculateShipping() {
-    const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
-    );
-
-    const baseShippingPriceFromZone = convertToLowerCase.includes(
-      addresses?.shippingAddress?.country.toLocaleLowerCase()
-    ) ? shippingPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? shippingPricing?.MetropolitanFrance : shippingPricing?.RestOfTheWorld);
-
-
-    const shippingPrice = cart.reduce((acc, cur) => {
-      if (cur?.support == "paper") {
-        // In a subscription, there are N magazines, so we multiply the N per the price of shipping
-        const quantityPerSubscription = cur.itemType !== 'Subscription' ? 1 : getAnnualPublications(cur.itemId.magazineTitle);
-
-        return (
-          acc + parseFloat(baseShippingPriceFromZone) * parseInt(cur?.quantity) * quantityPerSubscription
-        );
+  function CheckConutryAndState(product) {
+    if (product?.itemType === "Subscription") {
+      if (product?.support === "paper") {
+        if (
+          lowerCaseStatesAndCountries.includes(
+            addresses?.shippingAddress?.province.toLowerCase()
+          ) ||
+          lowerCaseStatesAndCountries.includes(
+            addresses?.shippingAddress?.country.toLowerCase()
+          )
+        ) {
+          return product?.itemId?.pricePaperEEC;
+        } else if (
+          addresses?.shippingAddress?.country.toLowerCase() === "france"
+        ) {
+          return product?.itemId?.pricePaperFrance;
+        } else {
+          return product?.itemId?.pricePaperRestOfWorld;
+        }
       } else {
-        return acc + 0;
+        return product?.itemId?.priceDigital;
       }
-    }, 0);
-
-    dispatch(
-      handleChangeShipping(
-        parseFloat(shippingPrice)
-      )
-    );
-
-    return parseFloat(shippingPrice);
-  }
-
-  function calculateTax() {
-    const convertToLowerCase = eec_switzerland_overseas_territories.map(
-      (country) => country.toLocaleLowerCase()
-    );
-    if (subTotal === 0) return;
-    if (promoCode?.discountPercentage == 100) {
-      dispatch(handleChangeTax(0));
-      return 0;
+    } else {
+      if (product?.support === "paper") return product?.itemId?.pricePaper;
+      return product?.itemId?.priceDigital;
     }
-
-    const baseTaxFromZone = convertToLowerCase.includes(
-      addresses?.shippingAddress?.country.toLocaleLowerCase()
-    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld);
-
-    const discountCode = isNaN(promoCodeDiscount) ? 0 : promoCodeDiscount;
-
-    const tax = (parseFloat(calculateShipping() + parseFloat(subTotal) - discount - discountCode) *
-      parseFloat(baseTaxFromZone)) /
-      100;
-
-    dispatch(handleChangeTax(tax));
-    return tax;
   }
 
   function calculateSubTotal() {
     const subTotal = cart.reduce((acc, cur) => {
-      // return acc + parseInt(cur?.itemId?.price) * parseInt(cur?.quantity);
-      if (cur?.support == "paper") {
-        return (
-          acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
-        );
+      if (cur?.itemType === "Subscription") {
+        if (cur?.support === "paper") {
+          if (
+            lowerCaseStatesAndCountries.includes(
+              addresses?.shippingAddress?.province.toLowerCase()
+            ) ||
+            lowerCaseStatesAndCountries.includes(
+              addresses?.shippingAddress?.country.toLowerCase()
+            )
+          ) {
+            return acc + parseFloat(cur?.itemId?.pricePaperEEC);
+          } else if (
+            addresses?.shippingAddress?.country.toLowerCase() === "france"
+          ) {
+            return acc + parseFloat(cur?.itemId?.pricePaperFrance);
+          } else {
+            return acc + parseFloat(cur?.itemId?.pricePaperRestOfWorld);
+          }
+        } else {
+          return acc + parseFloat(cur?.itemId?.priceDigital);
+        }
       } else {
-        return (
-          acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
-        );
+        if (cur?.support === "paper") {
+          return (
+            acc +
+            parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+          );
+        }
+        return acc + parseFloat(cur?.itemId?.priceDigital);
       }
     }, 0);
     if (subTotal !== NaN && typeof subTotal === "number") {
@@ -275,17 +337,42 @@ const Cart = () => {
   function calculatePromoCodeDiscount(code) {
     if (!code) return;
 
-    dispatch(
-      handleChangePromoCodeDiscount(
-        parseFloat(
-          (parseFloat(code?.discountPercentage) * parseFloat(calculateSubTotal())) /
+    if (code?.subscription) {
+      const findArr = cart.find(
+        (item) => item?.itemId?._id === code?.subscription?._id
+      );
+      if (findArr.hasOwnProperty("itemId")) {
+        dispatch(
+          handleChangePromoCodeDiscount(
+            parseFloat(
+              (parseFloat(code?.discountPercentage) *
+                parseFloat(CheckConutryAndState(findArr))) /
+                100
+            ).toFixed(2)
+          )
+        );
+        return parseFloat(
+          (parseFloat(code?.discountPercentage) *
+            parseFloat(CheckConutryAndState(findArr))) /
+            100
+        ).toFixed(2);
+      }
+    } else {
+      dispatch(
+        handleChangePromoCodeDiscount(
+          parseFloat(
+            (parseFloat(code?.discountPercentage) *
+              parseFloat(calculateSubTotal())) /
+              100
+          ).toFixed(2)
+        )
+      );
+      return parseFloat(
+        (parseFloat(code?.discountPercentage) *
+          parseFloat(calculateSubTotal())) /
           100
-        ).toFixed(2)
-      )
-    );
-    return parseFloat(
-      (parseFloat(code?.discountPercentage) * parseFloat(calculateSubTotal())) / 100
-    ).toFixed(2);
+      ).toFixed(2);
+    }
   }
 
   // for get cart or show login screen
@@ -296,7 +383,7 @@ const Cart = () => {
     }
     if (user !== null) {
       dispatch(handleGetCart({ token }));
-      setCountries(Country.getAllCountries());
+      // setCountries(Country.getAllCountries());
       setSelectedCountry(addresses?.shippingAddress?.country);
       setPromoCodeText(promoCode?.code);
     }
@@ -307,8 +394,8 @@ const Cart = () => {
   // for calculate total & subtotal
   useEffect(() => {
     if (user !== null && cart?.length > 0 && !getCartLoading) {
-      dispatch(handleCalculateSubTotal());
-      dispatch(handleCalculateTotal());
+      dispatch(handleCalculateSubTotal(addresses));
+      dispatch(handleCalculateTotal(addresses));
       calculatePromoCodeDiscount(promoCode);
       calculateDiscount();
     }
@@ -322,26 +409,26 @@ const Cart = () => {
   ]);
 
   // for change state while country change
-  useEffect(() => {
-    let findCountry = "";
-    if (selectedCountry === "") {
-      findCountry = Country.getAllCountries().find(
-        (c) => c.name === addresses?.shippingAddress?.country
-      );
-      setSelectedCountry(findCountry?.name);
-    }
-    findCountry = Country.getAllCountries().find(
-      (c) => c.name === getValues("country")
-    );
-    if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
-      resetField("province", "");
-      setSelectedCountry(findCountry?.name);
-      setStates(State.getStatesOfCountry(findCountry?.isoCode));
-      !showStateField && setShowStateField(true);
-    } else {
-      setShowStateField(false);
-    }
-  }, [watch("country")]);
+  // useEffect(() => {
+  //   let findCountry = "";
+  //   if (selectedCountry === "") {
+  //     findCountry = Country.getAllCountries().find(
+  //       (c) => c.name === addresses?.shippingAddress?.country
+  //     );
+  //     setSelectedCountry(findCountry?.name);
+  //   }
+  //   findCountry = Country.getAllCountries().find(
+  //     (c) => c.name === getValues("country")
+  //   );
+  //   if (State.getStatesOfCountry(findCountry?.isoCode).length > 0) {
+  //     resetField("province", "");
+  //     setSelectedCountry(findCountry?.name);
+  //     // setStates(State.getStatesOfCountry(findCountry?.isoCode));
+  //     !showStateField && setShowStateField(true);
+  //   } else {
+  //     setShowStateField(false);
+  //   }
+  // }, [watch("country")]);
 
   return (
     <>
@@ -389,7 +476,9 @@ const Cart = () => {
                 </table>
               </div>
 
+              {/* promo code + update cart btn */}
               <div className="w-full flex md:flex-row flex-col items-center justify-between md:gap-2 gap-5 lg:px-4 px-2 py-3">
+                {/* promo code */}
                 <div className="flex items-center md:flex-nowrap flex-wrap gap-2">
                   <input
                     type="text"
@@ -411,15 +500,16 @@ const Cart = () => {
                       promoCodeLoading ||
                       isPromoCodeApplied
                     }
-                    className={` ${(isPromoCodeApplied || promoCodeLoading) &&
+                    className={` ${
+                      (isPromoCodeApplied || promoCodeLoading) &&
                       "cursor-not-allowed"
-                      } uppercase gray_button w-full md:min-h-[3rem]`}
+                    } uppercase gray_button w-full md:min-h-[3rem]`}
                   >
                     {isPromoCodeApplied
                       ? "Applied"
                       : promoCodeLoading
-                        ? t("Applying").concat("...")
-                        : t("Apply Promo code")}
+                      ? t("Applying").concat("...")
+                      : t("Apply Promo code")}
                   </button>
                   {isPromoCodeApplied && (
                     <AiOutlineClose
@@ -430,11 +520,13 @@ const Cart = () => {
                     />
                   )}
                 </div>
+                {/* btn update cart */}
                 <div className="w-full md:w-auto">
                   <button
                     onClick={() => handleUpdateProduct()}
-                    className={`uppercase gray_button w-auto ${productsToUpdate.length === 0 && "cursor-not-allowed"
-                      } `}
+                    className={`uppercase gray_button w-auto ${
+                      productsToUpdate.length === 0 && "cursor-not-allowed"
+                    } `}
                     disabled={
                       updateOrAddLoading || getCartLoading || promoCodeLoading
                     }
@@ -445,31 +537,102 @@ const Cart = () => {
               </div>
             </div>
             {/* total box */}
-            <div className="w-full border transition-all duration-100 ease-linear">
-              <div className="flex flex-col">
-                <div class="w-full flex justify-between p-4">
-                  <p class="font-semibold">{t("Sub total")}</p>
-                  {/* subtotal */}
+            <div className="w-full flex items-center justify-between p-4 border  transition-all duration-100 ease-linear">
+              <div className="font-semibold md:text-base text-sm text-left">
+                {discount !== 0 && <p>{t("Discount")}</p>}
+                {isPromoCodeApplied && !promoCode?.subscription && (
+                  <p>{t("Promo Code")}</p>
+                )}
+                {isPromoCodeApplied && promoCode?.subscription && (
                   <p>
+                    {t(
+                      `Promo Code applied on ${promoCode?.subscription?.title} `
+                    )}
+                  </p>
+                )}
+                {addresses?.shippingAddress?.country.toLocaleLowerCase() ===
+                  "france" && <p>{t("Total without tax")}</p>}
+                <p>{t("Total")}</p>
+              </div>
+              <div>
+                {/* discount */}
+                {discount !== 0 && (
+                  <p className="font-medium md:text-lg text-sm text-right text-black">
+                    € -&nbsp;
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 1,
+                    }).format(calculateDiscount())}
+                  </p>
+                )}
+                {/* promo code for whole cart */}
+                {isPromoCodeApplied && !promoCode?.subscription && (
+                  <p className="font-medium md:text-lg text-sm text-right text-black">
+                    € -&nbsp;
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 1,
+                    }).format(promoCodeDiscount)}{" "}
+                    ({promoCode?.discountPercentage}%) off
+                  </p>
+                )}
+                {/* promo code only for subscription */}
+                {isPromoCodeApplied && promoCode?.subscription && (
+                  <p className="font-medium md:text-lg text-sm text-right text-black">
+                    € -&nbsp;
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 1,
+                    }).format(promoCodeDiscount)}{" "}
+                    ({promoCode?.discountPercentage}%) off
+                  </p>
+                )}
+                {/* total without tax */}
+                {addresses?.shippingAddress?.country.toLocaleLowerCase() ===
+                  "france" && (
+                  <p className="font-medium md:text-lg text-sm text-right text-black">
+                    € &nbsp;
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 1,
+                    }).format(Math.abs(parseFloat(total * 2.1) / 100 - total))}
+                  </p>
+                )}
+                {/* total */}
+                <p className="font-medium md:text-lg text-sm text-right text-black">
+                  <b>
+                    € &nbsp;
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 2,
+                    }).format(parseFloat(total))}
+                  </b>
+                  {/* &nbsp; (including tax + shipping) */}
+                </p>
+              </div>
+            </div>
+            {/* subtotal */}
+            {/* <div className="w-full transition-all duration-100 ease-linear">
+              {/* <div className="flex flex-col"> */}
+            {/* subtotal */}
+            {/* <div className="w-full flex justify-between p-4">
+                  <p className="font-semibold">{t("Sub total")}</p>
+                  {/* subtotal */}
+            {/* <p>
                     €&nbsp;
                     {Intl.NumberFormat("fr-FR", {
                       maximumFractionDigits: 1,
                     }).format(parseFloat(subTotal))}
                   </p>
-                </div>
+                </div> */}
+            {/* shipping */}
+            {/* <div className="w-full flex justify-between p-4">
+                  <div className="flex flex-col">
+                    <span className="font-semibold">{t("Shipping")}</span>
+                    <span className="text-xs">{t("Shipping disclaimer")}</span>
+                  </div> */}
 
-                <div class="w-full flex justify-between p-4">
-                  <div class="flex flex-col">
-                    <span class="font-semibold">{t("Shipping")}</span>
-                    <span class="text-xs">{t("Shipping disclaimer")}</span>
-                  </div>
-
-                  {/* address */}
-                  <div className="text-darkGray font-semibold space-y-3 text-right">
-                    {/* address */}
-                    <div className="space-y-2 text-black">
+            {/* address */}
+            {/* <div className="text-darkGray font-semibold space-y-3 text-right"> */}
+            {/* address */}
+            {/* <div className="space-y-2 text-black">
                       {/* shipping */}
-                      <p className="font-normal">
+            {/* <p className="font-normal">
                         €&nbsp;{calculateShipping()}
                       </p>
                       <p>
@@ -477,19 +640,20 @@ const Cart = () => {
                         {addresses?.shippingAddress?.city}, <br />{" "}
                         {addresses?.shippingAddress?.province}, <br />{" "}
                         {addresses?.shippingAddress?.country}
-                      </p>
-                      {/* <p
+                      </p> */}
+            {/* <p
                         className="text-darkGray cursor-pointer inline-block"
                         onClick={() => setshowAddressFields(!showAddressFields)}
                       >
                         {t("Change address")}
                       </p> */}
-                    </div>
-                    {/* address fields */}
-                    <form
+            {/* </div> */}
+            {/* address fields */}
+            {/* <form
                       onSubmit={handleSubmit(handleChangeAddress)}
-                      className={`${showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
-                        } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
+                      className={`${
+                        showAddressFields ? "scale-100 h-full" : "scale-0 h-0"
+                      } transition-all duration-300 origin-top flex flex-col gap-2 md:w-60 w-auto`}
                     >
                       <select
                         name="country"
@@ -556,54 +720,23 @@ const Cart = () => {
                           ? t("Updating").concat("...")
                           : t("update")}
                       </button>
-                    </form>
-                  </div>
-                </div>
-                <div class="w-full flex justify-between p-4">
-                  <p class="font-semibold">{t("Tax")}</p>
+                    </form> */}
+            {/* </div> */}
+            {/* </div> */}
+            {/* tax */}
+            {/* <div className="w-full flex justify-between p-4">
+                  <p className="font-semibold">{t("Tax")}</p>
                   {/* tax */}
-                  <p>€&nbsp; {Intl.NumberFormat("fr-FR", {
-                    maximumFractionDigits: 1,
-                  }).format(calculateTax())}</p>
-                </div>
-              </div>
-              <hr />
-              <div className="w-full flex items-center justify-between p-4">
-                <div className="font-semibold md:text-base text-sm text-left">
-                  {discount !== 0 && <p>{t("Discount")}</p>}
-                  {isPromoCodeApplied && <p>{t("Promo Code")}</p>}
-                  <p>{t("Total")}</p>
-                </div>
-                <div>
-                  {discount !== 0 && (
-                    <p className="font-medium md:text-base text-sm text-right text-black">
-                      € -&nbsp;
-                      {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 1,
-                      }).format(calculateDiscount())}
-                    </p>
-                  )}
-                  {isPromoCodeApplied && (
-                    <p className="font-medium md:text-base text-sm text-right text-black">
-                      € -&nbsp;
-                      {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 1,
-                      }).format(promoCodeDiscount)}{" "}
-                      ({promoCode?.discountPercentage}%) off
-                    </p>
-                  )}
-                  <p className="font-medium md:text-base text-sm text-right text-black">
-                    <b>
-                      € &nbsp;
-                      {Intl.NumberFormat("fr-FR", {
-                        maximumFractionDigits: 1,
-                      }).format(parseFloat(total))}
-                    </b>
-                    &nbsp; (including tax + shipping)
+            {/* <p>
+                    €&nbsp;{" "}
+                    {Intl.NumberFormat("fr-FR", {
+                      maximumFractionDigits: 1,
+                    }).format(calculateTax())}
                   </p>
-                </div>
-              </div>
-            </div>
+                </div> */}
+            {/* </div> */}
+            {/* <hr /> */}
+            {/* </div> */}
             {/* btn */}
             <div className="text-right">
               <Link to="/checkout">

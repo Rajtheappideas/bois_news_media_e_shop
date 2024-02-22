@@ -311,59 +311,165 @@ const initialState = {
   promoCodeDiscount: 0,
 };
 
+function CheckConutryAndState(addresses, product, lowerCaseStatesAndCountries) {
+  if (product?.itemType === "Subscription") {
+    if (product?.support === "paper") {
+      if (
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.province.toLowerCase()
+        ) ||
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.country.toLowerCase()
+        )
+      ) {
+        return product?.itemId?.pricePaperEEC;
+      } else if (
+        addresses?.shippingAddress?.country.toLowerCase() === "france"
+      ) {
+        return product?.itemId?.pricePaperFrance;
+      } else {
+        return product?.itemId?.pricePaperRestOfWorld;
+      }
+    } else {
+      return product?.itemId?.priceDigital;
+    }
+  } else {
+    if (product?.support === "paper") return product?.itemId?.pricePaper;
+    return product?.itemId?.priceDigital;
+  }
+}
+
 const CartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
     handleCalculateTotal: (state, { payload }) => {
+      const lowerCaseStatesAndCountries =
+        state.eec_switzerland_overseas_territories.map((country) =>
+          country.toLocaleLowerCase()
+        );
       const subtotal = state.cart.reduce((acc, cur) => {
-        if (cur?.support === "paper") {
-          return (
-            acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
-          );
+        if (cur?.itemType === "Subscription") {
+          if (cur?.support === "paper") {
+            if (
+              lowerCaseStatesAndCountries.includes(
+                payload?.shippingAddress?.province.toLowerCase()
+              ) ||
+              lowerCaseStatesAndCountries.includes(
+                payload?.shippingAddress?.country.toLowerCase()
+              )
+            ) {
+              return acc + parseFloat(cur?.itemId?.pricePaperEEC);
+            } else if (
+              payload?.shippingAddress?.country.toLowerCase() === "france"
+            ) {
+              return acc + parseFloat(cur?.itemId?.pricePaperFrance);
+            } else {
+              return acc + parseFloat(cur?.itemId?.pricePaperRestOfWorld);
+            }
+          } else {
+            return acc + parseFloat(cur?.itemId?.priceDigital);
+          }
         } else {
-          return (
-            acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
-          );
+          if (cur?.support === "paper") {
+            return (
+              acc +
+              parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+            );
+          }
+          return acc + parseFloat(cur?.itemId?.priceDigital);
         }
       }, 0);
+      
       if (subtotal !== NaN && typeof subtotal === "number") {
         if (state.promoCode !== null && state.isPromoCodeApplied) {
-          const total =
-            parseFloat(subtotal) +
-            parseFloat(state.shipping) +
-            parseFloat(state.tax) -
-            parseInt(state.discount) -
-            parseFloat(
-              (parseInt(state.promoCode?.discountPercentage) *
-                parseFloat(state.subTotal)) /
-              100
-            ).toFixed(2);
+          let total = 0;
 
+          if (state.promoCode?.subscription) {
+            const findArr = state.cart.find(
+              (item) => item?.itemId?._id === state.promoCode?.subscription?._id
+            );
+            if (findArr.hasOwnProperty("itemId")) {
+              total =
+                parseFloat(subtotal) -
+                parseInt(state.discount) -
+                parseFloat(
+                  (parseInt(state.promoCode?.discountPercentage) *
+                    parseFloat(
+                      CheckConutryAndState(
+                        payload,
+                        findArr,
+                        lowerCaseStatesAndCountries
+                      )
+                    )) /
+                    100
+                ).toFixed(2);
+            }
+          } else {
+            total =
+              parseFloat(subtotal) -
+              parseInt(state.discount) -
+              parseFloat(
+                (parseInt(state.promoCode?.discountPercentage) *
+                  parseFloat(subtotal)) /
+                  100
+              ).toFixed(2);
+          }
           if (total <= 0) {
             state.total = parseFloat(state.shipping);
           } else {
             state.total = total;
           }
         } else {
-          state.total =
-            parseFloat(subtotal) +
-            parseFloat(state.shipping) +
-            parseFloat(state.tax) -
-            parseFloat(state.discount);
+          state.total = parseFloat(subtotal) - parseFloat(state.discount);
         }
       }
     },
 
     handleCalculateSubTotal: (state, { payload }) => {
+      const lowerCaseStatesAndCountries =
+        state.eec_switzerland_overseas_territories.map((country) =>
+          country.toLocaleLowerCase()
+        );
       const subTotal = state.cart.reduce((acc, cur) => {
+        if (cur?.itemType === "Subscription") {
+          if (cur?.support === "paper") {
+            if (
+              lowerCaseStatesAndCountries.includes(
+                payload?.shippingAddress?.province.toLowerCase()
+              ) ||
+              lowerCaseStatesAndCountries.includes(
+                payload?.shippingAddress?.country.toLowerCase()
+              )
+            ) {
+              return acc + parseFloat(cur?.itemId?.pricePaperEEC);
+            } else if (
+              payload?.shippingAddress?.country.toLowerCase() === "france"
+            ) {
+              return acc + parseFloat(cur?.itemId?.pricePaperFrance);
+            } else {
+              return acc + parseFloat(cur?.itemId?.pricePaperRestOfWorld);
+            }
+          } else {
+            return acc + parseFloat(cur?.itemId?.priceDigital);
+          }
+        } else {
+          if (cur?.support === "paper") {
+            return (
+              acc +
+              parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+            );
+          }
+          return acc + parseFloat(cur?.itemId?.priceDigital);
+        }
         if (cur?.support === "paper") {
           return (
             acc + parseFloat(cur?.itemId?.pricePaper) * parseInt(cur?.quantity)
           );
         } else {
           return (
-            acc + parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
+            acc +
+            parseFloat(cur?.itemId?.priceDigital) * parseInt(cur?.quantity)
           );
         }
       }, 0);
@@ -464,7 +570,7 @@ const CartSlice = createSlice({
   },
   extraReducers: (builder) => {
     // get cart
-    builder.addCase(handleGetCart.pending, (state, { }) => {
+    builder.addCase(handleGetCart.pending, (state, {}) => {
       state.getCartLoading = true;
       state.error = null;
     });
@@ -480,7 +586,7 @@ const CartSlice = createSlice({
     });
 
     // add magazine to cart
-    builder.addCase(handleAddMagazineToCart.pending, (state, { }) => {
+    builder.addCase(handleAddMagazineToCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -495,7 +601,7 @@ const CartSlice = createSlice({
     });
 
     // add subscriptioon to cart
-    builder.addCase(handleAddSubscriptionToCart.pending, (state, { }) => {
+    builder.addCase(handleAddSubscriptionToCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -516,7 +622,7 @@ const CartSlice = createSlice({
     );
 
     // remove from cart
-    builder.addCase(handleRemoveFromCart.pending, (state, { }) => {
+    builder.addCase(handleRemoveFromCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -531,7 +637,7 @@ const CartSlice = createSlice({
     });
 
     // update from cart
-    builder.addCase(handleUpdateCart.pending, (state, { }) => {
+    builder.addCase(handleUpdateCart.pending, (state, {}) => {
       state.updateOrAddLoading = true;
       state.error = null;
     });
@@ -546,7 +652,7 @@ const CartSlice = createSlice({
     });
 
     // create paymnet intent
-    builder.addCase(handleCreatePaymentIntent.pending, (state, { }) => {
+    builder.addCase(handleCreatePaymentIntent.pending, (state, {}) => {
       state.checkoutLoading = true;
       state.error = null;
     });
@@ -566,7 +672,7 @@ const CartSlice = createSlice({
     );
 
     // create order
-    builder.addCase(handleCreateOrder.pending, (state, { }) => {
+    builder.addCase(handleCreateOrder.pending, (state, {}) => {
       state.checkoutLoading = true;
       state.error = null;
     });
@@ -582,7 +688,7 @@ const CartSlice = createSlice({
     });
 
     // get tax & shipping price
-    builder.addCase(handleGetTaxAndShipping.pending, (state, { }) => {
+    builder.addCase(handleGetTaxAndShipping.pending, (state, {}) => {
       state.loading = true;
       state.error = null;
     });
@@ -598,7 +704,7 @@ const CartSlice = createSlice({
     });
 
     // get orders
-    builder.addCase(handleGetOrders.pending, (state, { }) => {
+    builder.addCase(handleGetOrders.pending, (state, {}) => {
       state.loading = true;
       state.error = null;
     });
@@ -614,7 +720,7 @@ const CartSlice = createSlice({
     });
 
     // get downloads
-    builder.addCase(handleGetDownloads.pending, (state, { }) => {
+    builder.addCase(handleGetDownloads.pending, (state, {}) => {
       state.loading = true;
       state.error = null;
     });
@@ -630,7 +736,7 @@ const CartSlice = createSlice({
     });
 
     // handle apply promo code
-    builder.addCase(handleApplyPromoCode.pending, (state, { }) => {
+    builder.addCase(handleApplyPromoCode.pending, (state, {}) => {
       state.promoCodeLoading = true;
       state.error = null;
     });

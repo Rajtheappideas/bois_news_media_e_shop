@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { handleChangeActiveCategory } from "../redux/ShopSlice";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -32,18 +33,22 @@ const Footer = () => {
       return toast.error(t("enter valid email"));
     setLoading(true);
     try {
-      await PostUrl("newsletter", {
+      await axios({
         data: { email },
         headers: {
           "Content-Type": "application/json",
         },
+        url: "https://hooks.zapier.com/hooks/catch/14786850/3qjpqmk/",
+        method: "post",
       });
 
       toast.success(t("subscribed successfully"));
       setEmail("");
       setLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      if (error?.response?.data?.message) {
+        return toast.error(error?.response?.data?.message);
+      }
       setLoading(false);
     }
   };
@@ -104,7 +109,7 @@ const Footer = () => {
               </li>
             </Link>
             <Link
-              to="/shop"
+              to="/shop/subscriptions"
               onClick={() => {
                 scrollToTop();
                 dispatch(handleChangeActiveCategory("subscriptions"));
@@ -126,7 +131,7 @@ const Footer = () => {
               </li>
             </Link>
             <Link
-              to="/shop"
+              to="/shop/magazines"
               onClick={() => {
                 scrollToTop();
                 dispatch(handleChangeActiveCategory("magazines"));

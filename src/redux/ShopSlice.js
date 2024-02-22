@@ -17,6 +17,36 @@ export const handleGetMagazines = createAsyncThunk(
   }
 );
 
+export const handleGetMagazineById = createAsyncThunk(
+  "getContent/handleGetMagazineById",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await GetUrl(`magazine/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
+export const handleGetSubscriptionById = createAsyncThunk(
+  "getContent/handleGetSubscriptionById",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await GetUrl(`subscription/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  }
+);
+
 export const handleGetLastestMagazines = createAsyncThunk(
   "getContent/handleGetLastestMagazines",
   async (_, { rejectWithValue }) => {
@@ -57,6 +87,7 @@ const initialState = {
   magazineLoading: false,
   subscriptionLoading: false,
   singleMagazineOrSubscription: null,
+  singleMagazineOrSubscriptionGetLoading: false,
   magazines: [],
   latestMagazines: null,
   subscriptions: [],
@@ -95,7 +126,7 @@ const ShopSlice = createSlice({
   },
   extraReducers: (builder) => {
     // get magazines
-    builder.addCase(handleGetMagazines.pending, (state, { }) => {
+    builder.addCase(handleGetMagazines.pending, (state, {}) => {
       state.magazineLoading = true;
       state.error = null;
     });
@@ -113,7 +144,7 @@ const ShopSlice = createSlice({
       state.error = payload ?? null;
     });
     // get latest magazines
-    builder.addCase(handleGetLastestMagazines.pending, (state, { }) => {
+    builder.addCase(handleGetLastestMagazines.pending, (state, {}) => {
       state.magazineLoading = true;
       state.error = null;
     });
@@ -133,7 +164,7 @@ const ShopSlice = createSlice({
       }
     );
     // get subscriptions
-    builder.addCase(handleGetSubscriptions.pending, (state, { }) => {
+    builder.addCase(handleGetSubscriptions.pending, (state, {}) => {
       state.subscriptionLoading = true;
       state.error = null;
     });
@@ -148,6 +179,36 @@ const ShopSlice = createSlice({
     });
     builder.addCase(handleGetSubscriptions.rejected, (state, { payload }) => {
       state.subscriptionLoading = false;
+      state.error = payload ?? null;
+    });
+
+    // get magazine by id
+    builder.addCase(handleGetMagazineById.pending, (state, {}) => {
+      state.singleMagazineOrSubscriptionGetLoading = true;
+      state.error = null;
+    });
+    builder.addCase(handleGetMagazineById.fulfilled, (state, { payload }) => {
+      state.singleMagazineOrSubscriptionGetLoading = false;
+      state.singleMagazineOrSubscription = payload?.magazine;
+      state.error = null;
+    });
+    builder.addCase(handleGetMagazineById.rejected, (state, { payload }) => {
+      state.singleMagazineOrSubscriptionGetLoading = false;
+      state.error = payload ?? null;
+    });
+
+    // get subscription by id
+    builder.addCase(handleGetSubscriptionById.pending, (state, {}) => {
+      state.singleMagazineOrSubscriptionGetLoading = true;
+      state.error = null;
+    });
+    builder.addCase(handleGetSubscriptionById.fulfilled, (state, { payload }) => {
+      state.singleMagazineOrSubscriptionGetLoading = false;
+      state.singleMagazineOrSubscription = payload?.magazine;
+      state.error = null;
+    });
+    builder.addCase(handleGetSubscriptionById.rejected, (state, { payload }) => {
+      state.singleMagazineOrSubscriptionGetLoading = false;
       state.error = payload ?? null;
     });
   },

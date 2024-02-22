@@ -21,6 +21,7 @@ const OTPVerify = () => {
     stepFive: "",
     stepSix: "",
   });
+
   const [resendOtpLoading, setResendOtpLoading] = useState(false);
 
   const { error, loading, email } = useSelector((state) => state.root.auth);
@@ -34,7 +35,8 @@ const OTPVerify = () => {
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
-  const handleOnChange = (value, e) => {
+  const handleOnChange = (value, e, event) => {
+    event.preventDefault();
     setNumberField({ ...numberField, [value]: e });
   };
 
@@ -123,6 +125,33 @@ const OTPVerify = () => {
     });
   };
 
+  function onPaste(event) {
+    event.preventDefault();
+    const pasted = event.clipboardData.getData("text/plain");
+    const code = pasted.split("");
+    const obj = [];
+    const steps = [
+      { stepOne: "" },
+      { stepTwo: "" },
+      { stepThree: "" },
+      { stepFour: "" },
+      { stepFive: "" },
+      { stepSix: "" },
+    ];
+
+    for (const [key, val] of steps.entries()) {
+      obj.push({ [Object.keys(val)[0]]: code[key] });
+    }
+
+    let otpObject = obj.reduce(function (result, currentObject) {
+      var key = Object.keys(currentObject)[0];
+      var value = currentObject[key];
+      result[key] = value;
+      return result;
+    }, {});
+    setNumberField(otpObject);
+  }
+
   useEffect(() => {
     document.getElementById("stepOne").focus();
     return () => {
@@ -161,7 +190,7 @@ const OTPVerify = () => {
       {/* title */}
       {/* {error !== null && <span className="error">{error?.message}</span>} */}
       <div
-        ref={otpRef}
+        // ref={otpRef}
         className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
       >
         <div className="space-y-2 text-center">
@@ -176,6 +205,7 @@ const OTPVerify = () => {
         <form
           className="md:space-y-5 space-y-2 w-full text-center"
           onSubmit={(e) => handleSubmitVerfiyOtp(e)}
+          onPaste={onPaste}
         >
           {/* otp boxes */}
           <div className="flex w-full items-center justify-center md:gap-3 gap-1">
@@ -187,7 +217,8 @@ const OTPVerify = () => {
                   "stepOne",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 );
               }}
               value={numberField?.stepOne}
@@ -208,7 +239,8 @@ const OTPVerify = () => {
                   "stepTwo",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 )
               }
               onKeyUp={(e) => handleInputFocus(e)}
@@ -229,7 +261,8 @@ const OTPVerify = () => {
                   "stepThree",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 )
               }
               onKeyUp={(e) => handleInputFocus(e)}
@@ -250,7 +283,8 @@ const OTPVerify = () => {
                   "stepFour",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 )
               }
               onKeyUp={(e) => handleInputFocus(e)}
@@ -271,7 +305,8 @@ const OTPVerify = () => {
                   "stepFive",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 )
               }
               onKeyUp={(e) => handleInputFocus(e)}
@@ -292,7 +327,8 @@ const OTPVerify = () => {
                   "stepSix",
                   e.target.value.length > 1
                     ? e.target.value.slice(-1)
-                    : e.target.value.trim()
+                    : e.target.value.trim(),
+                  e
                 )
               }
               onKeyUp={(e) => handleInputFocus(e)}

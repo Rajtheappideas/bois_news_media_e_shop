@@ -18,19 +18,19 @@ const SubScribe = () => {
 
   const { t } = useTranslation();
 
-  const handleOnClick = (id) => {
-    dispatch(handleChangeMagazineOrSubscriptionShow(true));
-    dispatch(
-      handleChangeSingleMagazineOrSubscription({
-        id,
-        type: "subscription",
-      })
-    );
-    setTimeout(() => {
-      navigate("/shop");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 300);
-  };
+  // const handleOnClick = (id) => {
+  //   dispatch(handleChangeMagazineOrSubscriptionShow(true));
+  //   dispatch(
+  //     handleChangeSingleMagazineOrSubscription({
+  //       id,
+  //       type: "subscription",
+  //     })
+  //   );
+  //   setTimeout(() => {
+  //     navigate("/shop");
+  //     window.scrollTo({ top: 0, behavior: "smooth" });
+  //   }, 300);
+  // };
 
   return (
     <div className="Container md:space-y-5 space-y-2">
@@ -62,7 +62,7 @@ const SubScribe = () => {
 
                 <div className="text-center lg:text-left w-full mx-auto">
                   <button
-                    onClick={() => handleOnClick(subscription?._id)}
+                    onClick={() => navigate(`/shop/subscription/${subscription?._id}`)}
                     className="gray_button uppercase md:w-48 w-full"
                   >
                     {t("i SubScribe")}

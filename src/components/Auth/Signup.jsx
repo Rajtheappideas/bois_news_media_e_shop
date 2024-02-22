@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiFillEye, AiOutlineClose, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeShowSignin,
@@ -24,11 +24,13 @@ import useAbortApiCall from "../../hooks/useAbortApiCall";
 import ValidationSchema from "../../validations/ValidationSchema";
 import { Country, State } from "country-state-city";
 import { useState } from "react";
+import { BsEyeSlashFill, BsEyeFill } from "react-icons/bs";
 
 const Signup = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [showStateField, setShowStateField] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -71,7 +73,7 @@ const Signup = () => {
       country,
       mobile,
       company,
-      vat
+      vat,
     } = data;
     let shippingAddress = {
       address1: address,
@@ -111,7 +113,7 @@ const Signup = () => {
         shippingAddress,
         billingSupplement,
         signal: AbortControllerRef,
-      }),
+      })
     );
     if (response) {
       response.then((res) => {
@@ -153,7 +155,7 @@ const Signup = () => {
   useEffect(() => {
     if (countries.length > 0) {
       // Définir la valeur par défaut pour le champ "country" avec setValue
-      setValue('country', 'France');
+      setValue("country", "France");
     }
   }, [countries, setValue]);
 
@@ -169,7 +171,7 @@ const Signup = () => {
   useEffect(() => {
     let findCountry = "";
     findCountry = Country.getAllCountries().find(
-      (c) => c.name === getValues("country"),
+      (c) => c.name === getValues("country")
     );
     if (getValues("country") === "") setShowStateField(true);
     else if (
@@ -185,11 +187,11 @@ const Signup = () => {
   }, [watch("country")]);
 
   return (
-    <div className="fixed z-10 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
+    <div className="fixed z-50 inset-0 bg-black bg-opacity-50 overflow-y-scroll hide_scrollbar">
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={signupRef}
-        className="absolute scrollbar z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-10 space-y-3"
+        className="absolute scrollbar z-50 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-10 space-y-3"
       >
         <div className="w-full flex items-center justify-between">
           <p className="font-semibold text-left md:text-lg">
@@ -461,7 +463,7 @@ const Signup = () => {
             {t("Postal code")} <span className="text-red-600">*</span>
           </label>
           <input
-            type="number"
+            type="text"
             className="input_field"
             placeholder={t("Postal code")}
             {...register("zipCode")}
@@ -469,16 +471,27 @@ const Signup = () => {
           <span className="error">{errors?.zipCode?.message}</span>
         </div>
         {/* password */}
-        <div>
+        <div className="relative">
           <label htmlFor="password" className="Label">
             {t("Password")} <span className="text-red-600">*</span>
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             className="input_field"
             placeholder="********"
             {...register("password")}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-10 right-3"
+          >
+            {showPassword ? (
+              <BsEyeFill className="h-6 w-6" />
+            ) : (
+              <BsEyeSlashFill className="w-6 h-6" />
+            )}
+          </button>
           <span className="error">{errors?.password?.message}</span>
         </div>
         {/* btn */}

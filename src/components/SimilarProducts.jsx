@@ -17,7 +17,9 @@ import { useTranslation } from "react-i18next";
 const SimilarProducts = ({ similarMagazines }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const { taxPricing, eec_switzerland_overseas_territories } = useSelector((state) => state.root.cart);
+  const { taxPricing, eec_switzerland_overseas_territories } = useSelector(
+    (state) => state.root.cart
+  );
   const { addresses } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
@@ -29,6 +31,8 @@ const SimilarProducts = ({ similarMagazines }) => {
   const { t } = useTranslation();
 
   const handleDispatchAction = (type, id) => {
+    if(type==="subscription")return navigate(`/shop/subscription/${id}`)
+    return navigate(`/shop/magazine/${id}`)
     dispatch(handleChangeMagazineOrSubscriptionShow(true));
     dispatch(
       handleChangeSingleMagazineOrSubscription({
@@ -47,13 +51,46 @@ const SimilarProducts = ({ similarMagazines }) => {
       (country) => country.toLocaleLowerCase()
     );
 
-    const baseTaxFromZone = addresses ? (convertToLowerCase.includes(
-      addresses?.shippingAddress?.country.toLocaleLowerCase()
-    ) ? taxPricing?.EEC_Switzerland_Overseas : (addresses?.shippingAddress?.country.toLocaleLowerCase() === "france" ? taxPricing?.MetropolitanFrance : taxPricing?.RestOfTheWorld)) : taxPricing?.MetropolitanFrance;
+    const baseTaxFromZone = addresses
+      ? convertToLowerCase.includes(
+          addresses?.shippingAddress?.country.toLocaleLowerCase()
+        )
+        ? taxPricing?.EEC_Switzerland_Overseas
+        : addresses?.shippingAddress?.country.toLocaleLowerCase() === "france"
+        ? taxPricing?.MetropolitanFrance
+        : taxPricing?.RestOfTheWorld
+      : taxPricing?.MetropolitanFrance;
 
-    const tax = magazine?.priceDigital * baseTaxFromZone / 100;
+    const tax = (magazine?.priceDigital * baseTaxFromZone) / 100;
 
     return magazine?.priceDigital + tax;
+  }
+
+  const lowerCaseStatesAndCountries = eec_switzerland_overseas_territories.map(
+    (country) => country.toLocaleLowerCase()
+  );
+
+  function CheckConutryAndState(magazine) {
+    if (magazine?.subscriptionId) {
+      if (
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.province.toLowerCase()
+        ) ||
+        lowerCaseStatesAndCountries.includes(
+          addresses?.shippingAddress?.country.toLowerCase()
+        )
+      ) {
+        return magazine?.pricePaperEEC;
+      } else if (
+        addresses?.shippingAddress?.country.toLowerCase() === "france"
+      ) {
+        return magazine?.pricePaperFrance;
+      } else {
+        return magazine?.pricePaperRestOfWorld;
+      }
+    } else {
+      return magazine?.pricePaper;
+    }
   }
 
   return (
@@ -99,8 +136,8 @@ const SimilarProducts = ({ similarMagazines }) => {
         }}
         className="py-8 "
       >
-        {similarMagazines.map((magazine) => (
-          <SwiperSlide key={magazine?._id} className="space-y-3">
+        {similarMagazines.map((magazine, i) => (
+          <SwiperSlide key={i} className="space-y-3">
             <div
               onClick={() =>
                 handleDispatchAction(
@@ -121,9 +158,10 @@ const SimilarProducts = ({ similarMagazines }) => {
               </p>
 
               <p className="font-semibold md:text-xl text-lg text-darkBlue text-center">
-                {t("Starting From")} € {Intl.NumberFormat("fr-FR", {
+                {t("Starting From")} €{" "}
+                {Intl.NumberFormat("fr-FR", {
                   maximumFractionDigits: 1,
-                }).format(getStartingFromPrice(magazine))}
+                }).format(CheckConutryAndState(magazine))}
               </p>
             </div>
           </SwiperSlide>

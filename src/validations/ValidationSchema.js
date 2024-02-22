@@ -39,7 +39,7 @@ const ValidationSchema = (required, required2) => {
       .typeError(t("only characters allowed")),
     zipCode: yup
       .string()
-      .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
+      // .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     country: yup.string().required(t("country is required")),
     city: yup.string().required(t("country is required")),
@@ -55,7 +55,7 @@ const ValidationSchema = (required, required2) => {
           "Minimum 8 characters, at least one special character (!@#$%^<>&*), at least one digit"
         )
       ),
-    province: required
+    province: !required
       ? yup.string()
       : yup.string().required(t("province is required")),
   });
@@ -124,20 +124,20 @@ const ValidationSchema = (required, required2) => {
       .max(200, t("maximum character limit reached")),
     billingzipCode: yup
       .string()
-      .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
+      // .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     shippingzipCode: yup
       .string()
-      .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
+      // .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     shippingcountry: yup.string().required(t("country is required")),
     billingcountry: yup.string().required(t("country is required")),
     shippingcity: yup.string().required(t("country is required")),
     billingcity: yup.string().required(t("country is required")),
-    billingProvince: required
+    billingProvince: !required
       ? yup.string()
       : yup.string().required(t("province is required")),
-    shippingProvince: required2
+    shippingProvince: !required2
       ? yup.string()
       : yup.string().required(t("province is required")),
     phone: yup.string().required("phone is required"),
@@ -183,13 +183,13 @@ const ValidationSchema = (required, required2) => {
       .typeError(t("only characters allowed")),
     zipCode: yup
       .string()
-      .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
+      // .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     country: yup.string().required(t("country is required")),
     city: yup.string().required(t("country is required")),
     phone: yup.string().required(t("phone is required")),
     mobile: yup.string(),
-    province: required
+    province: !required
       ? yup.string()
       : yup.string().required(t("province is required")),
   });
@@ -203,11 +203,11 @@ const ValidationSchema = (required, required2) => {
     address3: yup.string().max(200, t("maximum character limit reached")),
     zipCode: yup
       .string()
-      .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
+      // .matches(/^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/, t("enter valid code"))
       .required(t("zipcode is required")),
     country: yup.string().required(t("country is required")),
     city: yup.string().required(t("city is required")),
-    province: required
+    province: !required
       ? yup.string()
       : yup.string().required(t("province is required")),
   });

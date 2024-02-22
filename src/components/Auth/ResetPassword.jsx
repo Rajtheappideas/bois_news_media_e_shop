@@ -13,6 +13,7 @@ import ValidationSchema from "../../validations/ValidationSchema";
 
 const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { showResetPassword } = useSelector((state) => state.root.globalStates);
 
@@ -94,14 +95,16 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="fixed z-10 inset-0 bg-black bg-opacity-50">
+    <div className="fixed z-50 inset-0 bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit(onSubmit)}
         ref={resetRef}
-        className="absolute z-10 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
+        className="absolute z-50 xl:w-1/3 md:w-1/2 w-11/12 h-auto md:p-5 p-2 rounded-lg bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 space-y-3"
       >
         <div className="w-full flex items-center justify-between">
-          <p className="font-semibold text-left md:text-lg">{t("Reset Password")}</p>
+          <p className="font-semibold text-left md:text-lg">
+            {t("Reset Password")}
+          </p>
           <AiOutlineClose
             size={20}
             role="button"
@@ -125,27 +128,43 @@ const ResetPassword = () => {
             {showPassword ? (
               <BsEyeFill
                 size={24}
-                className="absolute md:top-[60%] top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+                className="absolute md:top-[60%]  top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
               />
             ) : (
               <BsEyeSlashFill
                 size={24}
-                className="absolute md:top-[60%] top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+                className="absolute md:top-[60%]  top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
               />
             )}
           </button>
         </div>
         <span className="error">{errors?.password?.message}</span>
-        <div>
+        <div className="relative h-20">
           <label htmlFor="confirmPassword" className="Label">
             {t("Confirm Password")}
           </label>
           <input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             className="input_field"
             placeholder="********"
             {...register("confirmPassword")}
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? (
+              <BsEyeFill
+                size={24}
+                className="absolute md:top-[60%]  top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+              />
+            ) : (
+              <BsEyeSlashFill
+                size={24}
+                className="absolute md:top-[60%]  top-1/2 -translate-y-1/2 cursor-pointer right-3 text-gray-400"
+              />
+            )}
+          </button>
           <span className="error">{errors?.confirmPassword?.message}</span>
         </div>
         <button disabled={loading} type="submit" className="gray_button w-full">

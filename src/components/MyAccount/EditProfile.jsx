@@ -30,7 +30,7 @@ const EditProfile = ({ setshowEditProfile }) => {
   const dispatch = useDispatch();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-  const { profileSchema } = ValidationSchema();
+  const { profileSchema } = ValidationSchema(showStateField);
 
   const {
     register,
@@ -419,7 +419,7 @@ const EditProfile = ({ setshowEditProfile }) => {
           {t("postal code")}
         </label>
         <input
-          type="number"
+          type="text"
           placeholder="Type here..."
           className="w-full input_field"
           {...register("zipCode")}

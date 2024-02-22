@@ -5,6 +5,7 @@ import { AiOutlineDown } from "react-icons/ai";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 const Categories = () => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(true);
@@ -14,6 +15,8 @@ const Categories = () => {
   );
 
   const dispatch = useDispatch();
+
+  const location = useLocation();
 
   const { t } = useTranslation();
 
@@ -29,101 +32,121 @@ const Categories = () => {
       }
     });
     return () => {
-      window.removeEventListener("resize", () => { });
+      window.removeEventListener("resize", () => {});
     };
   }, [window.innerWidth]);
 
+  useEffect(() => {
+    const activeCategory = location.pathname.split("/")[2];
+    if (activeCategory) {
+      dispatch(handleChangeActiveCategory(location.pathname.split("/")[2]));
+    } else {
+      dispatch(handleChangeActiveCategory("view_all"));
+    }
+  }, [location]);
+
   return (
     <div className="w-full border">
-      <p className="bg-darkBlue text-white p-4 text-left font-semibold md:text-lg">
+      <p
+        onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+        className="bg-darkBlue lg:cursor-default cursor-pointer text-white p-4 text-left font-semibold md:text-lg"
+      >
         <span>{t("Categories")}</span>
         <AiOutlineDown
           size={20}
           className="float-right lg:hidden block cursor-pointer"
-          onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
         />
       </p>
       {showCategoryDropdown && (
         <div className="space-y-3 font-semibold p-3 md:text-base text-sm">
           <p
-            onClick={() => dispatch(handleChangeActiveCategory("view_all"))}
-            className={`${activeCategory === "view_all" && "underline text-darkBlue"
-              } underline-offset-2 cursor-pointer text-left capitalize md:text-base text-sm`}
+            // onClick={() => dispatch(handleChangeActiveCategory("view_all"))}
+            className={`${
+              activeCategory === "view_all" && "underline text-darkBlue"
+            } underline-offset-2 cursor-pointer text-left capitalize md:text-base text-sm`}
           >
-            {t("View All")}
+            <Link to="/shop">{t("View All")}</Link>
           </p>
           <p
-            className={`${activeCategory === "subscriptions" &&
+            className={`${
+              activeCategory === "subscriptions" &&
               "underline text-darkBlue underline-offset-2"
-              } text-black text-left capitalize cursor-pointer`}
-            onClick={() =>
-              dispatch(handleChangeActiveCategory("subscriptions"))
-            }
+            } text-black text-left capitalize`}
           >
-            {t("Subscriptions")} ({subscriptions?.length ?? "0"})
+            <Link to="/shop/subscriptions">
+              {t("Subscriptions")} ({subscriptions?.length ?? "0"})
+            </Link>
           </p>
           <p
-            onClick={() => dispatch(handleChangeActiveCategory("magazines"))}
-            className={`${activeCategory === "magazines" &&
+            className={`${
+              activeCategory === "magazines" &&
               "underline text-darkBlue underline-offset-2"
-              } text-black text-left capitalize cursor-pointer`}
+            } text-black text-left capitalize cursor-pointer`}
           >
-            {t("Magazines")} ({magazines?.length ?? "0"}){" "}
+            <Link to="/shop/magazines">
+              {t("Magazines")} ({magazines?.length ?? "0"}){" "}
+            </Link>
           </p>
           <ul className="list-disc font-semibold pl-6 space-y-2">
             <li
-              onClick={() =>
-                dispatch(handleChangeActiveCategory("artisans_and_bois"))
-              }
-              className={`${activeCategory === "artisans_and_bois" &&
+              className={`${
+                activeCategory === "artisans-&-bois" &&
                 "text-darkBlue underline underline-offset-2"
-                } cursor-pointer`}
+              } cursor-pointer`}
             >
-              {t("artisans_and_bois")} (
-              {magazines.length > 0 &&
-                magazines.filter((magazine) =>
-                  magazine?.magazineTitle.includes("artisans_and_bois")
-                ).length}
-              )
+              <Link to="/shop/artisans-&-bois">
+                {t("Artisans & Bois")} (
+                {magazines.length > 0 &&
+                  magazines.filter((magazine) =>
+                    magazine?.magazineTitle.includes("artisans_and_bois")
+                  ).length}
+                )
+              </Link>
             </li>
             <li
-              className={`${activeCategory === "boismag" &&
+              className={`${
+                activeCategory === "boismag" &&
                 "text-darkBlue underline underline-offset-2"
-                } cursor-pointer`}
-              onClick={() => dispatch(handleChangeActiveCategory("boismag"))}
+              } cursor-pointer`}
             >
-              {t("boismag")} (
-              {magazines.length > 0 &&
-                magazines.filter((magazine) =>
-                  magazine?.magazineTitle.includes("boismag")
-                ).length}
-              )
+              <Link to="/shop/boismag">
+                {t("BOISmag")} (
+                {magazines.length > 0 &&
+                  magazines.filter((magazine) =>
+                    magazine?.magazineTitle.includes("boismag")
+                  ).length}
+                )
+              </Link>
             </li>
             <li
-              className={`${activeCategory === "agenceur" &&
+              className={`${
+                activeCategory === "agenceur" &&
                 "text-darkBlue underline underline-offset-2"
-                } cursor-pointer`}
-              onClick={() => dispatch(handleChangeActiveCategory("agenceur"))}
+              } cursor-pointer`}
             >
-              {t("agenceur")} (
-              {magazines.length > 0 &&
-                magazines.filter((magazine) =>
-                  magazine?.magazineTitle.includes("agenceur")
-                ).length}
-              )
+              <Link to="/shop/agenceur">
+                {t("L'Agenceur Magazine")} (
+                {magazines.length > 0 &&
+                  magazines.filter((magazine) =>
+                    magazine?.magazineTitle.includes("agenceur")
+                  ).length}
+                )
+              </Link>
             </li>
             <li
-              className={`${activeCategory === "toiture" &&
+              className={`${
+                activeCategory === "toiture" &&
                 "text-darkBlue underline underline-offset-2"
-                } cursor-pointer`}
-              onClick={() => dispatch(handleChangeActiveCategory("toiture"))}
+              } cursor-pointer`}
             >
-              {t("toiture")} (
-              {magazines.length > 0 &&
-                magazines.filter((magazine) =>
-                  magazine?.magazineTitle.includes("toiture")
-                ).length}
-              )
+              <Link to="/shop/toiture">
+                {t("Toiture Magazine")} (
+                {magazines.length > 0 &&
+                  magazines.filter((magazine) =>
+                    magazine?.magazineTitle.includes("toiture")
+                  ).length}
+                )
+              </Link>
             </li>
           </ul>
         </div>

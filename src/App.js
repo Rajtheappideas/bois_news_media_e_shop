@@ -30,6 +30,7 @@ import { handleGetCart, handleGetTaxAndShipping } from "./redux/CartSlice";
 import { handleGetUserAddress, handleLogout } from "./redux/AuthSlice";
 import SuccessPage from "./pages/SuccessPage";
 import Error from "./pages/Error";
+import MagazineOrSubscriptionDetails from "./components/MagazineOrSubscriptionDetails";
 
 const Home = lazy(() => import("./pages/Home"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
@@ -78,7 +79,7 @@ function App() {
       dispatch(
         handleGetUserAddress({
           token,
-        }),
+        })
       );
     }
   }, []);
@@ -119,6 +120,22 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} caseSensitive />
+            <Route path="/shop/subscriptions" element={<Shop />} caseSensitive />
+            <Route path="/shop/magazines" element={<Shop />} caseSensitive />
+            <Route path="/shop/artisans-&-bois" element={<Shop />} caseSensitive />
+            <Route path="/shop/boismag" element={<Shop />} caseSensitive />
+            <Route path="/shop/agenceur" element={<Shop />} caseSensitive />
+            <Route path="/shop/toiture" element={<Shop />} caseSensitive />
+            <Route
+              path="/shop/subscription/:id"
+              element={<MagazineOrSubscriptionDetails />}
+              caseSensitive
+            />
+            <Route
+              path="/shop/magazine/:id"
+              element={<MagazineOrSubscriptionDetails />}
+              caseSensitive
+            />
             <Route
               path="/cart"
               element={

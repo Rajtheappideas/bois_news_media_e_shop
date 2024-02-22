@@ -32,6 +32,13 @@ const Profile = () => {
                   {user?.fname ?? "-"} {user?.lname}
                 </div>
               </div>
+              {/* sub id */}
+              <div className="flex items-center gap-3">
+                <div className="md:w-40 w-20 font-semibold capitalize">
+                  {t("Subscriber ID")}:{" "}
+                </div>
+                <div className="flex-1">{user?.subscriberId}</div>
+              </div>
               {/* emaail */}
               <div className="flex items-center gap-3">
                 <div className="md:w-40 w-20 font-semibold capitalize">

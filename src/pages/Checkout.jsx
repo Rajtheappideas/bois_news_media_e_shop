@@ -22,7 +22,7 @@ const Checkout = () => {
   );
   const [stripePromise, setStripePromise] = useState(null);
 
-  const { user } = useSelector((state) => state.root.auth);
+  const { user, addresses } = useSelector((state) => state.root.auth);
   const { cart, checkoutLoading } = useSelector((state) => state.root.cart);
 
   const dispatch = useDispatch();
@@ -41,27 +41,22 @@ const Checkout = () => {
       navigate("/shop");
     }
     if (user !== null) {
-      dispatch(handleCalculateSubTotal());
-      dispatch(handleCalculateTotal());
+      dispatch(handleCalculateSubTotal(addresses));
+      dispatch(handleCalculateTotal(addresses));
     }
 
     return () => abortApiCall();
   }, []);
   useEffect(() => {
-    // setStripePromise(
-    //   loadStripe(
-    //     "pk_live_51NptSmIEhdCVsY1P48BRPHzl6zLtOviR1wQ3ORciNmzuGjAvnqSL49J3fmbY4DwbY7jslIHAmk56OKbANXkqGHOU00OitBOK0D"
-    //   )
-    // );
     if (
       user !== null &&
       clientSecret !==
-      "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
+        "pi_3O0iJRIEhdCVsY1P0Vh7NViH_secret_xV9tyPc7JtGcQULL2Dh2Ckor6"
     ) {
-      // console.log("runn");
       setStripePromise(
         loadStripe(
           "pk_live_51NptSmIEhdCVsY1P48BRPHzl6zLtOviR1wQ3ORciNmzuGjAvnqSL49J3fmbY4DwbY7jslIHAmk56OKbANXkqGHOU00OitBOK0D"
+          // "pk_test_51NptSmIEhdCVsY1PKguV4Vbif5Kf10YVWTAIYi9H5wLiTbMLvejHyAHvlXJOGbnNtQbIjF9u6R7W8tfNKA8yJ0Fn008z2nS1tE"
         )
       );
     }

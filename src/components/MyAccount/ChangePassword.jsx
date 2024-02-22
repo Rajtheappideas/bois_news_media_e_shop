@@ -14,6 +14,7 @@ import { handleLogoutFromAllTabs } from "../../redux/globalStates";
 const ChangePassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setshowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { loading, token } = useSelector((state) => state.root.auth);
 
@@ -119,16 +120,27 @@ const ChangePassword = () => {
         </span>
       </div>
       {/* confirm password */}
-      <div className="space-y-2">
+      <div className="space-y-2 relative">
         <label htmlFor="" className="Label">
           {t("confirm password")}
         </label>
         <input
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="*******"
           className="w-full input_field"
           {...register("confirmPassword")}
         />
+        <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          className="absolute top-[2.4rem] cursor-pointer right-3 text-gray-600 rounded-full bg-white"
+        >
+          {showOldPassword ? (
+            <BsEyeFill size={24} />
+          ) : (
+            <BsEyeSlashFill size={24} />
+          )}
+        </button>
         <span role="alert" className="error">
           {errors?.confirmPassword?.message}
         </span>
